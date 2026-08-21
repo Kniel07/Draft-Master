@@ -1,0 +1,3343 @@
+{
+  "patch": "2.1.90",
+  "patchDate": "2026-07-08",
+  "generated": "2026-08-21",
+  "note": "meta = 0-100 competitive priority for this patch. Edit freely; the app reads this file at runtime and never hardcodes hero data.",
+  "heroes": [
+    {
+      "id": "aamon",
+      "name": "Aamon",
+      "classes": [
+        "Assassin"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "invisible",
+        "burst",
+        "backline-access"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 74,
+        "late": 64,
+        "damage": 99,
+        "survivability": 48,
+        "cc": 38,
+        "push": 55,
+        "coordination": 42
+      }
+    },
+    {
+      "id": "akai",
+      "name": "Akai",
+      "classes": [
+        "Tank"
+      ],
+      "lanes": [
+        "roam",
+        "jungle"
+      ],
+      "tags": [
+        "aoe-cc",
+        "zoning",
+        "engage",
+        "frontline"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 70,
+        "late": 62,
+        "damage": 28,
+        "survivability": 99,
+        "cc": 98,
+        "push": 35,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "alice",
+      "name": "Alice",
+      "classes": [
+        "Mage",
+        "Tank"
+      ],
+      "lanes": [
+        "exp",
+        "mid"
+      ],
+      "tags": [
+        "sustain",
+        "aoe-cc",
+        "scaling",
+        "frontline"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 60,
+        "late": 82,
+        "damage": 70,
+        "survivability": 73,
+        "cc": 77,
+        "push": 52,
+        "coordination": 74
+      }
+    },
+    {
+      "id": "alpha",
+      "name": "Alpha",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "jungle",
+        "exp"
+      ],
+      "tags": [
+        "sustained-damage",
+        "sustain",
+        "objective"
+      ],
+      "meta": 66,
+      "stats": {
+        "early": 76,
+        "late": 72,
+        "damage": 72,
+        "survivability": 84,
+        "cc": 50,
+        "push": 68,
+        "coordination": 58
+      }
+    },
+    {
+      "id": "alucard",
+      "name": "Alucard",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "jungle",
+        "exp"
+      ],
+      "tags": [
+        "sustain",
+        "mobility",
+        "sustained-damage"
+      ],
+      "meta": 68,
+      "stats": {
+        "early": 72,
+        "late": 72,
+        "damage": 72,
+        "survivability": 90,
+        "cc": 50,
+        "push": 60,
+        "coordination": 58
+      }
+    },
+    {
+      "id": "angela",
+      "name": "Angela",
+      "classes": [
+        "Support"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "shield",
+        "heal",
+        "global",
+        "peel"
+      ],
+      "meta": 80,
+      "stats": {
+        "early": 66,
+        "late": 66,
+        "damage": 34,
+        "survivability": 80,
+        "cc": 72,
+        "push": 38,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "argus",
+      "name": "Argus",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "immunity",
+        "split-push",
+        "sustained-damage"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 72,
+        "late": 72,
+        "damage": 72,
+        "survivability": 82,
+        "cc": 50,
+        "push": 74,
+        "coordination": 52
+      }
+    },
+    {
+      "id": "arlott",
+      "name": "Arlott",
+      "classes": [
+        "Fighter",
+        "Assassin"
+      ],
+      "lanes": [
+        "exp",
+        "jungle"
+      ],
+      "tags": [
+        "hard-cc",
+        "mobility",
+        "burst"
+      ],
+      "meta": 82,
+      "stats": {
+        "early": 72,
+        "late": 66,
+        "damage": 79,
+        "survivability": 72,
+        "cc": 57,
+        "push": 59,
+        "coordination": 56
+      }
+    },
+    {
+      "id": "atlas",
+      "name": "Atlas",
+      "classes": [
+        "Tank",
+        "Support"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "aoe-cc",
+        "engage",
+        "setup",
+        "frontline",
+        "counter-initiate"
+      ],
+      "meta": 88,
+      "stats": {
+        "early": 69,
+        "late": 63,
+        "damage": 30,
+        "survivability": 94,
+        "cc": 98,
+        "push": 34,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "aulus",
+      "name": "Aulus",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "jungle",
+        "exp"
+      ],
+      "tags": [
+        "sustained-damage",
+        "mobility",
+        "split-push"
+      ],
+      "meta": 78,
+      "stats": {
+        "early": 72,
+        "late": 72,
+        "damage": 72,
+        "survivability": 80,
+        "cc": 50,
+        "push": 74,
+        "coordination": 52
+      }
+    },
+    {
+      "id": "aurora",
+      "name": "Aurora",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "burst",
+        "aoe-cc",
+        "setup"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 68,
+        "late": 74,
+        "damage": 92,
+        "survivability": 44,
+        "cc": 76,
+        "push": 58,
+        "coordination": 76
+      }
+    },
+    {
+      "id": "badang",
+      "name": "Badang",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "hard-cc",
+        "burst",
+        "zoning"
+      ],
+      "meta": 68,
+      "stats": {
+        "early": 72,
+        "late": 66,
+        "damage": 74,
+        "survivability": 74,
+        "cc": 66,
+        "push": 60,
+        "coordination": 62
+      }
+    },
+    {
+      "id": "balmond",
+      "name": "Balmond",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "jungle",
+        "exp"
+      ],
+      "tags": [
+        "sustain",
+        "tank-shred",
+        "wave-clear"
+      ],
+      "meta": 62,
+      "stats": {
+        "early": 72,
+        "late": 68,
+        "damage": 72,
+        "survivability": 84,
+        "cc": 50,
+        "push": 68,
+        "coordination": 58
+      }
+    },
+    {
+      "id": "bane",
+      "name": "Bane",
+      "classes": [
+        "Mage",
+        "Fighter"
+      ],
+      "lanes": [
+        "gold",
+        "exp"
+      ],
+      "tags": [
+        "poke",
+        "objective",
+        "sustained-damage"
+      ],
+      "meta": 68,
+      "stats": {
+        "early": 79,
+        "late": 78,
+        "damage": 90,
+        "survivability": 52,
+        "cc": 58,
+        "push": 66,
+        "coordination": 61
+      }
+    },
+    {
+      "id": "barats",
+      "name": "Barats",
+      "classes": [
+        "Tank",
+        "Fighter"
+      ],
+      "lanes": [
+        "jungle",
+        "exp"
+      ],
+      "tags": [
+        "hard-cc",
+        "scaling",
+        "frontline",
+        "tank-shred"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 62,
+        "late": 74,
+        "damage": 44,
+        "survivability": 92,
+        "cc": 82,
+        "push": 41,
+        "coordination": 78
+      }
+    },
+    {
+      "id": "baxia",
+      "name": "Baxia",
+      "classes": [
+        "Tank"
+      ],
+      "lanes": [
+        "roam",
+        "jungle"
+      ],
+      "tags": [
+        "anti-heal",
+        "mobility",
+        "frontline",
+        "objective"
+      ],
+      "meta": 80,
+      "stats": {
+        "early": 74,
+        "late": 62,
+        "damage": 30,
+        "survivability": 99,
+        "cc": 80,
+        "push": 43,
+        "coordination": 85
+      }
+    },
+    {
+      "id": "beatrix",
+      "name": "Beatrix",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "poke",
+        "burst",
+        "early-game",
+        "split-push"
+      ],
+      "meta": 82,
+      "stats": {
+        "early": 68,
+        "late": 78,
+        "damage": 94,
+        "survivability": 38,
+        "cc": 30,
+        "push": 92,
+        "coordination": 49
+      }
+    },
+    {
+      "id": "belerick",
+      "name": "Belerick",
+      "classes": [
+        "Tank"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "peel",
+        "frontline",
+        "sustain",
+        "zoning"
+      ],
+      "meta": 68,
+      "stats": {
+        "early": 70,
+        "late": 62,
+        "damage": 28,
+        "survivability": 99,
+        "cc": 86,
+        "push": 35,
+        "coordination": 97
+      }
+    },
+    {
+      "id": "benedetta",
+      "name": "Benedetta",
+      "classes": [
+        "Assassin",
+        "Fighter"
+      ],
+      "lanes": [
+        "exp",
+        "jungle"
+      ],
+      "tags": [
+        "mobility",
+        "immunity",
+        "split-push",
+        "burst"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 74,
+        "late": 64,
+        "damage": 89,
+        "survivability": 64,
+        "cc": 41,
+        "push": 70,
+        "coordination": 46
+      }
+    },
+    {
+      "id": "brody",
+      "name": "Brody",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "burst",
+        "poke",
+        "mobility"
+      ],
+      "meta": 78,
+      "stats": {
+        "early": 58,
+        "late": 86,
+        "damage": 94,
+        "survivability": 44,
+        "cc": 30,
+        "push": 78,
+        "coordination": 55
+      }
+    },
+    {
+      "id": "bruno",
+      "name": "Bruno",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "sustained-damage",
+        "poke",
+        "early-game"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 68,
+        "late": 84,
+        "damage": 92,
+        "survivability": 38,
+        "cc": 30,
+        "push": 78,
+        "coordination": 55
+      }
+    },
+    {
+      "id": "carmilla",
+      "name": "Carmilla",
+      "classes": [
+        "Support",
+        "Tank"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "aoe-cc",
+        "peel",
+        "sustain"
+      ],
+      "meta": 66,
+      "stats": {
+        "early": 67,
+        "late": 65,
+        "damage": 32,
+        "survivability": 82,
+        "cc": 86,
+        "push": 33,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "cecilion",
+      "name": "Cecilion",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "scaling",
+        "poke",
+        "wave-clear",
+        "zoning"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 66,
+        "late": 86,
+        "damage": 88,
+        "survivability": 44,
+        "cc": 66,
+        "push": 66,
+        "coordination": 66
+      }
+    },
+    {
+      "id": "change",
+      "name": "Chang'e",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "poke",
+        "sustained-damage",
+        "wave-clear",
+        "scaling"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 66,
+        "late": 90,
+        "damage": 94,
+        "survivability": 44,
+        "cc": 60,
+        "push": 66,
+        "coordination": 62
+      }
+    },
+    {
+      "id": "chip",
+      "name": "Chip",
+      "classes": [
+        "Tank",
+        "Support"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "global",
+        "engage",
+        "peel",
+        "frontline"
+      ],
+      "meta": 78,
+      "stats": {
+        "early": 69,
+        "late": 63,
+        "damage": 30,
+        "survivability": 98,
+        "cc": 78,
+        "push": 40,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "chou",
+      "name": "Chou",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp",
+        "roam"
+      ],
+      "tags": [
+        "hard-cc",
+        "immunity",
+        "peel",
+        "backline-access"
+      ],
+      "meta": 84,
+      "stats": {
+        "early": 72,
+        "late": 68,
+        "damage": 72,
+        "survivability": 86,
+        "cc": 60,
+        "push": 60,
+        "coordination": 62
+      }
+    },
+    {
+      "id": "cici",
+      "name": "Cici",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "sustain",
+        "mobility",
+        "poke",
+        "split-push"
+      ],
+      "meta": 78,
+      "stats": {
+        "early": 78,
+        "late": 68,
+        "damage": 70,
+        "survivability": 90,
+        "cc": 50,
+        "push": 74,
+        "coordination": 52
+      }
+    },
+    {
+      "id": "claude",
+      "name": "Claude",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "scaling",
+        "mobility",
+        "sustained-damage"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 44,
+        "late": 99,
+        "damage": 88,
+        "survivability": 44,
+        "cc": 30,
+        "push": 78,
+        "coordination": 55
+      }
+    },
+    {
+      "id": "clint",
+      "name": "Clint",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "poke",
+        "burst",
+        "early-game"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 68,
+        "late": 78,
+        "damage": 94,
+        "survivability": 38,
+        "cc": 30,
+        "push": 78,
+        "coordination": 55
+      }
+    },
+    {
+      "id": "diggie",
+      "name": "Diggie",
+      "classes": [
+        "Support"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "purify",
+        "disengage",
+        "vision",
+        "peel"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 66,
+        "late": 66,
+        "damage": 34,
+        "survivability": 76,
+        "cc": 72,
+        "push": 32,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "dyrroth",
+      "name": "Dyrroth",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "burst",
+        "tank-shred",
+        "mobility"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 72,
+        "late": 66,
+        "damage": 80,
+        "survivability": 80,
+        "cc": 50,
+        "push": 60,
+        "coordination": 58
+      }
+    },
+    {
+      "id": "edith",
+      "name": "Edith",
+      "classes": [
+        "Tank",
+        "Marksman"
+      ],
+      "lanes": [
+        "roam",
+        "exp"
+      ],
+      "tags": [
+        "aoe-cc",
+        "scaling",
+        "frontline",
+        "engage"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 58,
+        "late": 78,
+        "damage": 42,
+        "survivability": 88,
+        "cc": 80,
+        "push": 46,
+        "coordination": 92
+      }
+    },
+    {
+      "id": "esmeralda",
+      "name": "Esmeralda",
+      "classes": [
+        "Mage",
+        "Tank"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "sustain",
+        "shield",
+        "split-push",
+        "frontline"
+      ],
+      "meta": 84,
+      "stats": {
+        "early": 68,
+        "late": 72,
+        "damage": 70,
+        "survivability": 79,
+        "cc": 65,
+        "push": 66,
+        "coordination": 66
+      }
+    },
+    {
+      "id": "estes",
+      "name": "Estes",
+      "classes": [
+        "Support"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "heal",
+        "sustain",
+        "peel"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 66,
+        "late": 66,
+        "damage": 34,
+        "survivability": 84,
+        "cc": 72,
+        "push": 32,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "eudora",
+      "name": "Eudora",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "burst",
+        "hard-cc",
+        "single-target"
+      ],
+      "meta": 66,
+      "stats": {
+        "early": 68,
+        "late": 74,
+        "damage": 96,
+        "survivability": 44,
+        "cc": 70,
+        "push": 58,
+        "coordination": 60
+      }
+    },
+    {
+      "id": "fanny",
+      "name": "Fanny",
+      "classes": [
+        "Assassin"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "mobility",
+        "burst",
+        "early-game",
+        "backline-access"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 84,
+        "late": 56,
+        "damage": 99,
+        "survivability": 48,
+        "cc": 38,
+        "push": 55,
+        "coordination": 46
+      }
+    },
+    {
+      "id": "faramis",
+      "name": "Faramis",
+      "classes": [
+        "Support",
+        "Mage"
+      ],
+      "lanes": [
+        "roam",
+        "mid"
+      ],
+      "tags": [
+        "revive",
+        "aoe-cc",
+        "zoning"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 66,
+        "late": 68,
+        "damage": 46,
+        "survivability": 64,
+        "cc": 87,
+        "push": 38,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "floryn",
+      "name": "Floryn",
+      "classes": [
+        "Support"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "heal",
+        "global",
+        "sustain"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 66,
+        "late": 66,
+        "damage": 34,
+        "survivability": 80,
+        "cc": 72,
+        "push": 38,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "franco",
+      "name": "Franco",
+      "classes": [
+        "Tank"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "hard-cc",
+        "single-target",
+        "engage",
+        "frontline"
+      ],
+      "meta": 78,
+      "stats": {
+        "early": 70,
+        "late": 62,
+        "damage": 32,
+        "survivability": 99,
+        "cc": 90,
+        "push": 35,
+        "coordination": 91
+      }
+    },
+    {
+      "id": "fredrinn",
+      "name": "Fredrinn",
+      "classes": [
+        "Fighter",
+        "Tank"
+      ],
+      "lanes": [
+        "jungle",
+        "exp"
+      ],
+      "tags": [
+        "aoe-cc",
+        "sustain",
+        "frontline",
+        "tank-shred"
+      ],
+      "meta": 84,
+      "stats": {
+        "early": 72,
+        "late": 66,
+        "damage": 62,
+        "survivability": 96,
+        "cc": 70,
+        "push": 54,
+        "coordination": 71
+      }
+    },
+    {
+      "id": "freya",
+      "name": "Freya",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "jungle",
+        "exp"
+      ],
+      "tags": [
+        "burst",
+        "mobility",
+        "sustain"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 72,
+        "late": 66,
+        "damage": 74,
+        "survivability": 90,
+        "cc": 50,
+        "push": 60,
+        "coordination": 58
+      }
+    },
+    {
+      "id": "gatotkaca",
+      "name": "Gatotkaca",
+      "classes": [
+        "Tank",
+        "Fighter"
+      ],
+      "lanes": [
+        "roam",
+        "exp"
+      ],
+      "tags": [
+        "aoe-cc",
+        "engage",
+        "frontline"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 70,
+        "late": 64,
+        "damage": 38,
+        "survivability": 96,
+        "cc": 84,
+        "push": 41,
+        "coordination": 92
+      }
+    },
+    {
+      "id": "gloo",
+      "name": "Gloo",
+      "classes": [
+        "Tank",
+        "Fighter"
+      ],
+      "lanes": [
+        "exp",
+        "roam"
+      ],
+      "tags": [
+        "hard-cc",
+        "sustain",
+        "zoning",
+        "frontline"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 70,
+        "late": 64,
+        "damage": 38,
+        "survivability": 99,
+        "cc": 88,
+        "push": 41,
+        "coordination": 82
+      }
+    },
+    {
+      "id": "gord",
+      "name": "Gord",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "true-damage",
+        "poke",
+        "sustained-damage"
+      ],
+      "meta": 64,
+      "stats": {
+        "early": 74,
+        "late": 80,
+        "damage": 99,
+        "survivability": 44,
+        "cc": 60,
+        "push": 58,
+        "coordination": 62
+      }
+    },
+    {
+      "id": "granger",
+      "name": "Granger",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "burst",
+        "poke",
+        "early-game"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 68,
+        "late": 78,
+        "damage": 94,
+        "survivability": 38,
+        "cc": 30,
+        "push": 78,
+        "coordination": 55
+      }
+    },
+    {
+      "id": "grock",
+      "name": "Grock",
+      "classes": [
+        "Tank"
+      ],
+      "lanes": [
+        "roam",
+        "exp"
+      ],
+      "tags": [
+        "aoe-cc",
+        "engage",
+        "zoning",
+        "frontline"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 70,
+        "late": 62,
+        "damage": 28,
+        "survivability": 99,
+        "cc": 98,
+        "push": 35,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "guinevere",
+      "name": "Guinevere",
+      "classes": [
+        "Fighter",
+        "Mage"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "aoe-cc",
+        "burst",
+        "setup",
+        "mobility"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 71,
+        "late": 68,
+        "damage": 78,
+        "survivability": 72,
+        "cc": 68,
+        "push": 60,
+        "coordination": 73
+      }
+    },
+    {
+      "id": "gusion",
+      "name": "Gusion",
+      "classes": [
+        "Assassin",
+        "Mage"
+      ],
+      "lanes": [
+        "jungle",
+        "mid"
+      ],
+      "tags": [
+        "blink",
+        "burst",
+        "backline-access"
+      ],
+      "meta": 78,
+      "stats": {
+        "early": 72,
+        "late": 66,
+        "damage": 99,
+        "survivability": 48,
+        "cc": 44,
+        "push": 56,
+        "coordination": 49
+      }
+    },
+    {
+      "id": "hanabi",
+      "name": "Hanabi",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "purify",
+        "scaling",
+        "wave-clear"
+      ],
+      "meta": 64,
+      "stats": {
+        "early": 44,
+        "late": 98,
+        "damage": 82,
+        "survivability": 42,
+        "cc": 30,
+        "push": 86,
+        "coordination": 59
+      }
+    },
+    {
+      "id": "hanzo",
+      "name": "Hanzo",
+      "classes": [
+        "Assassin"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "scaling",
+        "burst",
+        "split-push",
+        "single-target"
+      ],
+      "meta": 68,
+      "stats": {
+        "early": 66,
+        "late": 74,
+        "damage": 98,
+        "survivability": 42,
+        "cc": 38,
+        "push": 69,
+        "coordination": 42
+      }
+    },
+    {
+      "id": "harith",
+      "name": "Harith",
+      "classes": [
+        "Mage",
+        "Assassin"
+      ],
+      "lanes": [
+        "mid",
+        "jungle"
+      ],
+      "tags": [
+        "mobility",
+        "sustained-damage",
+        "scaling"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 62,
+        "late": 88,
+        "damage": 90,
+        "survivability": 50,
+        "cc": 54,
+        "push": 57,
+        "coordination": 59
+      }
+    },
+    {
+      "id": "hayabusa",
+      "name": "Hayabusa",
+      "classes": [
+        "Assassin"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "mobility",
+        "burst",
+        "split-push",
+        "backline-access"
+      ],
+      "meta": 78,
+      "stats": {
+        "early": 74,
+        "late": 64,
+        "damage": 99,
+        "survivability": 48,
+        "cc": 38,
+        "push": 69,
+        "coordination": 40
+      }
+    },
+    {
+      "id": "helcurt",
+      "name": "Helcurt",
+      "classes": [
+        "Assassin"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "invisible",
+        "burst",
+        "single-target",
+        "backline-access"
+      ],
+      "meta": 64,
+      "stats": {
+        "early": 74,
+        "late": 64,
+        "damage": 99,
+        "survivability": 48,
+        "cc": 38,
+        "push": 55,
+        "coordination": 40
+      }
+    },
+    {
+      "id": "hilda",
+      "name": "Hilda",
+      "classes": [
+        "Fighter",
+        "Tank"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "sustain",
+        "burst",
+        "frontline",
+        "objective"
+      ],
+      "meta": 64,
+      "stats": {
+        "early": 76,
+        "late": 64,
+        "damage": 64,
+        "survivability": 96,
+        "cc": 58,
+        "push": 62,
+        "coordination": 65
+      }
+    },
+    {
+      "id": "hirara",
+      "name": "Hirara",
+      "classes": [
+        "Assassin"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "mobility",
+        "burst",
+        "backline-access"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 74,
+        "late": 64,
+        "damage": 99,
+        "survivability": 48,
+        "cc": 38,
+        "push": 55,
+        "coordination": 46
+      }
+    },
+    {
+      "id": "hylos",
+      "name": "Hylos",
+      "classes": [
+        "Tank"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "aoe-cc",
+        "frontline",
+        "sustain",
+        "engage"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 70,
+        "late": 62,
+        "damage": 28,
+        "survivability": 99,
+        "cc": 92,
+        "push": 35,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "irithel",
+      "name": "Irithel",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "mobility",
+        "sustained-damage",
+        "scaling"
+      ],
+      "meta": 68,
+      "stats": {
+        "early": 44,
+        "late": 99,
+        "damage": 88,
+        "survivability": 44,
+        "cc": 30,
+        "push": 78,
+        "coordination": 55
+      }
+    },
+    {
+      "id": "ixia",
+      "name": "Ixia",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "sustained-damage",
+        "zoning",
+        "scaling"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 44,
+        "late": 99,
+        "damage": 88,
+        "survivability": 38,
+        "cc": 36,
+        "push": 78,
+        "coordination": 59
+      }
+    },
+    {
+      "id": "johnson",
+      "name": "Johnson",
+      "classes": [
+        "Tank",
+        "Support"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "hard-cc",
+        "global",
+        "engage",
+        "frontline"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 69,
+        "late": 63,
+        "damage": 30,
+        "survivability": 94,
+        "cc": 88,
+        "push": 40,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "joy",
+      "name": "Joy",
+      "classes": [
+        "Assassin"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "mobility",
+        "immunity",
+        "burst",
+        "backline-access"
+      ],
+      "meta": 82,
+      "stats": {
+        "early": 74,
+        "late": 64,
+        "damage": 99,
+        "survivability": 56,
+        "cc": 38,
+        "push": 55,
+        "coordination": 46
+      }
+    },
+    {
+      "id": "julian",
+      "name": "Julian",
+      "classes": [
+        "Fighter",
+        "Mage"
+      ],
+      "lanes": [
+        "jungle",
+        "exp"
+      ],
+      "tags": [
+        "hard-cc",
+        "burst",
+        "mobility",
+        "sustained-damage"
+      ],
+      "meta": 82,
+      "stats": {
+        "early": 71,
+        "late": 72,
+        "damage": 84,
+        "survivability": 72,
+        "cc": 62,
+        "push": 60,
+        "coordination": 59
+      }
+    },
+    {
+      "id": "kadita",
+      "name": "Kadita",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "burst",
+        "immunity",
+        "aoe-cc",
+        "setup"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 68,
+        "late": 74,
+        "damage": 92,
+        "survivability": 52,
+        "cc": 76,
+        "push": 58,
+        "coordination": 76
+      }
+    },
+    {
+      "id": "kagura",
+      "name": "Kagura",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "burst",
+        "mobility",
+        "zoning",
+        "poke"
+      ],
+      "meta": 82,
+      "stats": {
+        "early": 74,
+        "late": 74,
+        "damage": 96,
+        "survivability": 50,
+        "cc": 66,
+        "push": 58,
+        "coordination": 66
+      }
+    },
+    {
+      "id": "kaja",
+      "name": "Kaja",
+      "classes": [
+        "Support",
+        "Fighter"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "hard-cc",
+        "single-target",
+        "engage",
+        "backline-access"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 68,
+        "late": 66,
+        "damage": 52,
+        "survivability": 69,
+        "cc": 76,
+        "push": 39,
+        "coordination": 82
+      }
+    },
+    {
+      "id": "kalea",
+      "name": "Kalea",
+      "classes": [
+        "Support",
+        "Tank"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "hard-cc",
+        "peel",
+        "engage",
+        "frontline"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 67,
+        "late": 65,
+        "damage": 32,
+        "survivability": 84,
+        "cc": 84,
+        "push": 33,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "karina",
+      "name": "Karina",
+      "classes": [
+        "Assassin",
+        "Mage"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "true-damage",
+        "burst",
+        "mobility",
+        "backline-access"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 72,
+        "late": 66,
+        "damage": 99,
+        "survivability": 48,
+        "cc": 44,
+        "push": 56,
+        "coordination": 49
+      }
+    },
+    {
+      "id": "karrie",
+      "name": "Karrie",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "true-damage",
+        "tank-shred",
+        "mobility",
+        "scaling"
+      ],
+      "meta": 80,
+      "stats": {
+        "early": 44,
+        "late": 98,
+        "damage": 94,
+        "survivability": 44,
+        "cc": 30,
+        "push": 78,
+        "coordination": 55
+      }
+    },
+    {
+      "id": "khaleed",
+      "name": "Khaleed",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "sustain",
+        "mobility",
+        "aoe-cc"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 72,
+        "late": 68,
+        "damage": 66,
+        "survivability": 90,
+        "cc": 62,
+        "push": 60,
+        "coordination": 64
+      }
+    },
+    {
+      "id": "khufra",
+      "name": "Khufra",
+      "classes": [
+        "Tank"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "hard-cc",
+        "engage",
+        "frontline",
+        "counter-initiate"
+      ],
+      "meta": 84,
+      "stats": {
+        "early": 70,
+        "late": 62,
+        "damage": 28,
+        "survivability": 99,
+        "cc": 94,
+        "push": 35,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "kimmy",
+      "name": "Kimmy",
+      "classes": [
+        "Marksman",
+        "Mage"
+      ],
+      "lanes": [
+        "gold",
+        "mid"
+      ],
+      "tags": [
+        "poke",
+        "sustained-damage",
+        "wave-clear"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 62,
+        "late": 89,
+        "damage": 92,
+        "survivability": 40,
+        "cc": 38,
+        "push": 81,
+        "coordination": 57
+      }
+    },
+    {
+      "id": "lancelot",
+      "name": "Lancelot",
+      "classes": [
+        "Assassin"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "mobility",
+        "burst",
+        "immunity",
+        "backline-access"
+      ],
+      "meta": 82,
+      "stats": {
+        "early": 74,
+        "late": 64,
+        "damage": 99,
+        "survivability": 56,
+        "cc": 38,
+        "push": 55,
+        "coordination": 46
+      }
+    },
+    {
+      "id": "lapu-lapu",
+      "name": "Lapu-Lapu",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "aoe-cc",
+        "burst",
+        "sustain"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 72,
+        "late": 66,
+        "damage": 74,
+        "survivability": 84,
+        "cc": 62,
+        "push": 60,
+        "coordination": 64
+      }
+    },
+    {
+      "id": "layla",
+      "name": "Layla",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "poke",
+        "scaling",
+        "wave-clear"
+      ],
+      "meta": 58,
+      "stats": {
+        "early": 50,
+        "late": 98,
+        "damage": 86,
+        "survivability": 38,
+        "cc": 30,
+        "push": 86,
+        "coordination": 55
+      }
+    },
+    {
+      "id": "leomord",
+      "name": "Leomord",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "sustained-damage",
+        "mobility",
+        "hard-cc"
+      ],
+      "meta": 68,
+      "stats": {
+        "early": 72,
+        "late": 72,
+        "damage": 72,
+        "survivability": 80,
+        "cc": 60,
+        "push": 60,
+        "coordination": 58
+      }
+    },
+    {
+      "id": "lesley",
+      "name": "Lesley",
+      "classes": [
+        "Marksman",
+        "Assassin"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "poke",
+        "burst",
+        "single-target",
+        "backline-access"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 64,
+        "late": 80,
+        "damage": 99,
+        "survivability": 39,
+        "cc": 32,
+        "push": 72,
+        "coordination": 48
+      }
+    },
+    {
+      "id": "ling",
+      "name": "Ling",
+      "classes": [
+        "Assassin"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "mobility",
+        "burst",
+        "backline-access",
+        "scaling"
+      ],
+      "meta": 80,
+      "stats": {
+        "early": 66,
+        "late": 74,
+        "damage": 99,
+        "survivability": 48,
+        "cc": 38,
+        "push": 55,
+        "coordination": 46
+      }
+    },
+    {
+      "id": "lolita",
+      "name": "Lolita",
+      "classes": [
+        "Tank",
+        "Support"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "aoe-cc",
+        "shield",
+        "peel",
+        "counter-initiate"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 69,
+        "late": 63,
+        "damage": 30,
+        "survivability": 92,
+        "cc": 94,
+        "push": 34,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "lukas",
+      "name": "Lukas",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "jungle",
+        "exp"
+      ],
+      "tags": [
+        "sustain",
+        "burst",
+        "mobility"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 72,
+        "late": 66,
+        "damage": 74,
+        "survivability": 90,
+        "cc": 50,
+        "push": 60,
+        "coordination": 58
+      }
+    },
+    {
+      "id": "lunox",
+      "name": "Lunox",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "burst",
+        "immunity",
+        "sustained-damage"
+      ],
+      "meta": 78,
+      "stats": {
+        "early": 68,
+        "late": 78,
+        "damage": 98,
+        "survivability": 52,
+        "cc": 60,
+        "push": 58,
+        "coordination": 62
+      }
+    },
+    {
+      "id": "luo-yi",
+      "name": "Luo Yi",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "aoe-cc",
+        "global",
+        "setup",
+        "wave-clear"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 68,
+        "late": 76,
+        "damage": 84,
+        "survivability": 44,
+        "cc": 76,
+        "push": 72,
+        "coordination": 86
+      }
+    },
+    {
+      "id": "lylia",
+      "name": "Lylia",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "mobility",
+        "zoning",
+        "poke",
+        "wave-clear"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 74,
+        "late": 76,
+        "damage": 88,
+        "survivability": 50,
+        "cc": 66,
+        "push": 66,
+        "coordination": 66
+      }
+    },
+    {
+      "id": "marcel",
+      "name": "Marcel",
+      "classes": [
+        "Mage",
+        "Support"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "shield",
+        "true-damage",
+        "poke"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 74,
+        "late": 74,
+        "damage": 82,
+        "survivability": 54,
+        "cc": 63,
+        "push": 52,
+        "coordination": 72
+      }
+    },
+    {
+      "id": "martis",
+      "name": "Martis",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "jungle",
+        "exp"
+      ],
+      "tags": [
+        "true-damage",
+        "mobility",
+        "hard-cc",
+        "objective"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 76,
+        "late": 68,
+        "damage": 72,
+        "survivability": 80,
+        "cc": 60,
+        "push": 68,
+        "coordination": 58
+      }
+    },
+    {
+      "id": "masha",
+      "name": "Masha",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "split-push",
+        "sustain",
+        "objective"
+      ],
+      "meta": 66,
+      "stats": {
+        "early": 76,
+        "late": 68,
+        "damage": 66,
+        "survivability": 84,
+        "cc": 50,
+        "push": 82,
+        "coordination": 52
+      }
+    },
+    {
+      "id": "mathilda",
+      "name": "Mathilda",
+      "classes": [
+        "Support",
+        "Assassin"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "mobility",
+        "peel",
+        "engage",
+        "disengage"
+      ],
+      "meta": 82,
+      "stats": {
+        "early": 68,
+        "late": 66,
+        "damage": 47,
+        "survivability": 77,
+        "cc": 64,
+        "push": 38,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "melissa",
+      "name": "Melissa",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "zoning",
+        "disengage",
+        "split-push",
+        "scaling"
+      ],
+      "meta": 78,
+      "stats": {
+        "early": 44,
+        "late": 98,
+        "damage": 82,
+        "survivability": 44,
+        "cc": 36,
+        "push": 92,
+        "coordination": 59
+      }
+    },
+    {
+      "id": "minotaur",
+      "name": "Minotaur",
+      "classes": [
+        "Tank",
+        "Support"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "aoe-cc",
+        "heal",
+        "frontline"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 69,
+        "late": 63,
+        "damage": 30,
+        "survivability": 98,
+        "cc": 90,
+        "push": 34,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "minsitthar",
+      "name": "Minsitthar",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "hard-cc",
+        "zoning",
+        "counter-initiate"
+      ],
+      "meta": 64,
+      "stats": {
+        "early": 72,
+        "late": 68,
+        "damage": 66,
+        "survivability": 74,
+        "cc": 70,
+        "push": 60,
+        "coordination": 68
+      }
+    },
+    {
+      "id": "miya",
+      "name": "Miya",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "scaling",
+        "immunity",
+        "objective"
+      ],
+      "meta": 60,
+      "stats": {
+        "early": 48,
+        "late": 98,
+        "damage": 82,
+        "survivability": 46,
+        "cc": 30,
+        "push": 86,
+        "coordination": 55
+      }
+    },
+    {
+      "id": "moskov",
+      "name": "Moskov",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "poke",
+        "hard-cc",
+        "scaling",
+        "global"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 50,
+        "late": 98,
+        "damage": 86,
+        "survivability": 38,
+        "cc": 40,
+        "push": 84,
+        "coordination": 65
+      }
+    },
+    {
+      "id": "nana",
+      "name": "Nana",
+      "classes": [
+        "Mage",
+        "Support"
+      ],
+      "lanes": [
+        "mid",
+        "roam"
+      ],
+      "tags": [
+        "hard-cc",
+        "poke",
+        "disengage"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 74,
+        "late": 74,
+        "damage": 76,
+        "survivability": 54,
+        "cc": 73,
+        "push": 52,
+        "coordination": 74
+      }
+    },
+    {
+      "id": "natalia",
+      "name": "Natalia",
+      "classes": [
+        "Assassin"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "invisible",
+        "burst",
+        "single-target"
+      ],
+      "meta": 66,
+      "stats": {
+        "early": 74,
+        "late": 64,
+        "damage": 98,
+        "survivability": 48,
+        "cc": 38,
+        "push": 55,
+        "coordination": 44
+      }
+    },
+    {
+      "id": "natan",
+      "name": "Natan",
+      "classes": [
+        "Marksman",
+        "Mage"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "scaling",
+        "sustained-damage",
+        "anti-heal"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 48,
+        "late": 99,
+        "damage": 90,
+        "survivability": 40,
+        "cc": 38,
+        "push": 73,
+        "coordination": 57
+      }
+    },
+    {
+      "id": "nolan",
+      "name": "Nolan",
+      "classes": [
+        "Assassin"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "mobility",
+        "burst",
+        "backline-access",
+        "sustained-damage"
+      ],
+      "meta": 84,
+      "stats": {
+        "early": 74,
+        "late": 68,
+        "damage": 99,
+        "survivability": 48,
+        "cc": 38,
+        "push": 55,
+        "coordination": 46
+      }
+    },
+    {
+      "id": "novaria",
+      "name": "Novaria",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "poke",
+        "vision",
+        "zoning"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 74,
+        "late": 76,
+        "damage": 88,
+        "survivability": 44,
+        "cc": 66,
+        "push": 58,
+        "coordination": 74
+      }
+    },
+    {
+      "id": "obsidia",
+      "name": "Obsidia",
+      "classes": [
+        "Mage",
+        "Fighter"
+      ],
+      "lanes": [
+        "exp",
+        "mid"
+      ],
+      "tags": [
+        "zoning",
+        "sustained-damage",
+        "sustain"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 69,
+        "late": 78,
+        "damage": 86,
+        "survivability": 62,
+        "cc": 64,
+        "push": 58,
+        "coordination": 65
+      }
+    },
+    {
+      "id": "odette",
+      "name": "Odette",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "aoe-cc",
+        "burst",
+        "zoning"
+      ],
+      "meta": 64,
+      "stats": {
+        "early": 68,
+        "late": 74,
+        "damage": 92,
+        "survivability": 44,
+        "cc": 78,
+        "push": 58,
+        "coordination": 72
+      }
+    },
+    {
+      "id": "paquito",
+      "name": "Paquito",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "jungle",
+        "exp"
+      ],
+      "tags": [
+        "burst",
+        "mobility",
+        "hard-cc"
+      ],
+      "meta": 80,
+      "stats": {
+        "early": 72,
+        "late": 66,
+        "damage": 74,
+        "survivability": 80,
+        "cc": 60,
+        "push": 60,
+        "coordination": 58
+      }
+    },
+    {
+      "id": "pharsa",
+      "name": "Pharsa",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "poke",
+        "burst",
+        "zoning",
+        "wave-clear"
+      ],
+      "meta": 80,
+      "stats": {
+        "early": 74,
+        "late": 74,
+        "damage": 96,
+        "survivability": 44,
+        "cc": 66,
+        "push": 66,
+        "coordination": 66
+      }
+    },
+    {
+      "id": "phoveus",
+      "name": "Phoveus",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "counter-initiate",
+        "sustain",
+        "frontline"
+      ],
+      "meta": 66,
+      "stats": {
+        "early": 72,
+        "late": 68,
+        "damage": 66,
+        "survivability": 92,
+        "cc": 54,
+        "push": 60,
+        "coordination": 64
+      }
+    },
+    {
+      "id": "popol-and-kupa",
+      "name": "Popol and Kupa",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "hard-cc",
+        "vision",
+        "zoning"
+      ],
+      "meta": 66,
+      "stats": {
+        "early": 52,
+        "late": 88,
+        "damage": 82,
+        "survivability": 38,
+        "cc": 46,
+        "push": 78,
+        "coordination": 67
+      }
+    },
+    {
+      "id": "rafaela",
+      "name": "Rafaela",
+      "classes": [
+        "Support"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "heal",
+        "purify",
+        "peel"
+      ],
+      "meta": 66,
+      "stats": {
+        "early": 66,
+        "late": 66,
+        "damage": 34,
+        "survivability": 78,
+        "cc": 72,
+        "push": 32,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "roger",
+      "name": "Roger",
+      "classes": [
+        "Marksman",
+        "Fighter"
+      ],
+      "lanes": [
+        "jungle",
+        "gold"
+      ],
+      "tags": [
+        "mobility",
+        "burst",
+        "early-game"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 67,
+        "late": 73,
+        "damage": 86,
+        "survivability": 53,
+        "cc": 35,
+        "push": 74,
+        "coordination": 56
+      }
+    },
+    {
+      "id": "ruby",
+      "name": "Ruby",
+      "classes": [
+        "Fighter",
+        "Tank"
+      ],
+      "lanes": [
+        "exp",
+        "roam"
+      ],
+      "tags": [
+        "aoe-cc",
+        "sustain",
+        "setup",
+        "frontline"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 72,
+        "late": 66,
+        "damage": 56,
+        "survivability": 96,
+        "cc": 74,
+        "push": 54,
+        "coordination": 79
+      }
+    },
+    {
+      "id": "saber",
+      "name": "Saber",
+      "classes": [
+        "Assassin"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "single-target",
+        "burst",
+        "backline-access"
+      ],
+      "meta": 64,
+      "stats": {
+        "early": 74,
+        "late": 64,
+        "damage": 99,
+        "survivability": 42,
+        "cc": 38,
+        "push": 55,
+        "coordination": 44
+      }
+    },
+    {
+      "id": "selena",
+      "name": "Selena",
+      "classes": [
+        "Assassin",
+        "Mage"
+      ],
+      "lanes": [
+        "roam",
+        "mid"
+      ],
+      "tags": [
+        "hard-cc",
+        "burst",
+        "vision",
+        "poke"
+      ],
+      "meta": 84,
+      "stats": {
+        "early": 78,
+        "late": 66,
+        "damage": 98,
+        "survivability": 42,
+        "cc": 54,
+        "push": 56,
+        "coordination": 61
+      }
+    },
+    {
+      "id": "silvanna",
+      "name": "Silvanna",
+      "classes": [
+        "Fighter",
+        "Mage"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "hard-cc",
+        "single-target",
+        "backline-access"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 71,
+        "late": 70,
+        "damage": 80,
+        "survivability": 66,
+        "cc": 62,
+        "push": 60,
+        "coordination": 53
+      }
+    },
+    {
+      "id": "sora",
+      "name": "Sora",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "zoning",
+        "poke",
+        "mobility"
+      ],
+      "meta": 70,
+      "stats": {
+        "early": 74,
+        "late": 76,
+        "damage": 88,
+        "survivability": 50,
+        "cc": 66,
+        "push": 58,
+        "coordination": 66
+      }
+    },
+    {
+      "id": "suyou",
+      "name": "Suyou",
+      "classes": [
+        "Assassin",
+        "Fighter"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "mobility",
+        "burst",
+        "backline-access"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 74,
+        "late": 64,
+        "damage": 95,
+        "survivability": 56,
+        "cc": 41,
+        "push": 56,
+        "coordination": 48
+      }
+    },
+    {
+      "id": "terizla",
+      "name": "Terizla",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "hard-cc",
+        "sustain",
+        "tank-shred",
+        "frontline"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 72,
+        "late": 68,
+        "damage": 72,
+        "survivability": 92,
+        "cc": 60,
+        "push": 60,
+        "coordination": 58
+      }
+    },
+    {
+      "id": "thamuz",
+      "name": "Thamuz",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "sustain",
+        "true-damage",
+        "frontline"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 72,
+        "late": 68,
+        "damage": 72,
+        "survivability": 92,
+        "cc": 50,
+        "push": 60,
+        "coordination": 58
+      }
+    },
+    {
+      "id": "tigreal",
+      "name": "Tigreal",
+      "classes": [
+        "Tank"
+      ],
+      "lanes": [
+        "roam"
+      ],
+      "tags": [
+        "aoe-cc",
+        "engage",
+        "setup",
+        "frontline"
+      ],
+      "meta": 82,
+      "stats": {
+        "early": 70,
+        "late": 62,
+        "damage": 28,
+        "survivability": 99,
+        "cc": 96,
+        "push": 35,
+        "coordination": 99
+      }
+    },
+    {
+      "id": "uranus",
+      "name": "Uranus",
+      "classes": [
+        "Tank"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "sustain",
+        "frontline",
+        "wave-clear"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 70,
+        "late": 62,
+        "damage": 28,
+        "survivability": 99,
+        "cc": 80,
+        "push": 43,
+        "coordination": 85
+      }
+    },
+    {
+      "id": "vale",
+      "name": "Vale",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "aoe-cc",
+        "burst",
+        "setup"
+      ],
+      "meta": 66,
+      "stats": {
+        "early": 68,
+        "late": 74,
+        "damage": 92,
+        "survivability": 44,
+        "cc": 76,
+        "push": 58,
+        "coordination": 76
+      }
+    },
+    {
+      "id": "valentina",
+      "name": "Valentina",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "burst",
+        "mobility",
+        "counter-initiate",
+        "zoning"
+      ],
+      "meta": 84,
+      "stats": {
+        "early": 68,
+        "late": 74,
+        "damage": 92,
+        "survivability": 50,
+        "cc": 70,
+        "push": 58,
+        "coordination": 72
+      }
+    },
+    {
+      "id": "valir",
+      "name": "Valir",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "zoning",
+        "aoe-cc",
+        "poke",
+        "disengage"
+      ],
+      "meta": 72,
+      "stats": {
+        "early": 74,
+        "late": 76,
+        "damage": 88,
+        "survivability": 50,
+        "cc": 78,
+        "push": 58,
+        "coordination": 78
+      }
+    },
+    {
+      "id": "vexana",
+      "name": "Vexana",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "aoe-cc",
+        "burst",
+        "setup"
+      ],
+      "meta": 68,
+      "stats": {
+        "early": 68,
+        "late": 74,
+        "damage": 92,
+        "survivability": 44,
+        "cc": 76,
+        "push": 58,
+        "coordination": 76
+      }
+    },
+    {
+      "id": "wanwan",
+      "name": "Wanwan",
+      "classes": [
+        "Marksman"
+      ],
+      "lanes": [
+        "gold"
+      ],
+      "tags": [
+        "scaling",
+        "mobility",
+        "immunity",
+        "backline-access"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 44,
+        "late": 98,
+        "damage": 88,
+        "survivability": 52,
+        "cc": 30,
+        "push": 78,
+        "coordination": 51
+      }
+    },
+    {
+      "id": "xborg",
+      "name": "X.Borg",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "true-damage",
+        "sustain",
+        "zoning",
+        "tank-shred"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 72,
+        "late": 68,
+        "damage": 78,
+        "survivability": 84,
+        "cc": 56,
+        "push": 60,
+        "coordination": 62
+      }
+    },
+    {
+      "id": "xavier",
+      "name": "Xavier",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "poke",
+        "scaling",
+        "global",
+        "zoning"
+      ],
+      "meta": 78,
+      "stats": {
+        "early": 66,
+        "late": 86,
+        "damage": 88,
+        "survivability": 44,
+        "cc": 66,
+        "push": 64,
+        "coordination": 76
+      }
+    },
+    {
+      "id": "yi-sun-shin",
+      "name": "Yi Sun-shin",
+      "classes": [
+        "Marksman",
+        "Assassin"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "global",
+        "objective",
+        "poke",
+        "mobility"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 68,
+        "late": 82,
+        "damage": 87,
+        "survivability": 45,
+        "cc": 32,
+        "push": 86,
+        "coordination": 64
+      }
+    },
+    {
+      "id": "yin",
+      "name": "Yin",
+      "classes": [
+        "Assassin",
+        "Fighter"
+      ],
+      "lanes": [
+        "jungle"
+      ],
+      "tags": [
+        "single-target",
+        "burst",
+        "mobility"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 74,
+        "late": 64,
+        "damage": 93,
+        "survivability": 56,
+        "cc": 41,
+        "push": 56,
+        "coordination": 50
+      }
+    },
+    {
+      "id": "yu-zhong",
+      "name": "Yu Zhong",
+      "classes": [
+        "Fighter"
+      ],
+      "lanes": [
+        "exp"
+      ],
+      "tags": [
+        "sustain",
+        "aoe-cc",
+        "mobility",
+        "frontline"
+      ],
+      "meta": 82,
+      "stats": {
+        "early": 72,
+        "late": 68,
+        "damage": 66,
+        "survivability": 98,
+        "cc": 62,
+        "push": 60,
+        "coordination": 64
+      }
+    },
+    {
+      "id": "yve",
+      "name": "Yve",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "zoning",
+        "aoe-cc",
+        "poke",
+        "wave-clear"
+      ],
+      "meta": 76,
+      "stats": {
+        "early": 74,
+        "late": 76,
+        "damage": 88,
+        "survivability": 44,
+        "cc": 78,
+        "push": 66,
+        "coordination": 72
+      }
+    },
+    {
+      "id": "zetian",
+      "name": "Zetian",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "zoning",
+        "aoe-cc",
+        "poke"
+      ],
+      "meta": 74,
+      "stats": {
+        "early": 74,
+        "late": 76,
+        "damage": 88,
+        "survivability": 44,
+        "cc": 78,
+        "push": 58,
+        "coordination": 72
+      }
+    },
+    {
+      "id": "zhask",
+      "name": "Zhask",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "split-push",
+        "poke",
+        "wave-clear"
+      ],
+      "meta": 62,
+      "stats": {
+        "early": 74,
+        "late": 76,
+        "damage": 88,
+        "survivability": 44,
+        "cc": 60,
+        "push": 80,
+        "coordination": 56
+      }
+    },
+    {
+      "id": "zhuxin",
+      "name": "Zhuxin",
+      "classes": [
+        "Mage"
+      ],
+      "lanes": [
+        "mid"
+      ],
+      "tags": [
+        "zoning",
+        "aoe-cc",
+        "sustained-damage"
+      ],
+      "meta": 86,
+      "stats": {
+        "early": 68,
+        "late": 80,
+        "damage": 90,
+        "survivability": 44,
+        "cc": 78,
+        "push": 58,
+        "coordination": 72
+      }
+    },
+    {
+      "id": "zilong",
+      "name": "Zilong",
+      "classes": [
+        "Fighter",
+        "Assassin"
+      ],
+      "lanes": [
+        "jungle",
+        "exp"
+      ],
+      "tags": [
+        "split-push",
+        "mobility",
+        "backline-access"
+      ],
+      "meta": 66,
+      "stats": {
+        "early": 72,
+        "late": 68,
+        "damage": 77,
+        "survivability": 72,
+        "cc": 47,
+        "push": 73,
+        "coordination": 46
+      }
+    }
+  ]
+}

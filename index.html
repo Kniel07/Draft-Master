@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Tournament pick-and-ban assistant for Mobile Legends: Bang Bang — counters, synergy, comfort picks and a pre-game brief.">
+<meta name="theme-color" content="#07090f">
+<title>Draft Room — MLBB Tournament Drafting Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="boot" class="boot">
+  <p class="boot__loading">Loading hero data…</p>
+</div>
+
+<div id="app" class="app" hidden>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand__mark">DRAFT<span>ROOM</span></span>
+      <span class="brand__patch" id="patch-badge">Loading patch…</span>
+    </div>
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Sections">
+      <button class="tab" type="button" role="tab" data-view="roster" aria-selected="false">Roster</button>
+      <button class="tab is-active" type="button" role="tab" data-view="draft" aria-selected="true">Draft</button>
+      <button class="tab" type="button" role="tab" data-view="strategy" aria-selected="false">Strategy</button>
+    </nav>
+  </header>
+
+  <p class="note" id="storage-note" hidden>
+    This browser is blocking local storage, so rosters will reset when you reload.
+  </p>
+
+  <main>
+
+    <section class="view" id="view-roster" role="tabpanel" aria-label="Roster and comfort picks" hidden></section>
+
+    <section class="view" id="view-draft" role="tabpanel" aria-label="Draft board">
+      <div class="timeline" id="timeline"></div>
+
+      <div class="boards">
+        <div class="board" id="board-blue"></div>
+        <div class="board" id="board-red"></div>
+      </div>
+
+      <div class="turn" id="turn-banner"></div>
+
+      <div class="controls">
+        <button class="btn btn--ghost" type="button" id="undo">Undo last</button>
+        <button class="btn btn--quiet" type="button" id="reset">Clear draft</button>
+        <button class="btn btn--ghost" type="button" id="comfort-toggle" aria-pressed="false">Comfort only</button>
+      </div>
+
+      <section class="panel" id="recommendations" aria-live="polite"></section>
+      <section class="panel" id="synergy"></section>
+      <section class="panel" id="strength"></section>
+
+      <section class="panel pool">
+        <div class="filter-bar" id="filter-bar"></div>
+        <div id="pool"></div>
+      </section>
+    </section>
+
+    <section class="view" id="view-strategy" role="tabpanel" aria-label="Pre-game strategy" hidden></section>
+
+  </main>
+
+  <footer class="foot">
+    <p>Hero, counter and synergy data live in <code>heroes.json</code>, <code>matchups.json</code> and <code>config.json</code>. Update the patch there — no code changes needed.</p>
+  </footer>
+
+</div>
+
+<div class="toast-host" id="toast-host" aria-live="polite"></div>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
