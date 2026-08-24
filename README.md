@@ -142,6 +142,15 @@ is fully draftable with default ratings. A hero missing a portrait, a stat or a
 counter rule is repaired with a default and reported in Setup → Data — it is
 never removed from the pool. **No optional field can hide a hero.**
 
+A hero the source *renames* is a different problem, and one the provisional
+mechanism cannot solve alone: adding it would produce two entries for one hero.
+So an API record is matched to the registry by stable numeric id first (learned
+on the first successful load and remembered from then on), exact name or alias
+second, and a similarity guard third; only what survives all three becomes a
+provisional entry. The guard is deliberately narrow — it is prefix-or-edit-
+distance, never plain containment, because `hilda` is a substring of `mathilda`
+and those are two different heroes.
+
 ### Retuning the recommendations
 
 `data/config.json → weights`. One object, read by everything:
@@ -178,8 +187,13 @@ python3 -m http.server 8000
 node tools/validate-data.mjs   # data checks + engine smoke test
 python3 tools/generate-heroes.py
 
-npm i jsdom && node tools/ui-test.mjs   # the real UI, offline and online
+npm i jsdom && node tools/ui-test.mjs   # 93 assertions against the real UI
 ```
+
+`tools/ui-test.mjs` includes a nine-case API resilience matrix — unreachable,
+rate limited, hanging, stale cache, nameless record, duplicate record, short
+roster, new hero, renamed hero — each driven through the real refresh handler
+with a scripted network and asserted on what the UI ends up showing.
 
 `tools/ui-test.mjs` is the only thing here with a dependency. Install `jsdom`
 anywhere and either run the test from that directory or point `JSDOM_PATH` at

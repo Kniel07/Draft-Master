@@ -283,6 +283,16 @@ Sora Sun Suyou Terizla Thamuz Tigreal Uranus Vale Valentina Valir Vexana Wanwan
 X.Borg Xavier Yi~Sun-shin Yin Yu~Zhong Yve Zetian Zhask Zhuxin Zilong
 """
 
+# Upstream numeric hero ids, when they are known: {"fanny": 21, ...}.
+#
+# Deliberately empty. This build has never seen a live response, and inventing
+# ids would be worse than having none — a wrong id binds another hero's
+# statistics. The app learns them at runtime instead: the first load that
+# identifies a hero by name records its id and every later load matches on that,
+# which is what makes a rename harmless. Bake them in here once you have a real
+# payload to read them from, and they take priority over anything learned.
+API_IDS = {}
+
 ROLE_BY_CLASS = {
     "Tank": "tank",
     "Fighter": "fighter",
@@ -350,6 +360,7 @@ def build():
             "tags": tag_list,
             "difficulty": difficulty.get(hid, 3),
             "meta": int(meta),
+            **({"apiId": API_IDS[hid]} if hid in API_IDS else {}),
             "portrait": "",
             "status": "active",
             "releaseVersion": "",

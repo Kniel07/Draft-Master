@@ -186,33 +186,3 @@ export function normalizeRelations(body) {
   });
   return { rows, total: records.length };
 }
-
-/**
- * Joins normalized API rows onto the local registry by name.
- * @returns {{matched:Map<string,object>, unmatched:object[], missed:string[]}}
- *   `unmatched` are heroes the API knows and we do not — a new release. They are
- *   surfaced, never dropped. `missed` are our heroes the API did not mention.
- */
-export function joinToRegistry(rows, heroes) {
-  const bySlug = new Map();
-  heroes.forEach((hero) => {
-    bySlug.set(slug(hero.name), hero);
-    bySlug.set(slug(hero.id), hero);
-    (hero.aliases || []).forEach((alias) => {
-      const key = slug(alias);
-      if (key && !bySlug.has(key)) bySlug.set(key, hero);
-    });
-  });
-
-  const matched = new Map();
-  const unmatched = [];
-
-  rows.forEach((row) => {
-    const hero = bySlug.get(row.slug);
-    if (hero) matched.set(hero.id, row);
-    else unmatched.push(row);
-  });
-
-  const missed = heroes.filter((hero) => !matched.has(hero.id)).map((hero) => hero.name);
-  return { matched, unmatched, missed };
-}

@@ -9,7 +9,25 @@
 
 import { fetchHeroList, fetchRankStats, isOffline } from '../api/mlbb-api.js';
 import { normalizeHeroList, normalizeRankStats } from '../api/normalizer.js';
+import { readSetting, writeSetting } from '../api/cache.js';
 import { applyLiveLayer } from './registry.js';
+
+/**
+ * heroId -> upstream numeric id, learned from whichever load first identified
+ * the hero by name. Persisted as a setting rather than a cache entry: it has no
+ * useful expiry, and it is what makes every subsequent load rename-proof.
+ */
+const ID_MAP_KEY = 'api-hero-ids';
+
+function readKnownIds() {
+  const stored = readSetting(ID_MAP_KEY, {});
+  return stored && typeof stored === 'object' ? stored : {};
+}
+
+function persistKnownIds(registry) {
+  const learned = registry.learnedApiIds;
+  if (learned && Object.keys(learned).length) writeSetting(ID_MAP_KEY, learned);
+}
 
 function tierFor(registry, rankId) {
   const tiers = (registry.ranks && registry.ranks.tiers) || [];
@@ -66,7 +84,14 @@ export async function refreshLive(registry, rankId) {
         ? 'Live data unavailable — using the bundled dataset.'
         : 'Live data not reachable — using the bundled dataset.'
     );
-    applyLiveLayer(registry, { rankRows: [], heroRows: [], rankId, apiRank, status });
+    applyLiveLayer(registry, {
+      rankRows: [],
+      heroRows: [],
+      rankId,
+      apiRank,
+      knownIds: readKnownIds(),
+      status
+    });
     return status;
   }
 
@@ -94,7 +119,15 @@ export async function refreshLive(registry, rankId) {
     attribution: registry.config.api && registry.config.api.attribution
   };
 
-  applyLiveLayer(registry, { rankRows: rankParsed.rows, heroRows, rankId, apiRank, status });
+  applyLiveLayer(registry, {
+    rankRows: rankParsed.rows,
+    heroRows,
+    rankId,
+    apiRank,
+    knownIds: readKnownIds(),
+    status
+  });
+  persistKnownIds(registry);
   return status;
 }
 

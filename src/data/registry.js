@@ -13,7 +13,8 @@
  * and portraits, and can fail without consequence.
  */
 
-import { slug, joinToRegistry } from '../api/normalizer.js';
+import { slug } from '../api/normalizer.js';
+import { resolveIdentities } from '../api/identity.js';
 
 const FILES = {
   heroes: 'heroes.json',
@@ -305,38 +306,61 @@ export async function loadRegistry(base = 'data/') {
  * provisional entries — a hero released after this build shipped is still
  * draftable, just without curated tags.
  */
-export function applyLiveLayer(registry, { rankRows = [], heroRows = [], rankId, apiRank, status }) {
+export function applyLiveLayer(registry, { rankRows = [], heroRows = [], rankId, apiRank, knownIds = {}, status }) {
   const stats = new Map();
   const notes = [];
 
-  const joinRank = joinToRegistry(rankRows, registry.heroes);
-  joinRank.matched.forEach((row, heroId) => {
+  // Rank rows carry the statistics; the hero list carries portraits. Resolve
+  // them together so a hero identified from either source is identified in
+  // both, and an id learned from either is learned once.
+  const combined = [];
+  const seenSlugs = new Set();
+  [...rankRows, ...heroRows].forEach((row) => {
+    const key = row.apiId != null ? `id:${row.apiId}` : `slug:${row.slug}`;
+    if (seenSlugs.has(key)) {
+      const existing = combined.find(
+        (r) => (r.apiId != null ? `id:${r.apiId}` : `slug:${r.slug}`) === key
+      );
+      if (existing) {
+        // Merge: whichever source had the portrait or the rates wins for that field.
+        if (existing.portrait == null) existing.portrait = row.portrait;
+        ['pickRate', 'banRate', 'winRate'].forEach((field) => {
+          if (existing[field] == null && row[field] != null) existing[field] = row[field];
+        });
+      }
+      return;
+    }
+    seenSlugs.add(key);
+    combined.push({ ...row });
+  });
+
+  const resolved = resolveIdentities(combined, registry.heroes, knownIds);
+
+  resolved.matched.forEach((row, heroId) => {
     stats.set(heroId, {
-      pickRate: row.pickRate,
-      banRate: row.banRate,
-      winRate: row.winRate,
+      pickRate: row.pickRate ?? null,
+      banRate: row.banRate ?? null,
+      winRate: row.winRate ?? null,
       portrait: row.portrait || null
     });
   });
 
-  const joinHeroes = joinToRegistry(heroRows, registry.heroes);
-  joinHeroes.matched.forEach((row, heroId) => {
-    const existing = stats.get(heroId) || {};
-    if (!existing.portrait && row.portrait) existing.portrait = row.portrait;
-    stats.set(heroId, existing);
+  // A hero the source renamed is the *same* hero. Binding its statistics to the
+  // existing entry — instead of adding a second one — is the whole point of the
+  // identity pass.
+  resolved.renames.forEach((rename) => {
+    notes.push(
+      `The source now calls ${rename.from} "${rename.to}". Treated as the same hero, ` +
+        `so its statistics went to the existing entry rather than creating a duplicate.`
+    );
   });
+  resolved.conflicts.forEach((conflict) => notes.push(conflict));
 
-  // Heroes the source knows that this build does not.
-  const knownNew = new Map();
-  [...joinRank.unmatched, ...joinHeroes.unmatched].forEach((row) => {
-    if (knownNew.has(row.slug)) return;
-    knownNew.set(row.slug, row);
-  });
-
+  // Only genuinely unrecognised heroes become provisional entries.
   const added = [];
-  knownNew.forEach((row) => {
+  resolved.provisional.forEach((row) => {
     const id = row.slug;
-    if (registry.byId.has(id)) return;
+    if (!id || registry.byId.has(id)) return;
     const hero = {
       id,
       name: row.name,
@@ -347,6 +371,7 @@ export function applyLiveLayer(registry, { rankRows = [], heroRows = [], rankId,
       tags: [],
       difficulty: 3,
       meta: 60,
+      apiId: row.apiId ?? null,
       portrait: row.portrait || '',
       status: 'provisional',
       releaseVersion: '',
@@ -356,8 +381,14 @@ export function applyLiveLayer(registry, { rankRows = [], heroRows = [], rankId,
     registry.byId.set(id, hero);
     registry.searchIndex.set(id, { name: slug(hero.name), all: slug(hero.name) });
     if (row.pickRate != null || row.winRate != null || row.banRate != null) {
-      stats.set(id, { pickRate: row.pickRate, banRate: row.banRate, winRate: row.winRate });
+      stats.set(id, {
+        pickRate: row.pickRate ?? null,
+        banRate: row.banRate ?? null,
+        winRate: row.winRate ?? null,
+        portrait: row.portrait || null
+      });
     }
+    if (row.apiId != null) resolved.learned[id] = row.apiId;
     added.push(hero.name);
   });
 
@@ -368,9 +399,9 @@ export function applyLiveLayer(registry, { rankRows = [], heroRows = [], rankId,
         `bundled data yet (${added.join(', ')}). They are selectable, with default ratings.`
     );
   }
-  if (joinRank.missed.length && rankRows.length) {
+  if (resolved.missed.length && rankRows.length) {
     notes.push(
-      `${joinRank.missed.length} hero${joinRank.missed.length === 1 ? '' : 'es'} had no live statistics for ` +
+      `${resolved.missed.length} hero${resolved.missed.length === 1 ? '' : 'es'} had no live statistics for ` +
         `this rank — they keep their bundled meta score.`
     );
   }
@@ -378,7 +409,14 @@ export function applyLiveLayer(registry, { rankRows = [], heroRows = [], rankId,
   registry.liveStats = stats;
   registry.liveRank = rankId || null;
   registry.dataStatus = status;
-  registry.diagnostics.live = { notes, matched: stats.size, added };
+  registry.diagnostics.live = {
+    notes,
+    matched: resolved.matched.size,
+    added,
+    renames: resolved.renames,
+    missed: resolved.missed.length
+  };
+  registry.learnedApiIds = resolved.learned;
   return registry;
 }
 

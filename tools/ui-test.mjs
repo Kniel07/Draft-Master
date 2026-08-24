@@ -67,14 +67,40 @@ window.Element.prototype.scrollIntoView = function scrollIntoView() {
 
 // Offline by default: the whole point is that the app is fully usable without
 // the public API.
+//
+// `allowNetwork` is either false (every request fails) or a function
+// (url, signal) => body. It may also return a never-resolving promise to model
+// a hang, or { __status: n } to model an HTTP error, so the matrix below can
+// exercise timeouts and rate limits through the real client.
 let allowNetwork = false;
 let networkCalls = 0;
-global.fetch = async (url) => {
+global.fetch = async (url, options = {}) => {
   const raw = String(url);
   if (raw.startsWith('http')) {
     networkCalls += 1;
-    if (!allowNetwork) throw new Error('offline');
-    return { ok: true, status: 200, json: async () => allowNetwork(raw) };
+    if (allowNetwork === false) throw new Error('offline');
+
+    const outcome = allowNetwork(raw, options.signal);
+
+    if (outcome && typeof outcome.then === 'function') {
+      return new Promise((resolve, reject) => {
+        outcome.then(
+          (body) => resolve({ ok: true, status: 200, json: async () => body }),
+          reject
+        );
+        if (options.signal) {
+          options.signal.addEventListener('abort', () => {
+            const error = new Error('aborted');
+            error.name = 'AbortError';
+            reject(error);
+          });
+        }
+      });
+    }
+    if (outcome && outcome.__status) {
+      return { ok: false, status: outcome.__status, json: async () => ({}) };
+    }
+    return { ok: true, status: 200, json: async () => outcome };
   }
   const file = path.join(root, raw.replace(/^\.?\//, ''));
   return { ok: true, status: 200, json: async () => JSON.parse(fs.readFileSync(file, 'utf8')) };
@@ -247,35 +273,254 @@ tap(byText('#controls .btn', 'Clear draft'));
 ok('clear empties the draft', store.getUnavailable().size === 0);
 ok('clear keeps rank and comfort', store.getSnapshot().rank === snap0.rank);
 
-section('Live data path');
-allowNetwork = (url) => {
-  if (url.includes('/heroes/rank')) {
-    return {
-      code: 0,
-      data: {
-        total: 2,
-        records: [
-          { data: { main_heroid: 1, main_hero: { data: { name: 'Fanny', head: 'https://cdn.test/f.png' } },
-            main_hero_appearance_rate: 0.031, main_hero_ban_rate: 0.42, main_hero_win_rate: 0.508 } },
-          // A hero this build has never heard of, plus a record with no name at
-          // all: neither may break the app.
-          { data: { main_heroid: 999, main_hero: { data: { name: 'Testhero', head: 'https://cdn.test/t.png' } },
-            main_hero_appearance_rate: 0.01, main_hero_win_rate: 0.5 } },
-          { data: { main_heroid: 1000, main_hero: { data: { head: 'https://cdn.test/none.png' } } } }
-        ]
-      }
-    };
+/* ==========================================================================
+   The API resilience matrix — the nine cases the source can put us in.
+
+   Assertions read the UI wherever the UI can show it, because the thing that
+   matters is not that the fetch layer returned a well-formed object; it is that
+   a player looking at the screen is told the truth and can still draft.
+
+   The client's real timeout is six seconds, which would make this suite crawl,
+   so the matrix reconfigures it through the module's own configuration entry
+   point rather than by patching internals.
+   ========================================================================== */
+
+const api = await importFresh('src/api/mlbb-api.js');
+const cacheModule = await importFresh('src/api/cache.js');
+const identity = await importFresh('src/api/identity.js');
+const config = JSON.parse(fs.readFileSync(path.join(root, 'data/config.json'), 'utf8'));
+// Two deliberate deviations from production config, both so the matrix
+// exercises the network instead of the cache:
+//   timeoutMs   the real six seconds would make this suite crawl
+//   cacheHours  zero makes every stored entry stale, so each case below
+//               actually reaches its scripted response — and case 9 gets to
+//               exercise the real stale-cache fallback rather than a cache hit
+api.configureApi({ ...config.api, timeoutMs: 150, cacheHours: { heroes: 0, rank: 0, relations: 0 } });
+
+const RANK_URL = '/heroes/rank';
+
+/** A hero record in the shape the upstream actually sends. */
+function rankRecord(id, name, { pick = 0.03, ban = null, win = 0.51 } = {}) {
+  return {
+    data: {
+      main_heroid: id,
+      main_hero: { data: { name, head: `https://cdn.test/${id}.png` } },
+      main_hero_appearance_rate: pick,
+      main_hero_ban_rate: ban,
+      main_hero_win_rate: win
+    }
+  };
+}
+function listRecord(id, name) {
+  return { data: { hero_id: id, hero: { data: { name, head: `https://cdn.test/${id}.png` } } } };
+}
+function payload(records) {
+  return { code: 0, message: 'SUCCESS', data: { total: records.length, records } };
+}
+
+function goTo(name) {
+  const tab = $$('.tab').find((t) => t.dataset.view === name);
+  if (tab && !tab.classList.contains('is-active')) tap(tab);
+}
+
+/** Reads a row out of the Setup → Data panel. */
+function dataRow(term) {
+  const dt = $$('#view-setup .datalist dt').find((n) => n.textContent.trim() === term);
+  return dt && dt.nextElementSibling ? dt.nextElementSibling.textContent.trim() : null;
+}
+function hints() {
+  return $$('#view-setup .setup__hint').map((n) => n.textContent).join(' | ');
+}
+
+/** Everything the player can see about the data layer, after a refresh. */
+async function refreshWith(script) {
+  allowNetwork = script;
+  goTo('setup');
+  tap(byText('.setup__actions .btn', 'Refresh live data'));
+  await new Promise((r) => setTimeout(r, 400));
+  goTo('setup');
+  return {
+    badge: $('#data-badge').textContent.trim(),
+    heroes: Number(dataRow('Heroes')),
+    source: dataRow('Source') || '',
+    updated: dataRow('Updated') || '',
+    hints: hints()
+  };
+}
+
+/** Finds a hero in the browse sheet and reports what its card shows. */
+function inspectHero(name) {
+  goTo('draft');
+  const browse = $('.recs__foot .btn--browse') || $('#actionbar .btn');
+  tap(browse);
+  const search = $('.sheet .search');
+  search.value = name;
+  search.dispatchEvent(new window.Event('input', { bubbles: true }));
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const cards = $$('.sheet .hcard').map((card) => ({
+        id: card.dataset.heroId,
+        name: card.querySelector('.hcard__name').textContent,
+        flag: card.querySelector('.hcard__flag') ? card.querySelector('.hcard__flag').textContent : null
+      }));
+      tap($('.sheet__close'));
+      resolve(cards);
+    }, 220);
+  });
+}
+
+section('API 1/9 — a normal live response');
+let result = await refreshWith((url) =>
+  url.includes(RANK_URL)
+    ? payload([
+        rankRecord(21, 'Fanny', { pick: 0.031, ban: 0.42, win: 0.508 }),
+        rankRecord(35, 'Lancelot', { pick: 0.05, ban: null, win: 0.52 }),
+        // A record with no name at all.
+        { data: { main_heroid: 1000, main_hero: { data: { head: 'https://cdn.test/x.png' } } } }
+      ])
+    : payload([listRecord(21, 'Fanny'), listRecord(35, 'Lancelot')])
+);
+ok('badge reads live', /live/i.test(result.badge), result.badge);
+ok('source names the public data', /public/i.test(result.source), result.source);
+ok('a nameless record is dropped without breaking the load', result.heroes === 133, String(result.heroes));
+let cards = await inspectHero('Fanny');
+ok('live ban rate is bound to the right hero', cards.some((c) => c.id === 'fanny' && c.flag === '42%B'),
+  JSON.stringify(cards.slice(0, 3)));
+cards = await inspectHero('Lancelot');
+ok('a hero with only a win rate still shows it',
+  cards.some((c) => c.id === 'lancelot' && /%W$/.test(c.flag || '')), JSON.stringify(cards.slice(0, 2)));
+
+section('API 2/9 — fewer heroes than we know about');
+ok('the shortfall is reported to the user', /had no live statistics/i.test(result.hints), result.hints.slice(0, 160));
+ok('heroes with no live stats stay in the pool', result.heroes === 133);
+goTo('draft');
+ok('and are still recommended', $$('#recommendations .rec').length > 0);
+
+section('API 3/9 — a newly released hero');
+result = await refreshWith((url) =>
+  url.includes(RANK_URL)
+    ? payload([rankRecord(21, 'Fanny', { ban: 0.42 }), rankRecord(9001, 'Novahex', { pick: 0.06, ban: 0.3 })])
+    : payload([listRecord(21, 'Fanny'), listRecord(9001, 'Novahex')])
+);
+ok('an unknown hero is added, not dropped', result.heroes === 134, String(result.heroes));
+ok('the addition is surfaced', /not in the/i.test(result.hints) && /Novahex/.test(result.hints), result.hints.slice(0, 200));
+cards = await inspectHero('Novahex');
+ok('it is selectable', cards.some((c) => c.name === 'Novahex'));
+ok('and marked as new', cards.some((c) => c.name === 'Novahex' && c.flag === 'NEW'), JSON.stringify(cards));
+
+section('API 4/9 — the source renames a hero');
+// Same numeric id, new display name. Must bind to the existing hero rather than
+// manufacture a second one. This is the bug the matrix was written for.
+result = await refreshWith((url) =>
+  url.includes(RANK_URL)
+    ? payload([rankRecord(21, 'Fanny Awakened', { ban: 0.51 })])
+    : payload([listRecord(21, 'Fanny Awakened')])
+);
+ok('a rename creates no new hero', result.heroes === 134, String(result.heroes));
+cards = await inspectHero('Fanny');
+ok('there is exactly one Fanny', cards.filter((c) => /^Fanny/.test(c.name)).length === 1,
+  cards.map((c) => c.name).join(', '));
+ok('the renamed hero\'s stats went to the existing entry',
+  cards.some((c) => c.id === 'fanny' && c.flag === '51%B'), JSON.stringify(cards.slice(0, 2)));
+
+section('API 5/9 — a rename with no id to lean on');
+// The harder case: name evidence only, resolved by the similarity guard.
+const roster = JSON.parse(fs.readFileSync(path.join(root, 'data/heroes.json'), 'utf8')).heroes;
+const renamed = identity.resolveIdentities(
+  [{ apiId: null, name: 'Popol & Kupa', slug: 'popolkupa', pickRate: 0.02 }], roster, {}
+);
+ok('the guard recognises the rename', renamed.renames.length === 1, JSON.stringify(renamed.renames));
+ok('it binds to the existing hero', renamed.matched.has('popol-and-kupa'));
+ok('it creates no provisional entry', renamed.provisional.length === 0);
+
+// The guard must not absorb a genuinely different hero with a similar name.
+const hildaRow = [{ apiId: null, name: 'Hilda', slug: 'hilda', pickRate: 0.02 }];
+const withoutHilda = identity.resolveIdentities(hildaRow, roster.filter((h) => h.id !== 'hilda'), {});
+ok('Hilda is never absorbed into Mathilda',
+  withoutHilda.renames.length === 0 && withoutHilda.provisional.length === 1,
+  JSON.stringify(withoutHilda.renames));
+
+// The guard run across the whole roster pairwise. Any hit here means one real
+// hero could be absorbed into another, which is worse than the bug this
+// replaced — so it has to be zero, and it has to be checked on every run rather
+// than the day the guard was written.
+const slugMod = await importFresh('src/api/normalizer.js');
+const allKeys = roster.flatMap((h) =>
+  [h.name, h.id, ...(h.aliases || [])].map((k) => ({ hero: h.name, key: slugMod.slug(k) }))
+);
+const collisions = [];
+for (let i = 0; i < allKeys.length; i += 1) {
+  for (let j = i + 1; j < allKeys.length; j += 1) {
+    if (allKeys[i].hero === allKeys[j].hero) continue;
+    if (identity.looksLikeRename(allKeys[i].key, allKeys[j].key)) {
+      collisions.push(`${allKeys[i].hero} ~ ${allKeys[j].hero}`);
+    }
   }
-  return { code: 0, data: { total: 1, records: [
-    { data: { hero_id: 1, hero: { data: { name: 'Fanny', head: 'https://cdn.test/f.png' } } } }
-  ] } };
-};
-tap($$('.tab').find((t) => t.dataset.view === 'setup'));
-tap(byText('.setup__actions .btn', 'Refresh live data'));
-await new Promise((r) => setTimeout(r, 120));
-ok('badge switches to live', $('#data-badge').textContent.toLowerCase().includes('live'), $('#data-badge').textContent);
-ok('an unknown hero from the API is added, not dropped', store.getSnapshot() && Boolean(
-  $$('.datalist dd').find((d) => d.textContent === '134')), $$('.datalist dd').map((d) => d.textContent).join('/'));
+}
+ok(`the guard confuses no two of the ${roster.length} real heroes`, collisions.length === 0,
+  [...new Set(collisions)].join(', '));
+
+// A remembered id that contradicts an exact name match must yield to the name.
+const stale = identity.resolveIdentities(
+  [{ apiId: 21, name: 'Lancelot', slug: 'lancelot' }], roster, { fanny: 21 }
+);
+ok('a stale learned id defers to an exact name', stale.matched.has('lancelot') && !stale.matched.has('fanny'),
+  JSON.stringify([...stale.matched.keys()]));
+ok('and the contradiction is recorded', stale.conflicts.length === 1, JSON.stringify(stale.conflicts));
+
+section('API 6/9 — duplicate records in one payload');
+result = await refreshWith((url) =>
+  url.includes(RANK_URL)
+    ? payload([
+        rankRecord(21, 'Fanny', { ban: 0.4 }),
+        rankRecord(21, 'Fanny', { ban: 0.9 }),
+        rankRecord(35, 'Lancelot', { ban: 0.1 })
+      ])
+    : payload([listRecord(21, 'Fanny')])
+);
+ok('a duplicated hero does not duplicate the registry', result.heroes === 134, String(result.heroes));
+cards = await inspectHero('Fanny');
+ok('the first record wins', cards.some((c) => c.id === 'fanny' && c.flag === '40%B'), JSON.stringify(cards.slice(0, 2)));
+
+section('API 7/9 — rate limited');
+result = await refreshWith(() => ({ __status: 429 }));
+ok('a 429 does not blank the app', result.heroes >= 133, String(result.heroes));
+ok('the badge stops claiming live', !/live/i.test(result.badge), result.badge);
+goTo('draft');
+ok('the draft board still works', $$('#recommendations .rec').length > 0);
+
+section('API 8/9 — slow enough to time out');
+let hangs = 0;
+result = await refreshWith(() => {
+  hangs += 1;
+  return new Promise(() => {}); // only the client's AbortController can end this
+});
+ok('the hanging request was attempted on every host', hangs >= 2, String(hangs));
+ok('the timeout resolved rather than hanging the app', result.heroes >= 133, String(result.heroes));
+ok('the badge does not claim live after a timeout', !/live/i.test(result.badge), result.badge);
+goTo('draft');
+ok('drafting is unaffected by a timed-out refresh', $$('#recommendations .rec').length > 0);
+
+section('API 9/9 — cached data, then the source goes away');
+// Cache entries are stale by configuration here, so this is the real fallback:
+// the client tries the network, fails, and serves what it stored last time.
+cacheModule.clearApiCache();
+cacheModule.writeCache('rank:mythic:7', payload([rankRecord(21, 'Fanny', { ban: 0.66 })]));
+result = await refreshWith(() => {
+  throw new Error('offline');
+});
+ok('the badge says cached, never live', /cached/i.test(result.badge), result.badge);
+ok('the source line admits it is cached', /cached/i.test(result.source), result.source);
+ok('a stored date is shown', result.updated.length > 0 && result.updated !== '—', result.updated);
+cards = await inspectHero('Fanny');
+ok('the cached rate is what is served', cards.some((c) => c.id === 'fanny' && c.flag === '66%B'),
+  JSON.stringify(cards.slice(0, 2)));
+
+section('API: cold start with no network at all');
+allowNetwork = false;
+goTo('draft');
+ok('the app is fully usable offline', $$('#recommendations .rec').length > 0);
+ok('every hero is still selectable', (await inspectHero('')).length > 0);
 
 section('Result');
 console.log(`${checks - failures}/${checks} checks passed`);

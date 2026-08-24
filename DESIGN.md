@@ -215,29 +215,81 @@ would stop meaning anything.
 
 ## 7. Data resilience
 
-Every one of these was exercised in `tools/ui-test.mjs`:
+Every row below names **how** it is verified. That column exists because an
+earlier draft of this document opened this section with "every one of these was
+exercised in `tools/ui-test.mjs`" when three of them were, and the rest had been
+checked in throwaway Node runs during development. A verification section that
+overstates itself is worse than no verification section, so:
 
-| Case | Behaviour |
-| --- | --- |
-| API unreachable | Boots on bundled data, badge reads **Bundled**, everything works |
-| API answers, then stops | Cached payload served, badge reads **Cached** with its stored date |
-| Record with no name | Dropped and counted; the run continues |
-| Duplicate hero in the payload | First wins, rest counted |
-| Hero in the API, not in this build | Added as provisional, marked NEW, fully draftable |
-| Hero in this build, not in the API | Keeps its bundled meta score; reported in Setup → Data |
-| Missing portrait | Generated crest from the hero's initials |
-| Missing rates | Falls back to the rank curve, and the Why? panel says which was used |
-| `localStorage` blocked | In-memory fallback plus a visible note that settings will not persist |
-| Malformed data file | Boot error naming the file and the problem, not a blank screen |
+- **matrix** — asserted in the committed API resilience matrix in
+  `tools/ui-test.mjs`, driven through the real refresh handler with a scripted
+  network, reading the result off the DOM.
+- **unit** — asserted in the committed suite by calling the module directly.
+- **code only** — handled in the source, no committed assertion.
 
-The normalizer does not walk a fixed path into the upstream payload. Those key
+| Case | Behaviour | Verified |
+| --- | --- | --- |
+| App starts with no network at all | Boots on bundled data, badge reads **Bundled**, everything works | matrix |
+| API unreachable mid-session | Falls back, badge stops claiming live | matrix |
+| API rate limits (429) | Tries the next host, then falls back; drafting unaffected | matrix |
+| API hangs | `AbortController` ends it; the app never waits on it | matrix |
+| API answers, then stops | Stale cached payload served, badge reads **Cached** with its stored date | matrix |
+| Record with no name | Dropped and counted; the load continues | matrix |
+| Duplicate record in one payload | First wins; the registry does not grow | matrix |
+| Fewer heroes than we know about | The rest keep their bundled meta score; the shortfall is reported | matrix |
+| Hero in the API, not in this build | Added as provisional, marked NEW, fully draftable | matrix |
+| **Hero renamed upstream** | Bound to the existing hero, no duplicate created | matrix + unit |
+| Two different heroes with similar names | Never merged (Hilda vs Mathilda is the live case) | unit |
+| A remembered id contradicting an exact name | Name wins, id is re-learned, conflict recorded | unit |
+| Missing portrait | Generated crest from the hero's initials | code only |
+| Missing rates | Falls back to the rank curve; Why? says which was used | code only |
+| `localStorage` blocked | In-memory fallback plus a visible note | code only |
+| Malformed data file | Boot error naming the file and the problem | code only |
+
+### Identity resolution
+
+The provisional-hero mechanism protects against a hero released after this build
+shipped. Its failure mode is that it cannot, alone, distinguish *a hero I have
+never seen* from *a hero whose name changed* — and getting that wrong makes the
+safety net manufacture the problem it exists to prevent: two entries for one
+hero, one carrying the live statistics and one carrying the curated tags.
+
+So `identity.js` resolves in four passes, strongest evidence first, and a hero
+can be claimed only once:
+
+1. **Stable numeric id.** Rename-proof. Not in the bundled data — this build has
+   never seen a live response, and inventing ids would be worse than having
+   none, since a wrong id binds another hero's statistics. They are *learned*
+   instead: every match by name records the id it saw, persisted as a setting,
+   and every later refresh matches on it first. One successful load makes the
+   app rename-proof from then on. `API_IDS` in the generator lets real ids be
+   baked in later; those take priority.
+2. **Exact name, id or alias**, slug-normalised, so punctuation drift is free.
+3. **Similarity guard** against heroes nothing else claimed — prefix match, or
+   normalised edit distance ≥ 0.72, and only for names of five characters or
+   more.
+4. **Provisional.** Genuinely unrecognised, so add it.
+
+The guard is prefix-matching rather than containment specifically because
+`hilda` is a substring of `mathilda` and those are two different heroes on the
+live roster. Plain containment let an unmatched Hilda row claim Mathilda's slot
+and bind her statistics to the wrong hero — the same failure one layer up. The
+committed test runs the guard across all 133 registry names pairwise and asserts
+zero collisions.
+
+Short names are excluded from the fuzzy path entirely. "Sun" and "Sup" score
+0.67 on a ratio that means nothing at three characters, and a false rename is
+worse than a false new hero: it binds the wrong statistics to a hero the player
+will actually draft.
+
+### Reading the payload
+
+The normalizer does not walk a fixed path into the upstream response. Those key
 names have already changed once (`main_heroid` vs `hero_id`, `appearance_rate`
 vs `pick_rate`), and path-based parsing is how an app breaks silently the day
 the upstream shifts a field. Each extractor searches the record for a value that
 *looks* like what it wants — a numeric hero id, a display name, a rate in 0..1,
 an image URL — and reports what it could not find.
-
----
 
 ## 8. Performance
 
@@ -257,39 +309,45 @@ Two network requests per session, both cached. Portraits are `loading="lazy"`.
 
 ## 9. Verification performed
 
-- **Engine, headless.** A full 20-step MPL draft driven through the real store;
-  every step produced a ranked suggestion carrying at least one reason and a
-  score breakdown; the brief returned all five sections; undo reversed exactly
-  one action.
-- **UI under jsdom** — 58 assertions, `tools/ui-test.mjs`. Offline boot; partial
-  search ("yuz" → Yu Zhong); picking a hero the engine did not suggest; ignore
-  removing one row and committing nothing; Why? opening the real components; the
-  ban list; unavailable heroes still findable, struck through and disabled; a
-  complete 20-step draft through the real click handlers; the brief; undo and
-  clear; and the live path including an unknown hero and a nameless record.
-  Scroll instrumentation asserts `scrollIntoView` is never called and the
+Committed and repeatable:
+
+- **`tools/ui-test.mjs` — 92 assertions**, the real UI under jsdom. Offline
+  boot; partial search ("yuz" → Yu Zhong); picking a hero the engine did not
+  suggest; ignore removing one row and committing nothing; Why? opening the real
+  components; the ban list; unavailable heroes still findable, struck through
+  and disabled; a complete 20-step tournament draft through the real click
+  handlers; the brief; undo and clear; and the nine-case API resilience matrix
+  above. Scroll instrumentation asserts `scrollIntoView` is never called and the
   viewport never moves.
-- **Real browser**, Chromium at 360×800, 390×844 and 412×915: no horizontal
-  overflow, no touch target under 32px, no console errors, and `scrollY`
-  unchanged across picking, searching and picking again. Wide layout checked at
-  768px and 1280px.
-- **Data**, `tools/validate-data.mjs`: no duplicate ids, no unknown lanes, no
-  matchup row naming a hero that does not exist, every hero reachable by at
-  least one counter rule, every tag used by at least one rule, weights resolving.
+- **`tools/validate-data.mjs`** — no duplicate ids, no unknown lanes, no matchup
+  row naming a hero that does not exist, every hero reachable by at least one
+  counter rule, every tag used by at least one rule, weights resolving, and an
+  engine smoke test on an empty board.
+- **`tools/generate-heroes.py`** — refuses to write `heroes.json` unless the
+  hero table matches the canonical roster exactly, in both directions.
+
+Run once, by hand, and **not** committed as a repeatable check:
+
+- A full 20-step draft driven headlessly through the store, confirming every
+  step produced a ranked suggestion with at least one reason and a breakdown.
+- Chromium at 360×800, 390×844 and 412×915: no horizontal overflow, no touch
+  target under 32px, no console errors, `scrollY` unchanged across picking,
+  searching and picking again. Wide layout at 768px and 1280px.
+- A mutation test on the identity fix: pass 1 and pass 3 disabled, confirming
+  the matrix reports the phantom duplicate ("Fanny, Fanny Awakened") rather than
+  passing regardless.
 
 **Not verified: the live API path against the real service.** The build
 environment's egress policy blocks every MLBB API host, so the endpoints,
 response shapes and CORS behaviour were established from the project's own
-router source and confirmed to be key-free with `allow_origins: ["*"]`, but no
-request was made from here. The offline and cached paths are fully exercised,
-and the live path is tested against recorded payloads in both the documented
-shape and a degraded one. A first real load should be checked with the network
-panel open.
+router source — key-free, `allow_origins: ["*"]` — but no request has ever been
+made from here. Everything above tests recorded payloads in the documented
+shape and in eight degraded ones. A first real load still needs a human with the
+network panel open, and the data badge is the diagnostic.
 
-Also not verified: the accuracy of the game data itself. That needs a human pass
-before it is trusted in a series.
-
----
+Also not verified: the accuracy of the game data itself, and whether the
+drafting workflow feels natural in a real ranked queue. The second of those is
+the next gate and no amount of further code changes it.
 
 ## 10. Known limits
 
@@ -298,6 +356,7 @@ before it is trusted in a series.
 | Bundled `meta` and `difficulty` are judgements, not measurements | High | Live rank rates override them when reachable, and the UI always says which is in use |
 | No Mythical Immortal bucket in the public source | Medium | Immortal reads Glory data; the rank picker and the data panel both say "approximated" |
 | Tag rules can miss a matchup that decides a game | Medium | Named `heroCounters` overrides exist for this; adding one is a two-line JSON edit |
+| A rename beyond the guard's reach (a hero renamed to something unrecognisable, before any id was learned) still creates a provisional duplicate | Low | Fails in the safe direction — an extra selectable entry, reported in Setup → Data, rather than statistics bound to the wrong hero. One successful load learns the id and closes it permanently |
 | Lane assignment is greedy, so unusual flex drafts can mis-assign | Low | Surfaced in the lane plan rather than hidden |
 | Live counter/compatibility data is fetched only on demand and capped | Low | Deliberate: the rule layer gives complete coverage and the rate limit is real |
 | Trusting the tool over the player | Medium | The whole interaction design: every suggestion is one of several, every one is ignorable, and every one shows its working so it can be argued with |
