@@ -27,7 +27,7 @@ function bullets(items) {
 
 export function renderStrategy(host, registry, model) {
   clear(host);
-  const { ourPicks, theirPicks, remaining, ourLabel } = model;
+  const { ourPicks, theirPicks, remaining, ourLabel, explicitLanes, onOpenLane } = model;
 
   const head = el('div', 'sect__head');
   head.appendChild(el('h2', 'sect__title', 'Pre-game brief'));
@@ -46,7 +46,7 @@ export function renderStrategy(host, registry, model) {
     return;
   }
 
-  const brief = buildStrategy(registry, ourPicks, theirPicks);
+  const brief = buildStrategy(registry, ourPicks, theirPicks, explicitLanes || {});
   const wrap = el('div', 'brief');
 
   const win = block('Win condition');
@@ -77,15 +77,46 @@ export function renderStrategy(host, registry, model) {
   threats.appendChild(threatList);
   wrap.appendChild(threats);
 
-  const lanes = block('Lane plan', brief.lanes.valid ? 'All five lanes covered' : 'Needs attention');
+  const unusual = brief.lanes.unorthodox.length;
+  const lanes = block(
+    'Lane plan',
+    brief.lanes.valid
+      ? unusual
+        ? `${unusual} unorthodox assignment${unusual === 1 ? '' : 's'}`
+        : 'All five lanes covered'
+      : 'Draft not finished'
+  );
+
   const laneList = el('ul', 'lanecheck');
   brief.lanes.rows.forEach((row) => {
-    const item = el('li', `lanecheck__row${row.hero ? '' : ' is-empty'}`);
+    const item = el('li', `lanecheck__row${row.hero ? '' : ' is-empty'}${row.unorthodox ? ' is-unusual' : ''}`);
     item.appendChild(el('span', 'lanecheck__tag', row.short));
-    item.appendChild(el('span', 'lanecheck__hero', row.hero ? row.hero.name : 'Not covered'));
+
+    if (row.hero && onOpenLane) {
+      // Tappable, because this is where an unorthodox assignment is noticed and
+      // therefore where the player will want to correct or confirm it.
+      const tap = el('button', 'lanecheck__hero lanecheck__hero--tap');
+      tap.type = 'button';
+      tap.textContent = row.hero.name;
+      tap.setAttribute('aria-label', `${row.hero.name} is playing ${row.label}. Change the assignment.`);
+      tap.addEventListener('click', () => onOpenLane(row.hero));
+      item.appendChild(tap);
+    } else {
+      item.appendChild(el('span', 'lanecheck__hero', row.hero ? row.hero.name : 'Still to fill'));
+    }
+
+    if (row.unorthodox) item.appendChild(el('span', 'lanecheck__flag', 'unorthodox'));
     laneList.appendChild(item);
   });
   lanes.appendChild(laneList);
+
+  // An unusual assignment is reported as what it is — unusual — and never as a
+  // missing lane. The player already made this call; the brief's job is to make
+  // sure they made it on purpose.
+  brief.lanes.unorthodox.forEach((entry) => {
+    lanes.appendChild(el('p', 'brief__warn', `⚠ Unorthodox assignment: ${entry.text}`));
+  });
+
   lanes.appendChild(bullets(brief.lanes.notes));
   wrap.appendChild(lanes);
 

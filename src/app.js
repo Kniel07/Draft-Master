@@ -20,6 +20,8 @@ import { isPersistent } from './api/cache.js';
 import * as store from './state/draft-state.js';
 import { el, clear, button, toast, keepScroll } from './ui/dom.js';
 import { createSelector } from './ui/hero-selector.js';
+import { createLanePicker } from './ui/lane-picker.js';
+import { describeUnorthodox } from './engine/composition.js';
 import { renderRecommendations, renderSynergy } from './ui/recommendations.js';
 import { renderStrength } from './ui/strength-meter.js';
 import { renderStrategy } from './ui/strategy.js';
@@ -37,6 +39,7 @@ import { progress } from './engine/tournament.js';
 const dom = {};
 let registry = null;
 let selector = null;
+let lanePicker = null;
 let view = 'draft';
 let expandedWhy = null;
 let dataStatus = { source: 'bundled', label: 'Bundled dataset', live: false, detail: '' };
@@ -104,6 +107,23 @@ function slotTitle(target) {
     allyBans: 'Your ban',
     enemyBans: 'Enemy ban'
   }[target.group] || 'Choose a hero';
+}
+
+/** What the lane picker needs to draw itself for one hero. */
+function laneContext(hero) {
+  const lane = store.laneFor(hero.id);
+  const assignments = store.getSnapshot().laneAssignments;
+  const row = lane
+    ? { hero, label: lane.label, knownLanes: hero.lanes || [], laneId: lane.laneId }
+    : null;
+  return {
+    hero,
+    /** What the player pinned, if anything. */
+    assigned: assignments[hero.id] || null,
+    /** What the hero is actually playing — pinned or inferred. */
+    current: lane ? lane.laneId : null,
+    unorthodox: lane && lane.unorthodox ? describeUnorthodox(registry, row) : null
+  };
 }
 
 function commit(hero, where) {
@@ -187,6 +207,25 @@ const handlers = {
   },
   onClearSlot: (group, index) => store.clearSlot(group, index),
 
+  laneFor: (heroId) => store.laneFor(heroId),
+  onOpenLane: (hero) => lanePicker.open(laneContext(hero)),
+  onAssignLane: (heroId, laneId) => {
+    const result = store.setLaneAssignment(heroId, laneId);
+    if (!result.ok) {
+      toast(result.message, 'warn');
+      return;
+    }
+    const hero = registry.byId.get(heroId);
+    const lane = store.laneFor(heroId);
+    lanePicker.update(laneContext(hero));
+    toast(
+      laneId
+        ? `${hero.name} → ${lane ? lane.label : laneId}${lane && lane.unorthodox ? ' (unorthodox)' : ''}`
+        : `${hero.name} back to automatic placement`,
+      'info'
+    );
+  },
+
   onBrowseComfort: () =>
     selector.open({
       title: 'Your comfort heroes',
@@ -243,6 +282,7 @@ function signature(snapshot) {
     JSON.stringify(snapshot.comfortRating),
     snapshot.scoutedHeroes.join(','),
     snapshot.ignored.join(','),
+    JSON.stringify(snapshot.laneAssignments),
     snapshot.target ? `${snapshot.target.group}:${snapshot.target.index}` : '',
     snapshot.ui.expandStrength,
     snapshot.ui.showAllRecs,
@@ -435,7 +475,9 @@ function renderBrief(snapshot) {
     ourPicks: context.ourPicks,
     theirPicks: context.theirPicks,
     remaining,
-    ourLabel: snapshot.sequenced ? (snapshot.side === 'blue' ? 'Blue side' : 'Red side') : 'Your team'
+    ourLabel: snapshot.sequenced ? (snapshot.side === 'blue' ? 'Blue side' : 'Red side') : 'Your team',
+    explicitLanes: snapshot.laneAssignments,
+    onOpenLane: handlers.onOpenLane
   });
 }
 
@@ -532,6 +574,12 @@ async function start() {
     onClose: () => store.setTarget(null)
   });
   dom['sheet-host'].appendChild(selector.root);
+
+  lanePicker = createLanePicker(registry, {
+    onAssign: (heroId, laneId) => handlers.onAssignLane(heroId, laneId),
+    onClose: () => {}
+  });
+  dom['sheet-host'].appendChild(lanePicker.root);
 
   dom.tabs.querySelectorAll('.tab').forEach((tab) => {
     tab.addEventListener('click', () => setView(tab.dataset.view));

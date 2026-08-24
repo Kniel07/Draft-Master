@@ -100,34 +100,103 @@ export function highlights(registry, comp) {
 }
 
 /**
- * Lane assignment for a locked set. Least-flexible heroes claim first, so flex
- * picks absorb whatever is left — the order a coach reasons in.
+ * Who is playing which lane.
+ *
+ * Three sources of truth, in this order, and the order is the whole point:
+ *
+ *   1. what the player explicitly assigned   — authoritative
+ *   2. what the draft state implies          — greedy natural fit
+ *   3. what the hero's role data suggests    — informs, never overrides
+ *
+ * The previous version had only (3), which meant an intentional off-role pick
+ * was reported as a missing lane: assign Belerick to EXP and the brief said
+ * "EXP — not covered" while flagging a role conflict for whoever lost Roam. The
+ * app was reinterpreting the draft instead of reading it.
+ *
+ * So a hero on the board is now always playing somewhere. A lane comes back
+ * empty only when there are genuinely fewer heroes than lanes — that is, the
+ * draft is not finished. An unusual pairing is reported as unorthodox, which is
+ * information; it is never reported as invalid.
+ *
+ * @param {object} registry
+ * @param {Array}  heroes    the locked picks for one side
+ * @param {object} explicit  heroId -> laneId, set by the player
  */
-export function assignLanes(registry, heroes) {
+export function assignLanes(registry, heroes, explicit = {}) {
   const lanes = registry.config.lanes;
+  const laneIds = lanes.map((l) => l.id);
   const assigned = new Map();
-  const unplaced = [];
+  const placed = new Set();
 
+  // 1. Explicit assignments claim their lane first, orthodox or not.
+  heroes.forEach((hero) => {
+    const laneId = explicit[hero.id];
+    if (!laneId || !laneIds.includes(laneId) || assigned.has(laneId)) return;
+    assigned.set(laneId, { hero, source: 'explicit' });
+    placed.add(hero.id);
+  });
+
+  // 2. Natural fit for the rest — least flexible first, so flex picks absorb
+  //    whatever is left. The order a coach reasons in.
   heroes
+    .filter((hero) => !placed.has(hero.id))
     .slice()
-    .sort((a, b) => a.lanes.length - b.lanes.length)
+    .sort((a, b) => (a.lanes || []).length - (b.lanes || []).length)
     .forEach((hero) => {
-      const target = hero.lanes.find((lane) => !assigned.has(lane));
-      if (target) assigned.set(target, hero);
-      else unplaced.push(hero);
+      const target = (hero.lanes || []).find((lane) => !assigned.has(lane));
+      if (!target) return;
+      assigned.set(target, { hero, source: 'natural' });
+      placed.add(hero.id);
     });
 
-  const rows = lanes.map((lane) => ({
-    laneId: lane.id,
-    label: lane.label,
-    short: lane.short,
-    hero: assigned.get(lane.id) || null
-  }));
+  // 3. Anyone left has no lane their role data likes. They are still in the
+  //    game, so they go in whatever is free rather than being dropped and
+  //    leaving a phantom hole in the plan.
+  const free = laneIds.filter((id) => !assigned.has(id));
+  heroes
+    .filter((hero) => !placed.has(hero.id))
+    .forEach((hero, index) => {
+      const laneId = free[index];
+      if (!laneId) return;
+      assigned.set(laneId, { hero, source: 'inferred' });
+      placed.add(hero.id);
+    });
+
+  const rows = lanes.map((lane) => {
+    const entry = assigned.get(lane.id) || null;
+    const hero = entry ? entry.hero : null;
+    return {
+      laneId: lane.id,
+      label: lane.label,
+      short: lane.short,
+      hero,
+      source: entry ? entry.source : null,
+      // A property of the pairing, not of how we arrived at it: an explicit
+      // off-role assignment and an inferred one are equally unorthodox, and
+      // equally valid. A hero with no lane data at all is neither.
+      unorthodox: Boolean(hero && (hero.lanes || []).length && !hero.lanes.includes(lane.id)),
+      knownLanes: hero ? hero.lanes || [] : []
+    };
+  });
+
+  const overflow = heroes.filter((hero) => !placed.has(hero.id));
 
   return {
     rows,
-    unplaced,
-    empty: rows.filter((r) => !r.hero).map((r) => r.label),
-    valid: rows.every((r) => r.hero) && unplaced.length === 0
+    overflow,
+    unorthodox: rows.filter((row) => row.unorthodox),
+    empty: rows.filter((row) => !row.hero).map((row) => row.label),
+    valid: rows.every((row) => row.hero) && overflow.length === 0
   };
+}
+
+/** Prose for one unorthodox pairing, used by the brief and the lane picker. */
+export function describeUnorthodox(registry, row) {
+  const known = row.knownLanes
+    .map((id) => {
+      const lane = registry.config.lanes.find((l) => l.id === id);
+      return lane ? lane.label : id;
+    })
+    .join(' / ');
+  return `${row.hero.name} is primarily classified as ${known}, but is assigned to ${row.label}.`;
 }

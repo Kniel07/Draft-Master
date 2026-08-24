@@ -126,6 +126,41 @@ discover a matchup nobody has written down.
 
 ---
 
+## 4a. Lane assignment: three things, not one
+
+Field testing surfaced the failure this section exists to prevent. A team put
+Kaja on Roam and Belerick on EXP — both canonically Roam-only, both intentional.
+The brief reported *"EXP — not covered"* and flagged Kaja as having no free
+lane. The draft was fine; the app was wrong about it.
+
+The cause was conflating three separate things:
+
+| | What it is | Authority |
+| --- | --- | --- |
+| Hero's known roles | What the data says this hero normally plays | Informs |
+| Lane assignment | What the team decided it is playing **this game** | **Decides** |
+| Recommendation | What the app thinks would be optimal | Advises |
+
+`assignLanes` now resolves in that order: explicit assignments claim their lane
+first, orthodox or not; natural fit fills the rest least-flexible-first; and
+anything still unplaced goes into whatever lane is free, because a hero on the
+board is playing *somewhere*. A lane comes back empty only when there are fewer
+heroes than lanes — that is, the draft is unfinished. An unusual pairing is
+reported as unorthodox, which is information. It is never reported as invalid.
+
+The same function serves the board tile, the brief and role-fit scoring, so all
+three agree about who is playing what. `state.laneAssignments` is a plain
+heroId → laneId map, cleared when the hero leaves the board and when the draft
+resets, and never written by anything except the player.
+
+This matters beyond the brief. Any later feature that reasons about who plays
+where — a teammate roster, for instance — would inherit the same wrong answer,
+and a player's preferred role must never become a hard constraint on where their
+team can put them.
+
+**Unusual is not invalid.** The app may say a pairing is unconventional. It may
+not overrule it, move the hero back, or treat the draft as broken.
+
 ## 5. Keeping the viewport still
 
 Four mechanisms, because removing the scroll calls only solves a third of it.
@@ -204,8 +239,22 @@ brief's "easy to access without navigating through a long page", solved without
 moving anyone's viewport. It disappears above 1040px, where the recommendation
 column sits beside the board and there is nothing left for it to solve.
 
-Touch targets are 44px minimum. Search inputs are 16px so iOS does not zoom the
-viewport on focus. `prefers-reduced-motion` disables the timeline pulse.
+Each filled tile carries a lane chip showing what that hero is *playing* — not
+what its role data says it usually plays — and the chip is a button, because
+that assignment is the player's to make. An off-role assignment is tinted and
+marked with `!`, never corrected. The same reassignment is reachable from the
+brief's lane plan, which is where an unusual pairing actually gets noticed.
+
+The hero sheet does **not** focus its search field on open. Autofocusing raised
+the Android keyboard every time, covering half the grid, so the common case —
+tap a hero you can already see — started with an obstruction to dismiss. On a
+phone, browsing is the default and typing is the exception. A pointer-fine
+device has no on-screen keyboard to raise and its user is likely to type, so
+there the input still takes focus.
+
+Touch targets are 44px minimum, lane chips included. Search inputs are 16px so
+iOS does not zoom the viewport on focus. `prefers-reduced-motion` disables the
+timeline pulse.
 
 **Gold is rationed** to one thing per region: the live timeline step, the score,
 the win condition. It marks *live right now*. If it appeared on every heading it
@@ -311,13 +360,16 @@ Two network requests per session, both cached. Portraits are `loading="lazy"`.
 
 Committed and repeatable:
 
-- **`tools/ui-test.mjs` — 92 assertions**, the real UI under jsdom. Offline
+- **`tools/ui-test.mjs` — 131 assertions**, the real UI under jsdom. Offline
   boot; partial search ("yuz" → Yu Zhong); picking a hero the engine did not
   suggest; ignore removing one row and committing nothing; Why? opening the real
   components; the ban list; unavailable heroes still findable, struck through
   and disabled; a complete 20-step tournament draft through the real click
   handlers; the brief; undo and clear; and the nine-case API resilience matrix
-  above. Scroll instrumentation asserts `scrollIntoView` is never called and the
+  above, plus both field-test findings: that the sheet does not raise the
+  keyboard, and that the exact reported board (Kaja on Roam, Belerick on EXP)
+  produces a full lane plan with one unorthodox flag and no missing-lane error.
+  Scroll instrumentation asserts `scrollIntoView` is never called and the
   viewport never moves.
 - **`tools/validate-data.mjs`** — no duplicate ids, no unknown lanes, no matchup
   row naming a hero that does not exist, every hero reachable by at least one
@@ -333,9 +385,11 @@ Run once, by hand, and **not** committed as a repeatable check:
 - Chromium at 360×800, 390×844 and 412×915: no horizontal overflow, no touch
   target under 32px, no console errors, `scrollY` unchanged across picking,
   searching and picking again. Wide layout at 768px and 1280px.
-- A mutation test on the identity fix: pass 1 and pass 3 disabled, confirming
-  the matrix reports the phantom duplicate ("Fanny, Fanny Awakened") rather than
-  passing regardless.
+- Mutation tests on both fixes, confirming the suites fail when the defect is
+  reintroduced rather than passing regardless: disabling identity passes 1 and 3
+  reproduces the phantom duplicate ("Fanny, Fanny Awakened"), and reverting
+  `assignLanes` to greedy-only reproduces the field report verbatim ("EXP Lane
+  still to fill / Belerick has nowhere to go").
 
 **Not verified: the live API path against the real service.** The build
 environment's egress policy blocks every MLBB API host, so the endpoints,
@@ -359,4 +413,5 @@ the next gate and no amount of further code changes it.
 | A rename beyond the guard's reach (a hero renamed to something unrecognisable, before any id was learned) still creates a provisional duplicate | Low | Fails in the safe direction — an extra selectable entry, reported in Setup → Data, rather than statistics bound to the wrong hero. One successful load learns the id and closes it permanently |
 | Lane assignment is greedy, so unusual flex drafts can mis-assign | Low | Surfaced in the lane plan rather than hidden |
 | Live counter/compatibility data is fetched only on demand and capped | Low | Deliberate: the rule layer gives complete coverage and the rate limit is real |
+| Lane assignments are per-draft and not persisted | Low | They describe one game. Carrying them into the next draft would be a worse default than re-deriving them |
 | Trusting the tool over the player | Medium | The whole interaction design: every suggestion is one of several, every one is ignorable, and every one shows its working so it can be argued with |

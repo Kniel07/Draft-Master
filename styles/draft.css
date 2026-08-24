@@ -75,7 +75,7 @@
 .slot__tap {
   width: 100%;
   min-width: 0;
-  min-height: 72px;
+  min-height: 62px;
   display: flex; flex-direction: column; align-items: center; gap: 2px;
   padding: 6px 2px 4px;
   border: 1px solid var(--line);
@@ -99,7 +99,36 @@
 }
 .slot__name { font-family: var(--cond); font-size: 12px; font-weight: 600; letter-spacing: 0.01em; line-height: 1.2; }
 .slot__name--empty { color: var(--text-faint); font-weight: 500; }
-.slot__lane { font-size: 8.5px; color: var(--text-faint); letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.25; min-height: 11px; }
+/* The lane chip is a control, not a caption: it shows what the hero is playing
+   and it is how the player changes that. An off-role assignment is tinted and
+   marked, never corrected. */
+.slot__lane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  /* 44px like every other target in the app. It is a secondary control, but a
+     secondary control you cannot reliably hit is not a control. */
+  min-height: var(--tap);
+  margin-top: 3px;
+  padding: 3px 2px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--raise);
+  color: var(--text-dim);
+  font-family: var(--cond);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.slot__lane.is-static { cursor: default; opacity: 0.75; }
+.slot__lane.is-unorthodox {
+  border-color: color-mix(in srgb, var(--warn) 55%, transparent);
+  color: var(--warn);
+}
 
 /* The clear affordance sits on the tile rather than beside it, so removing a
    hero costs no layout width and the tile grid stays even. */
@@ -275,7 +304,67 @@
 .threat__note { font-size: 11.5px; color: var(--text-faint); line-height: 1.3; }
 
 .lanecheck { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
-.lanecheck__row { display: grid; grid-template-columns: 52px 1fr; gap: 8px; align-items: baseline; font-size: 13px; }
+.lanecheck__row { display: grid; grid-template-columns: 52px 1fr auto; gap: 8px; align-items: center; min-height: var(--tap); font-size: 13px; }
 .lanecheck__tag { font-family: var(--cond); font-size: 11.5px; letter-spacing: 0.08em; color: var(--text-faint); }
 .lanecheck__hero { color: var(--text); }
-.lanecheck__row.is-empty .lanecheck__hero { color: var(--warn); }
+.lanecheck__row.is-empty .lanecheck__hero { color: var(--text-faint); }
+.lanecheck__hero--tap {
+  justify-self: start;
+  min-height: var(--tap);
+  padding: 0 8px 0 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.lanecheck__row.is-unusual .lanecheck__hero--tap { color: var(--warn); }
+.lanecheck__flag {
+  font-family: var(--cond);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--warn);
+}
+
+
+/* ------------------------------------------------------------ lane picker */
+
+/* The hero sheet is a fixed-height scroller, so its body is `flex: 1 1 0`. This
+   one sizes to its content, and a zero flex-basis against an auto-height parent
+   collapses the body to nothing — so it opts out. */
+.sheet--short .sheet__panel { height: auto; max-height: 78dvh; }
+.sheet--short .sheet__body { flex: 0 1 auto; }
+.lanepick { display: flex; flex-direction: column; gap: 12px; padding-top: 12px; }
+.lanepick__hero { display: flex; align-items: center; gap: 10px; }
+.lanepick__meta { display: flex; flex-direction: column; min-width: 0; }
+.lanepick__name { font-family: var(--cond); font-size: 18px; font-weight: 600; letter-spacing: 0.02em; }
+.lanepick__known { font-size: 11.5px; color: var(--text-faint); letter-spacing: 0.04em; text-transform: uppercase; }
+.lanepick__chips { gap: 6px; }
+
+/* Off-role lanes stay fully available — dimmed to say "unusual", never
+   disabled, because the player's assignment is the authoritative one. */
+.chip--off { border-style: dashed; color: var(--text-faint); }
+.chip--off.is-active { border-style: solid; border-color: var(--warn); color: var(--warn); }
+
+/* Where the hero is playing right now without the player having said so —
+   distinct from a pinned choice, so an empty-looking row never reads as
+   "unassigned". */
+.chip.is-current { border-color: color-mix(in srgb, var(--gold) 45%, var(--line)); color: var(--text); }
+.chip--off.is-current { border-style: dashed; border-color: color-mix(in srgb, var(--warn) 50%, transparent); color: var(--warn); }
+
+.lanepick__state { font-size: 12.5px; color: var(--text-dim); }
+
+.lanepick__warn {
+  padding: 8px 10px;
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--warn) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent);
+  color: var(--warn);
+  font-size: 12.5px;
+}
+.lanepick__hint { font-size: 12px; color: var(--text-faint); line-height: 1.4; }

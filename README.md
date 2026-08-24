@@ -31,6 +31,12 @@ components behind the ranking. **Browse all heroes** is under the list at all
 times, and the bar pinned to the bottom of the screen opens the same list from
 anywhere on the page.
 
+**Lanes.** Each filled tile shows the lane that hero is playing. Tap the chip to
+change it — every lane is offered, including off-role ones. An unconventional
+assignment (a tank on EXP, a support in the jungle) is marked *unorthodox* and
+then left alone: the app flags it so you can see it, and does not overrule you.
+The same control is on each row of the brief's lane plan.
+
 **Brief tab.** Unlocks when both sides have five heroes: win condition,
 Turtle/Lord approach, the enemy heroes putting the most pressure on your draft,
 a lane plan, and shotcaller reminders. Written to be read in about 30 seconds.
@@ -187,7 +193,7 @@ python3 -m http.server 8000
 node tools/validate-data.mjs   # data checks + engine smoke test
 python3 tools/generate-heroes.py
 
-npm i jsdom && node tools/ui-test.mjs   # 93 assertions against the real UI
+npm i jsdom && node tools/ui-test.mjs   # 131 assertions against the real UI
 ```
 
 `tools/ui-test.mjs` includes a nine-case API resilience matrix — unreachable,

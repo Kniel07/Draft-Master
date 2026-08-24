@@ -111,6 +111,11 @@ const importFresh = (rel) => import(pathToFileURL(path.join(root, rel)).href);
 await importFresh('src/app.js');
 await new Promise((resolve) => setTimeout(resolve, 60));
 
+function goTo(name) {
+  const tab = $$('.tab').find((t) => t.dataset.view === name);
+  if (tab && !tab.classList.contains('is-active')) tap(tab);
+}
+
 const $ = (sel) => window.document.querySelector(sel);
 const $$ = (sel) => Array.from(window.document.querySelectorAll(sel));
 const byText = (sel, text) => $$(sel).find((n) => n.textContent.trim().toLowerCase() === text.toLowerCase());
@@ -318,11 +323,6 @@ function payload(records) {
   return { code: 0, message: 'SUCCESS', data: { total: records.length, records } };
 }
 
-function goTo(name) {
-  const tab = $$('.tab').find((t) => t.dataset.view === name);
-  if (tab && !tab.classList.contains('is-active')) tap(tab);
-}
-
 /** Reads a row out of the Setup → Data panel. */
 function dataRow(term) {
   const dt = $$('#view-setup .datalist dt').find((n) => n.textContent.trim() === term);
@@ -521,6 +521,167 @@ allowNetwork = false;
 goTo('draft');
 ok('the app is fully usable offline', $$('#recommendations .rec').length > 0);
 ok('every hero is still selectable', (await inspectHero('')).length > 0);
+
+/* ==========================================================================
+   Field test findings.
+
+   #1  the hero sheet raised the on-screen keyboard on open
+   #2  the lane plan read hero role metadata as if it were the actual lane
+       assignment, so an intentional off-role pick was reported as a missing
+       lane and someone else was flagged as having no free lane
+   ========================================================================== */
+
+section('Field test #1 — the sheet does not raise the keyboard');
+// jsdom reports pointer:fine as false, i.e. a touch device, which is the case
+// that regressed in the field.
+goTo('draft');
+tap($('#actionbar .btn') || $('.recs__foot .btn--browse'));
+await new Promise((r) => setTimeout(r, 60));
+ok('the sheet is open', !$('.sheet').hidden);
+ok('focus is on the panel, not the search field',
+  window.document.activeElement !== $('.sheet .search'),
+  window.document.activeElement ? window.document.activeElement.className : 'none');
+ok('focus is still inside the dialog', $('.sheet__panel').contains(window.document.activeElement)
+  || window.document.activeElement === $('.sheet__panel'),
+  window.document.activeElement ? window.document.activeElement.className : 'none');
+ok('the search field is still there to tap', Boolean($('.sheet .search')));
+tap($('.sheet__close'));
+
+section('Field test #2 — explicit lane assignment');
+store.resetDraft();
+store.setMode('ranked');
+
+// The exact board from the field report: Kaja on Roam, Belerick on EXP.
+// Both are canonically Roam-only, so the old greedy inference gave one of them
+// a lane and left EXP reading "not covered".
+const fieldDraft = ['kaja', 'hirara', 'novaria', 'brody', 'belerick'];
+fieldDraft.forEach((id, index) => {
+  const result = store.commitHero(id, { group: 'allies', index });
+  if (!result.ok) throw new Error(`${id}: ${result.message}`);
+});
+ok('all five heroes are on the board', store.getSnapshot().allies.filter(Boolean).length === 5);
+
+// The brief needs both sides complete, so give the enemy an ordinary draft.
+['tigreal', 'lancelot', 'kagura', 'beatrix', 'yu-zhong'].forEach((id, index) => {
+  const result = store.commitHero(id, { group: 'enemies', index });
+  if (!result.ok) throw new Error(`${id}: ${result.message}`);
+});
+
+let plan = store.getLanePlan('ally');
+ok('no lane is reported uncovered with five heroes drafted',
+  plan.empty.length === 0, plan.empty.join(', '));
+ok('nobody is left without a lane', plan.overflow.length === 0,
+  plan.overflow.map((h) => h.name).join(', '));
+ok('every lane has a hero', plan.rows.every((r) => r.hero),
+  plan.rows.map((r) => `${r.short}:${r.hero ? r.hero.name : '—'}`).join(' '));
+
+// Now the player says explicitly what the team decided.
+store.setLaneAssignment('kaja', 'roam');
+store.setLaneAssignment('belerick', 'exp');
+plan = store.getLanePlan('ally');
+
+const laneOf = (heroId) => {
+  const row = plan.rows.find((r) => r.hero && r.hero.id === heroId);
+  return row ? row.laneId : null;
+};
+ok('Kaja is on Roam because the player said so', laneOf('kaja') === 'roam', String(laneOf('kaja')));
+ok('Belerick is on EXP because the player said so', laneOf('belerick') === 'exp', String(laneOf('belerick')));
+ok('EXP is not reported as uncovered', !plan.empty.includes('EXP Lane'), plan.empty.join(', '));
+ok('Kaja is not reported as having no free lane',
+  !plan.overflow.some((h) => h.id === 'kaja'), plan.overflow.map((h) => h.name).join(', '));
+
+const belerickRow = plan.rows.find((r) => r.laneId === 'exp');
+ok('the unusual pairing is marked unorthodox', belerickRow.unorthodox === true);
+ok('the orthodox one is not', plan.rows.find((r) => r.laneId === 'roam').unorthodox === false);
+ok('the app can tell unusual from invalid', plan.valid === true && plan.unorthodox.length === 1,
+  `valid=${plan.valid} unorthodox=${plan.unorthodox.length}`);
+
+section('Field test #2 — the brief reports it as unusual, not missing');
+goTo('brief');
+const laneBlock = $$('#view-brief .brief__block').find((b) =>
+  b.querySelector('.brief__title').textContent === 'Lane plan'
+);
+ok('the lane plan block is rendered', Boolean(laneBlock));
+const laneText = laneBlock.textContent;
+ok('Belerick appears under EXP',
+  Array.from(laneBlock.querySelectorAll('.lanecheck__row')).some(
+    (row) => row.querySelector('.lanecheck__tag').textContent === 'EXP' && /Belerick/.test(row.textContent)
+  ), laneText.slice(0, 200));
+ok('nothing says "not covered"', !/not covered/i.test(laneText), laneText.slice(0, 200));
+ok('no false role-conflict warning for Kaja', !/no free lane/i.test(laneText), laneText.slice(0, 200));
+ok('the unorthodox assignment is stated plainly',
+  /Unorthodox assignment/i.test(laneText) && /Belerick is primarily classified as Roam/i.test(laneText),
+  laneText.slice(0, 300));
+
+section('Field test #2 — the player can change the assignment');
+// Release Belerick first, so the picker opens the way it does on a first
+// encounter: playing a lane the app worked out, with nothing pinned. The
+// inferred placement is still EXP and still unorthodox — the explicit
+// assignment confirmed that reading rather than creating it.
+store.clearLaneAssignment('belerick');
+ok('releasing does not move the hero', store.laneFor('belerick').laneId === 'exp',
+  JSON.stringify(store.laneFor('belerick')));
+ok('and it is still flagged unorthodox', store.laneFor('belerick').unorthodox === true);
+
+const laneRow = Array.from(laneBlock.querySelectorAll('.lanecheck__row')).find((row) =>
+  /Belerick/.test(row.textContent)
+);
+tap(laneRow.querySelector('.lanecheck__hero--tap'));
+await new Promise((r) => setTimeout(r, 60));
+const picker = $$('.sheet').find((sheet) => sheet.classList.contains('sheet--short'));
+ok('the lane picker opens', picker && !picker.hidden);
+ok('it names the hero', /Belerick/.test(picker.textContent));
+ok('it shows the known roles as context', /Known roles/i.test(picker.textContent), picker.textContent.slice(0, 160));
+ok('every lane is offered, including off-role ones',
+  picker.querySelectorAll('.lanepick__chips .chip').length === 5,
+  String(picker.querySelectorAll('.lanepick__chips .chip').length));
+ok('off-role lanes are marked but not disabled',
+  Array.from(picker.querySelectorAll('.chip--off')).every((c) => !c.disabled),
+  String(picker.querySelectorAll('.chip--off').length));
+ok('it says which lane is in play and how it was chosen',
+  /worked out automatically/i.test(picker.textContent), picker.textContent.slice(0, 220));
+ok('no release control is offered while nothing is pinned',
+  !Array.from(picker.querySelectorAll('.btn')).some((b) => /back to automatic/i.test(b.textContent)));
+
+// Reassign through the real control, then release it back to automatic.
+const jungChip = Array.from(picker.querySelectorAll('.lanepick__chips .chip')).find(
+  (c) => c.textContent === 'JUNG'
+);
+tap(jungChip);
+ok('the reassignment takes effect', store.getSnapshot().laneAssignments.belerick === 'jungle',
+  JSON.stringify(store.getSnapshot().laneAssignments));
+ok('and it wins over the hero role data', store.laneFor('belerick').laneId === 'jungle');
+ok('the hero it displaced is not lost',
+  store.getLanePlan('ally').rows.every((r) => r.hero) &&
+    store.getLanePlan('ally').overflow.length === 0);
+
+const releaseBtn = Array.from(picker.querySelectorAll('.btn')).find((b) =>
+  /back to automatic/i.test(b.textContent)
+);
+ok('a release control appears once a lane is pinned', Boolean(releaseBtn),
+  Array.from(picker.querySelectorAll('.btn')).map((b) => b.textContent).join(' / '));
+ok('the pinned lane is marked as the player\'s choice',
+  /you set this/i.test(picker.textContent), picker.textContent.slice(0, 220));
+tap(releaseBtn);
+ok('releasing clears the explicit assignment',
+  store.getSnapshot().laneAssignments.belerick === undefined,
+  JSON.stringify(store.getSnapshot().laneAssignments));
+tap(picker.querySelector('.sheet__close'));
+
+section('Field test #2 — assignments do not leak');
+store.setLaneAssignment('belerick', 'exp');
+store.clearSlot('allies', fieldDraft.indexOf('belerick'));
+ok('removing a hero drops its assignment',
+  store.getSnapshot().laneAssignments.belerick === undefined,
+  JSON.stringify(store.getSnapshot().laneAssignments));
+store.resetDraft();
+ok('clearing the draft drops every assignment',
+  Object.keys(store.getSnapshot().laneAssignments).length === 0);
+ok('a banned hero is on no lane', (store.setIntent('ban'),
+  store.commitHero('fanny', { group: 'enemyBans', index: 0 }),
+  store.laneFor('fanny') === null));
+store.resetDraft();
+store.setIntent('pick');
 
 section('Result');
 console.log(`${checks - failures}/${checks} checks passed`);

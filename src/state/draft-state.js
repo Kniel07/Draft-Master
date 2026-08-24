@@ -19,6 +19,7 @@
  */
 
 import { readSetting, writeSetting } from '../api/cache.js';
+import { assignLanes } from '../engine/composition.js';
 
 const SETTINGS_KEY = 'draft-settings';
 const listeners = new Set();
@@ -50,6 +51,16 @@ const state = {
   comfortRating: {},
   /** Tournament scouting: heroes the opponent is known to play. Drives ban priority. */
   scoutedHeroes: [],
+
+  /**
+   * heroId -> laneId, set only by the player.
+   *
+   * Kept separate from the hero's role data on purpose. Role data says what a
+   * hero normally plays; this says what the player decided it is playing this
+   * game. When the two disagree the player is right, and the app's job is to
+   * note that the pairing is unusual — not to overrule it.
+   */
+  laneAssignments: {},
 
   /** Ranked intent: what the user is about to do. Never set by the engine. */
   intent: 'pick',
@@ -144,6 +155,7 @@ function resetBoards() {
   state.stepIndex = 0;
   state.ignored = [];
   state.target = null;
+  state.laneAssignments = {};
 }
 
 /* ----------------------------------------------------------- subscription */
@@ -261,24 +273,59 @@ export function getSlotCounts(team) {
   );
 }
 
-/** Lanes on our side with nobody assigned yet. Greedy: least-flexible first. */
+/**
+ * Lanes on our side nobody is playing yet.
+ *
+ * Routed through the same assignment function the brief uses, so an explicit
+ * assignment closes its lane here too — otherwise role-fit scoring would keep
+ * recommending for a lane the player has already filled off-role.
+ */
 export function getOpenLanes(side) {
-  const lanes = registry.config.lanes.map((l) => l.id);
-  const claimed = new Set();
-  getPicks(side)
-    .slice()
-    .sort((a, b) => a.lanes.length - b.lanes.length)
-    .forEach((hero) => {
-      const target = hero.lanes.find((lane) => !claimed.has(lane));
-      if (target) claimed.add(target);
-    });
-  const open = lanes.filter((id) => !claimed.has(id));
-  // In ranked the player has told us their own lane; it stays "open" for them
-  // until they lock something in it, so recommendations answer their role.
-  if (!isSequenced() && state.selectedRole && !claimed.has(state.selectedRole)) {
+  const plan = assignLanes(registry, getPicks(side), state.laneAssignments);
+  const open = plan.rows.filter((row) => !row.hero).map((row) => row.laneId);
+
+  // In ranked the player has told us their own lane; it stays the focus until
+  // something is locked into it, so recommendations answer their role.
+  if (!isSequenced() && state.selectedRole && open.includes(state.selectedRole)) {
     return [state.selectedRole];
   }
   return open;
+}
+
+/** The full lane plan for one side, explicit assignments applied. */
+export function getLanePlan(side) {
+  return assignLanes(registry, getPicks(side), state.laneAssignments);
+}
+
+/**
+ * Which side a picked hero is on, or null if it is not a pick.
+ * Ban slots deliberately return null — a banned hero plays no lane.
+ */
+export function sideOf(heroId) {
+  if (isSequenced()) {
+    const entry = state.history.find((h) => h.heroId === heroId && h.action === 'pick');
+    return entry ? entry.team : null;
+  }
+  if (state.allies.includes(heroId)) return 'ally';
+  if (state.enemies.includes(heroId)) return 'enemy';
+  return null;
+}
+
+/**
+ * The lane a hero is actually playing — explicit if the player set one, the
+ * inferred placement otherwise. This is what the board and the brief display,
+ * so both agree with each other and with the engine.
+ *
+ * @returns {{laneId:string, source:string, unorthodox:boolean}|null}
+ */
+export function laneFor(heroId) {
+  const side = sideOf(heroId);
+  if (!side) return null;
+  const row = assignLanes(registry, getPicks(side), state.laneAssignments).rows.find(
+    (r) => r.hero && r.hero.id === heroId
+  );
+  if (!row) return null;
+  return { laneId: row.laneId, source: row.source, unorthodox: row.unorthodox, label: row.label, short: row.short };
 }
 
 export function getComfortIds() {
@@ -309,6 +356,7 @@ export function getSnapshot() {
     intent: state.intent,
     target: state.target ? { ...state.target } : null,
     ignored: state.ignored.slice(),
+    laneAssignments: { ...state.laneAssignments },
     ui: { ...state.ui },
     sequenced: isSequenced(),
     currentStep: getCurrentStep(),
@@ -357,6 +405,35 @@ export function setTarget(target) {
   if (target && (target.group === 'allyBans' || target.group === 'enemyBans')) state.intent = 'ban';
   if (target && (target.group === 'allies' || target.group === 'enemies')) state.intent = 'pick';
   notify();
+}
+
+/**
+ * The player says what a hero is playing. Authoritative: nothing in the engine
+ * or the UI may overwrite this, and passing null returns the hero to inferred
+ * placement rather than pinning it somewhere else.
+ */
+export function setLaneAssignment(heroId, laneId) {
+  if (!registry.byId.has(heroId)) return { ok: false, message: 'That hero is not in the registry.' };
+  if (laneId == null) {
+    delete state.laneAssignments[heroId];
+    notify();
+    return { ok: true, cleared: true };
+  }
+  if (!registry.config.lanes.some((lane) => lane.id === laneId)) {
+    return { ok: false, message: 'Unknown lane.' };
+  }
+  // One lane, one hero: assigning into an occupied lane releases the previous
+  // occupant back to inferred placement rather than silently double-booking.
+  Object.keys(state.laneAssignments).forEach((id) => {
+    if (id !== heroId && state.laneAssignments[id] === laneId) delete state.laneAssignments[id];
+  });
+  state.laneAssignments[heroId] = laneId;
+  notify();
+  return { ok: true };
+}
+
+export function clearLaneAssignment(heroId) {
+  return setLaneAssignment(heroId, null);
 }
 
 export function setUi(patch) {
@@ -462,6 +539,8 @@ function defaultTarget() {
 export function clearSlot(group, index) {
   if (isSequenced()) return { ok: false, message: 'Use Undo in tournament mode.' };
   if (!Array.isArray(state[group])) return { ok: false, message: 'Unknown draft slot.' };
+  const removed = state[group][index];
+  if (removed) delete state.laneAssignments[removed];
   state[group][index] = null;
   state.ignored = [];
   notify();
@@ -472,6 +551,7 @@ export function undoLast() {
   if (isSequenced()) {
     if (state.history.length === 0) return { ok: false, message: 'Nothing to undo.' };
     const last = state.history.pop();
+    delete state.laneAssignments[last.heroId];
     state.stepIndex = last.stepIndex;
     state.ignored = [];
     notify();
@@ -482,6 +562,8 @@ export function undoLast() {
   for (const group of order) {
     const filled = state[group].map((id, i) => (id ? i : -1)).filter((i) => i >= 0);
     if (filled.length) {
+      const removed = state[group][filled[filled.length - 1]];
+      if (removed) delete state.laneAssignments[removed];
       state[group][filled[filled.length - 1]] = null;
       state.ignored = [];
       notify();

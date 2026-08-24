@@ -150,6 +150,9 @@ export function createSelector(registry, { onSelect, onClose }) {
   root.appendChild(backdrop);
 
   const panel = el('div', 'sheet__panel');
+  // Focusable so the sheet can hold focus without the search field taking it —
+  // Escape and screen-reader announcement both need focus inside the dialog.
+  panel.tabIndex = -1;
   root.appendChild(panel);
 
   const head = el('div', 'sheet__head');
@@ -261,9 +264,23 @@ export function createSelector(registry, { onSelect, onClose }) {
       renderBody(true);
       root.hidden = false;
       document.body.classList.add('is-locked');
-      // Focus goes to the search field, but focus never scrolls: the sheet is
-      // fixed-position, so there is nothing for the browser to scroll to.
-      window.setTimeout(() => search.focus({ preventScroll: true }), 30);
+
+      // Focus the panel, not the search field.
+      //
+      // Autofocusing the input made Android raise the keyboard every time the
+      // sheet opened, which covers half the grid — so the common case (tap a
+      // hero you can already see) started with an obstruction to dismiss. On a
+      // phone, browsing is the default and typing is the exception; the player
+      // opens the keyboard by tapping the field when they actually want it.
+      //
+      // A pointer-fine device has no on-screen keyboard to raise and its user
+      // is likely to type, so there the input still takes focus.
+      const wantsKeyboard =
+        typeof window.matchMedia === 'function' && window.matchMedia('(pointer: fine)').matches;
+      window.setTimeout(() => {
+        if (wantsKeyboard) search.focus({ preventScroll: true });
+        else panel.focus({ preventScroll: true });
+      }, 30);
     },
     close() {
       if (root.hidden) return;

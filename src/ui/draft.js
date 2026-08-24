@@ -26,7 +26,7 @@ import { timeline, turnLabel } from '../engine/tournament.js';
  * without scrolling and not.
  */
 function slot(registry, hero, options) {
-  const { label, onTap, onClear, tone, active } = options;
+  const { label, onTap, onClear, onLane, tone, active, lane } = options;
   const cell = el(
     'div',
     ['slot', hero ? 'is-filled' : '', tone ? `slot--${tone}` : '', active ? 'is-active' : '']
@@ -41,13 +41,30 @@ function slot(registry, hero, options) {
 
   const body = el('span', 'slot__body');
   body.appendChild(el('span', `slot__name${hero ? '' : ' slot__name--empty'}`, hero ? hero.name : label));
-  body.appendChild(
-    el('span', 'slot__lane', hero ? (hero.lanes || []).map((l) => laneShort(registry, l)).join('·') : '')
-  );
   tap.appendChild(body);
 
   if (onTap) tap.addEventListener('click', onTap);
   cell.appendChild(tap);
+
+  // The lane chip shows what this hero is *playing*, not what its role data
+  // says it usually plays — and it is a button, because that assignment is the
+  // player's to make. An off-role assignment is marked, never corrected.
+  if (hero && lane) {
+    const chip = el(
+      'button',
+      `slot__lane${lane.unorthodox ? ' is-unorthodox' : ''}${onLane ? '' : ' is-static'}`
+    );
+    chip.type = 'button';
+    chip.textContent = lane.unorthodox ? `${laneShort(registry, lane.laneId)} !` : laneShort(registry, lane.laneId);
+    chip.setAttribute(
+      'aria-label',
+      `${hero.name} is playing ${lane.label}${lane.unorthodox ? ', an unorthodox assignment' : ''}.` +
+        (onLane ? ' Change it.' : '')
+    );
+    if (onLane) chip.addEventListener('click', () => onLane(hero));
+    else chip.disabled = true;
+    cell.appendChild(chip);
+  }
 
   if (hero && onClear) {
     cell.appendChild(button('slot__clear', '✕', onClear, { label: `Clear ${hero.name}` }));
@@ -112,7 +129,9 @@ function rankedTeam(registry, snapshot, handlers, side) {
         label: isYou ? 'You' : String(index + 1),
         tone: isAlly ? 'ally' : 'enemy',
         active: snapshot.target && snapshot.target.group === group && snapshot.target.index === index,
+        lane: hero ? handlers.laneFor(hero.id) : null,
         onTap: () => handlers.onOpenSlot(group, index),
+        onLane: hero ? (h) => handlers.onOpenLane(h) : null,
         onClear: hero ? () => handlers.onClearSlot(group, index) : null
       })
     );
@@ -180,7 +199,14 @@ function tournamentTeam(registry, snapshot, team, handlers) {
   const list = el('div', 'slots');
   for (let i = 0; i < slots.picks; i += 1) {
     const hero = picks[i] ? registry.byId.get(picks[i]) : null;
-    list.appendChild(slot(registry, hero, { label: String(i + 1), tone: team }));
+    list.appendChild(
+      slot(registry, hero, {
+        label: String(i + 1),
+        tone: team,
+        lane: hero ? handlers.laneFor(hero.id) : null,
+        onLane: hero ? (h) => handlers.onOpenLane(h) : null
+      })
+    );
   }
   host.appendChild(list);
   return host;

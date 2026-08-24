@@ -7,7 +7,7 @@
  * a hero interaction that the data does not contain.
  */
 
-import { profile, highlights, assignLanes } from './composition.js';
+import { profile, highlights, assignLanes, describeUnorthodox } from './composition.js';
 import { counterPoints } from './counter.js';
 import { stripVs } from './counter.js';
 
@@ -92,11 +92,14 @@ function threats(registry, ourPicks, theirPicks, limit = 3) {
   });
 }
 
-function lanePlan(registry, ourPicks, theirPicks) {
-  const ours = assignLanes(registry, ourPicks);
-  const theirs = assignLanes(registry, theirPicks);
+function lanePlan(registry, ourPicks, theirPicks, explicit = {}) {
+  const ours = assignLanes(registry, ourPicks, explicit);
+  const theirs = assignLanes(registry, theirPicks, explicit);
   const notes = [];
 
+  // Matchup reads are done against the lanes heroes are *actually* playing, so
+  // an off-role assignment is compared to the hero opposite it rather than to
+  // whoever its role data would have expected.
   ours.rows.forEach((row) => {
     if (!row.hero) return;
     const opposite = theirs.rows.find((r) => r.laneId === row.laneId);
@@ -110,17 +113,26 @@ function lanePlan(registry, ourPicks, theirPicks) {
     }
   });
 
-  if (ours.empty.length) notes.push(`No hero assigned to ${ours.empty.join(', ')} — confirm the lane swap.`);
-  if (ours.unplaced.length) {
+  // An empty lane now means one thing only: fewer heroes than lanes. It is a
+  // statement about how far the draft has got, never a verdict on a pick.
+  if (ours.empty.length) {
+    notes.push(`${ours.empty.join(', ')} still to fill.`);
+  }
+  if (ours.overflow.length) {
     notes.push(
-      `Role conflict: ${ours.unplaced.map((h) => h.name).join(', ')} ${
-        ours.unplaced.length === 1 ? 'has' : 'have'
-      } no free lane.`
+      `More heroes than lanes: ${ours.overflow.map((h) => h.name).join(', ')} ${
+        ours.overflow.length === 1 ? 'has' : 'have'
+      } nowhere to go.`
     );
   }
   if (!notes.length) notes.push('No standout lane mismatch — play the map, not the matchup.');
 
-  return { rows: ours.rows, valid: ours.valid, notes: notes.slice(0, 4) };
+  return {
+    rows: ours.rows,
+    valid: ours.valid,
+    unorthodox: ours.unorthodox.map((row) => ({ row, text: describeUnorthodox(registry, row) })),
+    notes: notes.slice(0, 4)
+  };
 }
 
 function reminders(registry, us) {
@@ -154,14 +166,14 @@ function reminders(registry, us) {
 }
 
 /** Full brief for one side. */
-export function buildStrategy(registry, ourPicks, theirPicks) {
+export function buildStrategy(registry, ourPicks, theirPicks, explicitLanes = {}) {
   const us = profile(registry, ourPicks);
   const them = profile(registry, theirPicks);
   return {
     winCondition: winCondition(registry, us, them),
     objectives: objectives(registry, us, them),
     threats: threats(registry, ourPicks, theirPicks),
-    lanes: lanePlan(registry, ourPicks, theirPicks),
+    lanes: lanePlan(registry, ourPicks, theirPicks, explicitLanes),
     reminders: reminders(registry, us),
     profile: us
   };
