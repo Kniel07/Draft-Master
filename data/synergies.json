@@ -1,0 +1,489 @@
+{
+  "schema": 2,
+  "patch": "2.1.90",
+  "note": "Synergy rules, all additive and all explained. tagSynergies cover every hero pair through their traits; heroSynergies are named combos. `reason` is the displayed text.",
+  "tagSynergies": [
+    {
+      "a": "setup",
+      "b": "burst",
+      "weight": 10,
+      "reason": "Guaranteed CC windows convert straight into burst damage"
+    },
+    {
+      "a": "setup",
+      "b": "aoe-cc",
+      "weight": 8,
+      "reason": "Layered crowd control — one lock feeds the next"
+    },
+    {
+      "a": "engage",
+      "b": "aoe-cc",
+      "weight": 8,
+      "reason": "Initiation lands into area control"
+    },
+    {
+      "a": "engage",
+      "b": "backline-access",
+      "weight": 7,
+      "reason": "The frontline opens the door the diver walks through"
+    },
+    {
+      "a": "peel",
+      "b": "scaling",
+      "weight": 9,
+      "reason": "Protection buys the scaling carry the time it needs"
+    },
+    {
+      "a": "peel",
+      "b": "sustained-damage",
+      "weight": 7,
+      "reason": "Peel keeps the damage source alive to keep dealing it"
+    },
+    {
+      "a": "heal",
+      "b": "frontline",
+      "weight": 7,
+      "reason": "Sustained healing multiplies frontline effective HP"
+    },
+    {
+      "a": "shield",
+      "b": "engage",
+      "weight": 6,
+      "reason": "Shields cover the initiator's commit"
+    },
+    {
+      "a": "zoning",
+      "b": "aoe-cc",
+      "weight": 7,
+      "reason": "Zones become inescapable when paired with lockdown"
+    },
+    {
+      "a": "global",
+      "b": "split-push",
+      "weight": 7,
+      "reason": "Global presence makes the side-lane threat safe to run"
+    },
+    {
+      "a": "vision",
+      "b": "burst",
+      "weight": 5,
+      "reason": "Vision picks the target the burst deletes"
+    },
+    {
+      "a": "disengage",
+      "b": "poke",
+      "weight": 7,
+      "reason": "Poke-and-retreat needs a reliable exit tool"
+    },
+    {
+      "a": "anti-heal",
+      "b": "burst",
+      "weight": 6,
+      "reason": "Healing cut makes the burst threshold stick"
+    },
+    {
+      "a": "tank-shred",
+      "b": "sustained-damage",
+      "weight": 6,
+      "reason": "Shred plus steady output breaks durable comps"
+    },
+    {
+      "a": "objective",
+      "b": "early-game",
+      "weight": 6,
+      "reason": "Early tempo turns into early objectives"
+    },
+    {
+      "a": "frontline",
+      "b": "sustained-damage",
+      "weight": 6,
+      "reason": "A clean front-to-back setup"
+    },
+    {
+      "a": "purify",
+      "b": "engage",
+      "weight": 5,
+      "reason": "Cleanse protects the commit from being answered by CC"
+    },
+    {
+      "a": "single-target",
+      "b": "setup",
+      "weight": 7,
+      "reason": "Setup guarantees the pick that single-target lockdown finishes"
+    },
+    {
+      "a": "revive",
+      "b": "engage",
+      "weight": 8,
+      "reason": "A second life makes the committed engage survivable"
+    },
+    {
+      "a": "revive",
+      "b": "frontline",
+      "weight": 6,
+      "reason": "The frontline holds the fight long enough for the revive window to matter"
+    }
+  ],
+  "heroSynergies": [
+    {
+      "pair": [
+        "atlas",
+        "zhuxin"
+      ],
+      "weight": 24,
+      "reason": "Layered crowd control — Atlas groups the enemy inside Zhuxin's zone"
+    },
+    {
+      "pair": [
+        "atlas",
+        "pharsa"
+      ],
+      "weight": 20,
+      "reason": "Grouped lockdown into full-team burst"
+    },
+    {
+      "pair": [
+        "atlas",
+        "cecilion"
+      ],
+      "weight": 18,
+      "reason": "Stacked enemies eat the full Sanguine Claws pattern"
+    },
+    {
+      "pair": [
+        "atlas",
+        "valentina"
+      ],
+      "weight": 18,
+      "reason": "A second Atlas ultimate on demand"
+    },
+    {
+      "pair": [
+        "tigreal",
+        "aurora"
+      ],
+      "weight": 20,
+      "reason": "Implosion holds the target inside the freeze window"
+    },
+    {
+      "pair": [
+        "tigreal",
+        "pharsa"
+      ],
+      "weight": 18,
+      "reason": "Classic setup-into-bombardment"
+    },
+    {
+      "pair": [
+        "tigreal",
+        "vale"
+      ],
+      "weight": 18,
+      "reason": "Grouped enemies take the full ultimate"
+    },
+    {
+      "pair": [
+        "khufra",
+        "zhuxin"
+      ],
+      "weight": 20,
+      "reason": "Airborne lock holds targets inside the damage zone"
+    },
+    {
+      "pair": [
+        "khufra",
+        "kadita"
+      ],
+      "weight": 18,
+      "reason": "Two knock-ups chain into an unavoidable combo"
+    },
+    {
+      "pair": [
+        "franco",
+        "eudora"
+      ],
+      "weight": 18,
+      "reason": "Hook-and-suppress into instant burst"
+    },
+    {
+      "pair": [
+        "franco",
+        "guinevere"
+      ],
+      "weight": 16,
+      "reason": "Pick potential into guaranteed follow-up"
+    },
+    {
+      "pair": [
+        "johnson",
+        "kagura"
+      ],
+      "weight": 18,
+      "reason": "Surprise arrival into full lockdown burst"
+    },
+    {
+      "pair": [
+        "luo-yi",
+        "tigreal"
+      ],
+      "weight": 20,
+      "reason": "Portal engage lands the whole team on top of the setup"
+    },
+    {
+      "pair": [
+        "luo-yi",
+        "atlas"
+      ],
+      "weight": 18,
+      "reason": "Teleport commit backed by area lockdown"
+    },
+    {
+      "pair": [
+        "angela",
+        "yu-zhong"
+      ],
+      "weight": 20,
+      "reason": "Attached shielding turns the dive into a sustained frontline"
+    },
+    {
+      "pair": [
+        "angela",
+        "paquito"
+      ],
+      "weight": 18,
+      "reason": "Shield and speed carry the burst combo into range"
+    },
+    {
+      "pair": [
+        "angela",
+        "dyrroth"
+      ],
+      "weight": 16,
+      "reason": "Enables an aggressive all-in on the enemy backline"
+    },
+    {
+      "pair": [
+        "mathilda",
+        "ling"
+      ],
+      "weight": 20,
+      "reason": "Guaranteed entry and exit for the dive"
+    },
+    {
+      "pair": [
+        "mathilda",
+        "lancelot"
+      ],
+      "weight": 18,
+      "reason": "Escort ultimate creates a safe reset window"
+    },
+    {
+      "pair": [
+        "mathilda",
+        "joy"
+      ],
+      "weight": 18,
+      "reason": "Mobility stacking makes the dive hard to answer"
+    },
+    {
+      "pair": [
+        "estes",
+        "uranus"
+      ],
+      "weight": 18,
+      "reason": "Regeneration comp that wins extended fights"
+    },
+    {
+      "pair": [
+        "estes",
+        "esmeralda"
+      ],
+      "weight": 16,
+      "reason": "Compounding sustain in prolonged objective fights"
+    },
+    {
+      "pair": [
+        "faramis",
+        "tigreal"
+      ],
+      "weight": 18,
+      "reason": "Revive lets the frontline commit without fear"
+    },
+    {
+      "pair": [
+        "faramis",
+        "khufra"
+      ],
+      "weight": 16,
+      "reason": "Aggressive engage backed by a second life"
+    },
+    {
+      "pair": [
+        "chip",
+        "yi-sun-shin"
+      ],
+      "weight": 16,
+      "reason": "Two global tools apply pressure across the whole map"
+    },
+    {
+      "pair": [
+        "carmilla",
+        "hylos"
+      ],
+      "weight": 16,
+      "reason": "Linked damage sharing on a high-HP frontline"
+    },
+    {
+      "pair": [
+        "kadita",
+        "aurora"
+      ],
+      "weight": 18,
+      "reason": "Knock-up into freeze into burst"
+    },
+    {
+      "pair": [
+        "selena",
+        "fredrinn"
+      ],
+      "weight": 16,
+      "reason": "Long-range stun feeds a guaranteed engage"
+    },
+    {
+      "pair": [
+        "yve",
+        "atlas"
+      ],
+      "weight": 20,
+      "reason": "Enemies locked inside a full-screen zone"
+    },
+    {
+      "pair": [
+        "yve",
+        "khufra"
+      ],
+      "weight": 18,
+      "reason": "Zone plus airborne lock removes escape options"
+    },
+    {
+      "pair": [
+        "belerick",
+        "melissa"
+      ],
+      "weight": 16,
+      "reason": "Taunt and zoning create an untouchable carry"
+    },
+    {
+      "pair": [
+        "lolita",
+        "beatrix"
+      ],
+      "weight": 16,
+      "reason": "Projectile shield protects the poke position"
+    },
+    {
+      "pair": [
+        "edith",
+        "wanwan"
+      ],
+      "weight": 14,
+      "reason": "Airborne group-up sets up the ultimate window"
+    },
+    {
+      "pair": [
+        "popol-and-kupa",
+        "eudora"
+      ],
+      "weight": 14,
+      "reason": "Trap CC guarantees the burst lands"
+    },
+    {
+      "pair": [
+        "baxia",
+        "karrie"
+      ],
+      "weight": 16,
+      "reason": "Anti-heal plus true damage answers durable comps"
+    },
+    {
+      "pair": [
+        "kalea",
+        "valentina"
+      ],
+      "weight": 14,
+      "reason": "Forced displacement sets up follow-up burst"
+    },
+    {
+      "pair": [
+        "diggie",
+        "cecilion"
+      ],
+      "weight": 16,
+      "reason": "Cleanse protects the stationary scaling mage"
+    },
+    {
+      "pair": [
+        "floryn",
+        "claude"
+      ],
+      "weight": 16,
+      "reason": "Global healing sustains a scaling carry through fights"
+    },
+    {
+      "pair": [
+        "grock",
+        "chou"
+      ],
+      "weight": 14,
+      "reason": "Wall trap into suppression removes the escape route"
+    },
+    {
+      "pair": [
+        "jawhead",
+        "eudora"
+      ],
+      "weight": 11,
+      "reason": "Displacement drops the target inside a guaranteed stun chain"
+    },
+    {
+      "pair": [
+        "jawhead",
+        "aldous"
+      ],
+      "weight": 10,
+      "reason": "The throw sets up the ultimate that cannot be dodged"
+    },
+    {
+      "pair": [
+        "aldous",
+        "angela"
+      ],
+      "weight": 10,
+      "reason": "Attachment turns a global ultimate into a two-hero dive"
+    },
+    {
+      "pair": [
+        "harley",
+        "tigreal"
+      ],
+      "weight": 9,
+      "reason": "Area lockdown holds the target inside the burst ring"
+    },
+    {
+      "pair": [
+        "cyclops",
+        "atlas"
+      ],
+      "weight": 10,
+      "reason": "Grouped lockdown lets every projectile land"
+    },
+    {
+      "pair": [
+        "sun",
+        "angela"
+      ],
+      "weight": 8,
+      "reason": "Global support keeps the side-lane threat alive to keep pushing"
+    }
+  ]
+}

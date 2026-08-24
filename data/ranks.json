@@ -1,0 +1,67 @@
+{
+  "schema": 2,
+  "note": "Ranked tiers the assistant supports, and how each maps onto the public MLBB statistics API. The API exposes rank buckets all|epic|legend|mythic|honor|glory — there is no separate Mythical Immortal bucket, so Immortal reads Glory data and the UI says so rather than pretending the numbers are its own.",
+  "default": "mythic",
+  "tiers": [
+    {
+      "id": "epic",
+      "label": "Epic",
+      "short": "EPIC",
+      "apiRank": "epic",
+      "exact": true,
+      "skillWeight": -6,
+      "blurb": "Solo-carry environment. Draft for heroes that win their lane without help."
+    },
+    {
+      "id": "legend",
+      "label": "Legend",
+      "short": "LEG",
+      "apiRank": "legend",
+      "exact": true,
+      "skillWeight": -3,
+      "blurb": "Objectives are contested but rarely set up. Tempo still beats composition."
+    },
+    {
+      "id": "mythic",
+      "label": "Mythic",
+      "short": "MYTH",
+      "apiRank": "mythic",
+      "exact": true,
+      "skillWeight": 0,
+      "blurb": "Rotations appear. Counters start to matter as much as raw hero strength."
+    },
+    {
+      "id": "honor",
+      "label": "Mythical Honor",
+      "short": "HONOR",
+      "apiRank": "honor",
+      "exact": true,
+      "skillWeight": 3,
+      "blurb": "Drafts get answered. Flex picks and lane-swap threats gain value."
+    },
+    {
+      "id": "glory",
+      "label": "Mythical Glory",
+      "short": "GLORY",
+      "apiRank": "glory",
+      "exact": true,
+      "skillWeight": 6,
+      "blurb": "Near-tournament habits. Composition and CC chains decide fights."
+    },
+    {
+      "id": "immortal",
+      "label": "Mythical Immortal",
+      "short": "IMM",
+      "apiRank": "glory",
+      "exact": false,
+      "fallbackNote": "The public data source has no Immortal bucket — showing Mythical Glory statistics.",
+      "skillWeight": 8,
+      "blurb": "Every draft is scouted. Comfort matters less than the matchup you are handing over."
+    }
+  ],
+  "rankCurve": {
+    "note": "meta adjustment = skillWeight x (difficulty - 3) x factor. A mastery hero gains priority as the rank climbs; a pick-up-and-play hero loses it. Only applied when live rank statistics are unavailable — real pick/ban/win rates always win.",
+    "factor": 1.6,
+    "maxShift": 14
+  }
+}

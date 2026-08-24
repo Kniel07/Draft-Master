@@ -1,0 +1,18 @@
+{
+  "schema": 2,
+  "patch": "2.1.90",
+  "patchDate": "2026-07-08",
+  "server": "Official Server",
+  "sourceLabel": "Bundled dataset",
+  "note": "Fallback meta layer. The bundled `meta` value on each hero in heroes.json is a tuned competitive baseline, not a measured pick-and-ban rate; ranks.json turns it into a per-rank number. When the public statistics API is reachable, live pick/ban/win rates for the selected rank replace this entirely and the data badge says so.",
+  "blend": {
+    "note": "How live rank statistics become a 0-100 meta score. pickRate/banRate/winRate arrive as fractions.",
+    "winRateCentre": 0.5,
+    "winRateSpan": 0.12,
+    "pickRateSpan": 0.06,
+    "banRateSpan": 0.25,
+    "weights": { "win": 0.45, "pick": 0.2, "ban": 0.35 },
+    "liveBlend": 0.75
+  },
+  "staleAfterHours": 24
+}

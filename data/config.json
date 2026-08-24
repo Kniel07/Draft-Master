@@ -1,0 +1,127 @@
+{
+  "schema": 2,
+  "app": {
+    "name": "Draft Room",
+    "subtitle": "MLBB Draft Assistant",
+    "server": "Official Server",
+    "principle": "The app recommends. The player decides."
+  },
+  "lanes": [
+    { "id": "roam", "label": "Roam", "short": "ROAM", "apiLane": "roam" },
+    { "id": "jungle", "label": "Jungle", "short": "JUNG", "apiLane": "jungle" },
+    { "id": "mid", "label": "Mid Lane", "short": "MID", "apiLane": "mid" },
+    { "id": "gold", "label": "Gold Lane", "short": "GOLD", "apiLane": "gold" },
+    { "id": "exp", "label": "EXP Lane", "short": "EXP", "apiLane": "exp" }
+  ],
+  "classes": ["Tank", "Fighter", "Assassin", "Mage", "Marksman", "Support"],
+
+  "weights": {
+    "note": "One place. Nothing in the UI or the engine hardcodes a weight. Values are relative — they are normalised by their own sum, so they do not have to add to 1.",
+    "pick": {
+      "meta": 0.20,
+      "counter": 0.25,
+      "synergy": 0.20,
+      "roleFit": 0.15,
+      "comfort": 0.10,
+      "flexibility": 0.10
+    },
+    "ban": {
+      "meta": 0.20,
+      "enemyThreat": 0.25,
+      "counterRisk": 0.23,
+      "rankPopularity": 0.13,
+      "comfortRisk": 0.10,
+      "flexibility": 0.09
+    },
+    "composition": {
+      "note": "Extra nudge applied to a pick score for covering the draft's thinnest dimensions. Kept separate from the six headline weights so those stay readable.",
+      "need": 0.12
+    }
+  },
+
+  "modes": {
+    "ranked": {
+      "id": "ranked",
+      "label": "Ranked",
+      "description": "Epic through Mythical Immortal. You control the order — tell the app what has happened and it tells you what it means.",
+      "sequenced": false,
+      "teamSize": 5,
+      "banSlots": { "ally": 3, "enemy": 3 }
+    },
+    "tournament": {
+      "id": "tournament",
+      "label": "Tournament",
+      "description": "MPL / M-Series standard. 10 bans, 10 picks, fixed order.",
+      "sequenced": true,
+      "teamSize": 5,
+      "format": "mpl-standard"
+    }
+  },
+
+  "draftFormats": {
+    "mpl-standard": {
+      "id": "mpl-standard",
+      "name": "MPL / M-Series standard",
+      "description": "10 bans, 10 picks. Blue opens the first ban phase, Red opens the second.",
+      "steps": [
+        { "team": "blue", "action": "ban", "phase": "Ban Phase 1" },
+        { "team": "red", "action": "ban", "phase": "Ban Phase 1" },
+        { "team": "blue", "action": "ban", "phase": "Ban Phase 1" },
+        { "team": "red", "action": "ban", "phase": "Ban Phase 1" },
+        { "team": "blue", "action": "ban", "phase": "Ban Phase 1" },
+        { "team": "red", "action": "ban", "phase": "Ban Phase 1" },
+        { "team": "blue", "action": "pick", "phase": "Pick Phase 1" },
+        { "team": "red", "action": "pick", "phase": "Pick Phase 1" },
+        { "team": "red", "action": "pick", "phase": "Pick Phase 1" },
+        { "team": "blue", "action": "pick", "phase": "Pick Phase 1" },
+        { "team": "blue", "action": "pick", "phase": "Pick Phase 1" },
+        { "team": "red", "action": "pick", "phase": "Pick Phase 1" },
+        { "team": "red", "action": "ban", "phase": "Ban Phase 2" },
+        { "team": "blue", "action": "ban", "phase": "Ban Phase 2" },
+        { "team": "red", "action": "ban", "phase": "Ban Phase 2" },
+        { "team": "blue", "action": "ban", "phase": "Ban Phase 2" },
+        { "team": "red", "action": "pick", "phase": "Pick Phase 2" },
+        { "team": "blue", "action": "pick", "phase": "Pick Phase 2" },
+        { "team": "blue", "action": "pick", "phase": "Pick Phase 2" },
+        { "team": "red", "action": "pick", "phase": "Pick Phase 2" }
+      ]
+    }
+  },
+
+  "strength": {
+    "dimensions": [
+      { "id": "early", "label": "Early Game", "short": "Early" },
+      { "id": "late", "label": "Late Game", "short": "Late" },
+      { "id": "damage", "label": "Damage", "short": "Damage" },
+      { "id": "survivability", "label": "Survivability", "short": "Survive" },
+      { "id": "cc", "label": "Crowd Control", "short": "CC" },
+      { "id": "push", "label": "Push", "short": "Push" },
+      { "id": "coordination", "label": "Team Coordination", "short": "Synergy" }
+    ]
+  },
+
+  "thresholds": {
+    "strongDimension": 68,
+    "weakDimension": 45,
+    "highCounterRisk": 18,
+    "matchupScale": 1.6
+  },
+
+  "api": {
+    "enabled": true,
+    "note": "Public, free, no key. Two hosts from the same project; the first that answers wins. Everything is cached, and every failure falls through to the bundled data files.",
+    "hosts": [
+      "https://openmlbb.fastapicloud.dev",
+      "https://mlbb.rone.dev"
+    ],
+    "basePath": "/api",
+    "timeoutMs": 6000,
+    "cacheHours": {
+      "heroes": 72,
+      "rank": 12,
+      "relations": 168
+    },
+    "maxRelationFetchesPerSession": 12,
+    "attribution": "Hero data © Moonton. Statistics via the public api-mobilelegends project."
+  }
+}
