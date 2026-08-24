@@ -1,0 +1,331 @@
+/* ==========================================================================
+   mobile.css — the layout, designed at 360x800 first.
+
+   Everything here assumes a phone held in one hand, in portrait, with a thumb
+   that reaches the bottom third of the screen comfortably and the top of the
+   screen barely. So: the tab bar is sticky at the top (small, rarely used mid
+   draft), the hero sheet slides up from the bottom (used constantly), and the
+   recommendation actions sit inside their own cards where the thumb already is.
+
+   The wide layouts at the bottom of this file are what a desktop does to the
+   phone design — not a separate design that the phone has to survive.
+   ========================================================================== */
+
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: color-mix(in srgb, var(--ink) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+  padding: 8px 12px 0;
+}
+.topbar__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 34px;
+}
+.brand {
+  font-family: var(--cond);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.brand span { color: var(--gold); }
+
+.tabs { display: flex; gap: 2px; margin-top: 6px; }
+.tab {
+  flex: 1;
+  min-height: 40px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--text-faint);
+  font-family: var(--cond);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.tab.is-active { color: var(--text); border-bottom-color: var(--gold); }
+
+.main { flex: 1; padding: 10px 12px calc(24px + var(--safe-b)); }
+.view { display: flex; flex-direction: column; gap: 10px; }
+
+.foot {
+  padding: 14px 12px calc(20px + var(--safe-b));
+  border-top: 1px solid var(--line);
+  color: var(--text-faint);
+  font-size: 11.5px;
+}
+
+/* ------------------------------------------------------------ setup view */
+
+.setup { gap: 12px; }
+.setup__block {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 12px;
+}
+.setup__hint { margin-top: 8px; color: var(--text-dim); font-size: 12.5px; }
+.setup__warn { margin-top: 6px; color: var(--warn); font-size: 12.5px; }
+.setup__credit { margin-top: 10px; color: var(--text-faint); font-size: 11px; }
+.setup__actions { display: flex; gap: 8px; margin-top: 10px; }
+
+.ranks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.rankbtn {
+  min-height: 58px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: transparent;
+  cursor: pointer;
+}
+.rankbtn.is-active { border-color: var(--gold); background: var(--raise); }
+.rankbtn__short { font-family: var(--cond); font-size: 14px; font-weight: 700; letter-spacing: 0.08em; color: var(--text); }
+.rankbtn.is-active .rankbtn__short { color: var(--gold); }
+.rankbtn__label { font-size: 10px; color: var(--text-faint); text-align: center; line-height: 1.15; }
+.rankbtn__flag { font-size: 9px; color: var(--warn); letter-spacing: 0.06em; text-transform: uppercase; }
+
+.pool { display: flex; flex-direction: column; gap: 6px; }
+.pool__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+}
+.pool__hero { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+.pool__name { font-family: var(--cond); font-size: 15px; letter-spacing: 0.02em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pool__x {
+  flex: 0 0 auto;
+  width: 36px; height: 36px;
+  border: 0; border-radius: var(--r-sm);
+  background: transparent; color: var(--text-faint);
+  cursor: pointer;
+}
+.rate { display: flex; gap: 1px; }
+.rate__star {
+  width: 26px; height: 36px;
+  border: 0; background: transparent;
+  color: var(--text-faint); font-size: 15px; line-height: 1;
+  cursor: pointer; padding: 0;
+}
+.rate__star.is-on { color: var(--gold); }
+
+.datalist { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 13px; }
+.datalist dt { color: var(--text-faint); font-family: var(--cond); letter-spacing: 0.06em; text-transform: uppercase; font-size: 11.5px; align-self: center; }
+.datalist dd { margin: 0; color: var(--text); }
+
+.diag { margin-top: 10px; font-size: 12.5px; color: var(--text-dim); }
+.diag summary { cursor: pointer; color: var(--warn); font-family: var(--cond); letter-spacing: 0.06em; text-transform: uppercase; }
+.diag__list { margin-top: 6px; display: flex; flex-direction: column; gap: 4px; }
+.diag__list li { padding-left: 12px; position: relative; }
+.diag__list li::before { content: '·'; position: absolute; left: 2px; color: var(--text-faint); }
+
+/* --------------------------------------------------------- hero sheet */
+
+/* Fixed layer, own scroll container, body locked behind it. Nothing in here can
+   move the document, which is why searching inside the sheet cannot move the
+   draft board underneath. */
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: flex-end;
+}
+.sheet[hidden] { display: none; }
+.sheet__backdrop { position: absolute; inset: 0; background: rgb(0 0 0 / 0.62); }
+.sheet__panel {
+  position: relative;
+  width: 100%;
+  /* Fixed height rather than content height: a sheet that grew and shrank as
+     search results came and went would be its own kind of jumping. Leaving the
+     top of the screen uncovered keeps the board you are drafting for in view. */
+  height: 78dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  box-shadow: 0 -18px 50px rgb(0 0 0 / 0.6);
+  padding-bottom: var(--safe-b);
+}
+.sheet__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 12px 8px;
+  border-bottom: 1px solid var(--line);
+}
+.sheet__titles { flex: 1; min-width: 0; }
+.sheet__title { font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase; }
+.sheet__note { margin-top: 2px; font-size: 12px; color: var(--text-faint); }
+.sheet__close {
+  flex: 0 0 auto;
+  width: var(--tap); height: var(--tap);
+  border: 1px solid var(--line); border-radius: var(--r-md);
+  background: var(--raise); color: var(--text-dim);
+  font-size: 16px; cursor: pointer;
+}
+.sheet__controls { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; }
+.sheet__body { flex: 1 1 0; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 12px 10px; overscroll-behavior: contain; }
+.sheet__foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 8px 12px 12px; border-top: 1px solid var(--line);
+}
+.sheet__count { font-size: 11.5px; color: var(--text-faint); font-family: var(--cond); letter-spacing: 0.06em; text-transform: uppercase; }
+
+.search {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--panel-2);
+  color: var(--text);
+  font: inherit;
+  font-size: 16px; /* 16px keeps iOS from zooming the viewport on focus */
+}
+.search::placeholder { color: var(--text-faint); }
+
+/* ---------------------------------------------------------- hero grid */
+
+.hgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.hcard {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 56px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--panel-2);
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.hcard__body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.hcard__name {
+  font-family: var(--cond); font-size: 15px; font-weight: 600; letter-spacing: 0.02em;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.hcard__sub { font-size: 10.5px; color: var(--text-faint); letter-spacing: 0.05em; text-transform: uppercase; }
+.hcard__stars { font-size: 10px; color: var(--gold); }
+.hcard__flag {
+  flex: 0 0 auto;
+  font-family: var(--cond); font-size: 10.5px; letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+.hcard__flag--out { color: var(--red); }
+.hcard__flag--new { color: var(--good); }
+.hcard.is-selected { border-color: var(--gold); background: var(--raise); }
+
+/* Unavailable heroes stay visible and struck through rather than disappearing:
+   a player scanning for a hero needs to see that it is gone, not fail to find
+   it. Same behaviour as the in-game draft screen. */
+.hcard.is-out { opacity: 0.42; cursor: default; }
+.hcard.is-out .hcard__name { text-decoration: line-through; }
+
+.more { margin-top: 8px; }
+
+/* ------------------------------------------------------------ breakpoints */
+
+@media (min-width: 640px) {
+  .hgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ranks { grid-template-columns: repeat(6, 1fr); }
+  .main { padding: 14px 18px calc(96px + var(--safe-b)); }
+  .sheet { align-items: center; justify-content: center; padding: 24px; }
+  .sheet__panel { max-width: 720px; height: 80dvh; border-radius: var(--r-lg); border: 1px solid var(--line); }
+}
+
+@media (min-width: 1040px) {
+  .hgrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .main { max-width: 1180px; margin: 0 auto; width: 100%; }
+  #view-draft {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 420px);
+    grid-template-areas:
+      'timeline timeline'
+      'board    recs'
+      'turn     recs'
+      'controls recs'
+      'strength recs'
+      'synergy  recs';
+    align-items: start;
+    column-gap: 16px;
+  }
+  #timeline { grid-area: timeline; }
+  #board { grid-area: board; }
+  #turn { grid-area: turn; }
+  #controls { grid-area: controls; }
+  #recommendations { grid-area: recs; position: sticky; top: 96px; }
+  #synergy { grid-area: synergy; }
+  #strength { grid-area: strength; }
+}
+
+/* ---------------------------------------------------------- action bar */
+
+/* The one piece of persistent chrome. Fixed to the bottom of the viewport, so
+   the hero list is always within thumb reach however far down the page the
+   player has scrolled — which is how the selector stays accessible without the
+   app ever scrolling anyone anywhere. */
+.actionbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px calc(8px + var(--safe-b));
+  background: color-mix(in srgb, var(--ink) 94%, transparent);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+}
+.actionbar[hidden] { display: none; }
+.actionbar__label {
+  font-family: var(--cond);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+.actionbar .btn { flex: 1; }
+
+/* Room for the bar, plus room for a toast above it. */
+.main { padding-bottom: calc(96px + var(--safe-b)); }
+.toast-host { bottom: calc(72px + var(--safe-b)); }
+
+@media (min-width: 640px) {
+  .actionbar { justify-content: center; }
+  .actionbar .btn { flex: 0 0 auto; min-width: 240px; }
+}
+
+@media (min-width: 1040px) {
+  /* Enough room for the recommendation column to sit beside the board, so the
+     bar has nothing left to solve. */
+  .actionbar { display: none; }
+  .main { padding-bottom: calc(28px + var(--safe-b)); }
+  .toast-host { bottom: calc(14px + var(--safe-b)); }
+}

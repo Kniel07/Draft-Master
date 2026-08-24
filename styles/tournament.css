@@ -1,0 +1,63 @@
+/* ==========================================================================
+   tournament.css — the broadcast layer: the 20-step timeline.
+
+   Only loaded concerns that belong to the sequenced mode live here, so the
+   ranked path pays nothing for the tournament presentation.
+   ========================================================================== */
+
+.timeline {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 2px 0;
+}
+.timeline::-webkit-scrollbar { display: none; }
+
+.tl { display: flex; gap: 4px; min-width: max-content; }
+
+.tl__step {
+  flex: 0 0 auto;
+  width: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 2px;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--step, var(--line));
+  border-radius: var(--r-sm);
+  background: var(--panel);
+}
+.tl__step--blue { --step: var(--blue); }
+.tl__step--red { --step: var(--red); }
+.tl__step--ban { opacity: 0.86; }
+/* The step number carries the side colour. A 2px top border alone is not
+   legible at this size on a phone. */
+.tl__index { font-family: var(--cond); font-size: 10px; color: var(--step, var(--text-faint)); letter-spacing: 0.06em; font-weight: 700; }
+.tl__action { font-family: var(--cond); font-size: 9.5px; letter-spacing: 0.08em; color: var(--text-faint); }
+.tl__step--ban .tl__action { color: var(--red); }
+
+.tl__step.is-done { background: var(--panel-2); }
+
+/* Gold marks exactly one thing: the step on the clock right now. If gold
+   appeared on every score and every heading, this would stop reading as live. */
+.tl__step.is-active {
+  border-color: var(--gold);
+  border-top-color: var(--gold);
+  background: var(--raise);
+}
+.tl__step.is-active .tl__index,
+.tl__step.is-active .tl__action { color: var(--gold); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .tl__step.is-active { animation: tl-pulse 1.8s ease-in-out infinite; }
+  @keyframes tl-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold) 30%, transparent); }
+    50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 0%, transparent); }
+  }
+}
+
+@media (min-width: 640px) {
+  .tl__step { width: 46px; }
+}

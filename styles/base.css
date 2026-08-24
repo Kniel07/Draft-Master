@@ -1,0 +1,306 @@
+/* ==========================================================================
+   base.css — tokens, reset, and the primitives every view shares.
+
+   Broadcast palette carried over from the previous build: deep arena black,
+   side colour reserved for team identity, gold rationed to whatever is live
+   right now. Condensed type for labels and numbers, Inter for the reason lines
+   — those are the only real prose on the screen and they should read as
+   annotation rather than chrome.
+   ========================================================================== */
+
+:root {
+  --ink: #05070c;
+  --panel: #0c1018;
+  --panel-2: #121826;
+  --raise: #19212f;
+  --line: #212b3d;
+
+  --text: #eef2f8;
+  --text-dim: #97a3b8;
+  --text-faint: #66718a;
+
+  --blue: #2f8dff;
+  --red: #ff3f5f;
+  --gold: #f2c14e;
+  --good: #38d39f;
+  --warn: #ffab4c;
+
+  --ally: var(--blue);
+  --enemy: var(--red);
+
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+
+  --tap: 44px;
+
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --cond: 'Barlow Condensed', 'Inter', system-ui, sans-serif;
+
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Horizontal overflow is a bug, not a layout option. Anything wide scrolls
+   inside its own container. */
+body { overflow-x: hidden; }
+
+/* Body scroll lock while the hero sheet is open. position:fixed would reset the
+   scroll offset on close — overflow:hidden holds the page exactly where it is,
+   which is the whole point. */
+body.is-locked { overflow: hidden; }
+
+h1, h2, h3 { margin: 0; font-family: var(--cond); font-weight: 600; letter-spacing: 0.02em; }
+p { margin: 0; }
+ul, ol, dl { margin: 0; padding: 0; list-style: none; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; color: var(--text-dim); }
+
+button { font: inherit; color: inherit; }
+
+/* The `hidden` attribute is a UA rule, so any class that sets `display` beats
+   it. This app hides tab panels with `hidden`, so that has to be made to stick
+   — without it every view stays in the document, the page is three times taller
+   than it looks, and the browser's scroll anchoring has three times as much to
+   get wrong. */
+[hidden] { display: none !important; }
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------- boot */
+
+.boot {
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+}
+.boot__loading { color: var(--text-dim); font-family: var(--cond); letter-spacing: 0.08em; text-transform: uppercase; }
+.boot__title { font-size: 22px; color: var(--gold); }
+.boot__detail {
+  margin: 0;
+  padding: 12px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  text-align: left;
+  white-space: pre-wrap;
+  font-size: 13px;
+  color: var(--text-dim);
+  overflow-x: auto;
+}
+.boot__hint { color: var(--text-faint); font-size: 13px; }
+
+/* ------------------------------------------------------------- buttons */
+
+.btn {
+  min-height: var(--tap);
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--raise);
+  color: var(--text);
+  font-family: var(--cond);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:disabled { opacity: 0.4; cursor: default; }
+.btn--ghost { background: transparent; }
+.btn--quiet { background: transparent; border-color: transparent; color: var(--text-dim); }
+.btn--wide { width: 100%; }
+.btn--sm { min-height: 36px; padding: 0 10px; font-size: 13px; }
+
+/* The two commit actions. Same visual weight as each other and only slightly
+   above Ignore — a recommendation must not look like an instruction. */
+.btn--act { flex: 1 1 auto; }
+.btn--pick { background: color-mix(in srgb, var(--blue) 26%, var(--raise)); border-color: color-mix(in srgb, var(--blue) 55%, transparent); }
+.btn--ban { background: color-mix(in srgb, var(--red) 24%, var(--raise)); border-color: color-mix(in srgb, var(--red) 50%, transparent); }
+
+/* --------------------------------------------------------------- chips */
+
+.chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.chips::-webkit-scrollbar { display: none; }
+.chips--wide { flex-wrap: wrap; overflow: visible; }
+
+.chip {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--cond);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.chip--lg { min-height: var(--tap); min-width: 62px; font-size: 14px; }
+.chip.is-active { background: var(--raise); border-color: var(--gold); color: var(--gold); }
+
+/* ------------------------------------------------------------ segments */
+
+.segment { display: flex; gap: 6px; }
+.segment__btn {
+  flex: 1;
+  min-height: var(--tap);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--cond);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.segment__btn.is-active { background: var(--raise); border-color: var(--gold); color: var(--gold); }
+.segment__btn--blue.is-active { border-color: var(--blue); color: var(--blue); }
+.segment__btn--red.is-active { border-color: var(--red); color: var(--red); }
+
+/* --------------------------------------------------------------- crest */
+
+.crest {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: var(--r-sm);
+  background:
+    linear-gradient(150deg,
+      hsl(var(--crest-hue, 210) 42% 26%),
+      hsl(var(--crest-hue, 210) 38% 14%));
+  border: 1px solid var(--line);
+  color: #fff;
+  font-family: var(--cond);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.crest--xs { width: 26px; height: 26px; font-size: 10px; }
+.crest--sm { width: 34px; height: 34px; font-size: 12px; }
+.crest--md { width: 44px; height: 44px; font-size: 14px; }
+.crest--empty { background: var(--panel-2); border-style: dashed; }
+.crest__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.class-tank { --crest-tint: var(--blue); }
+.class-marksman { --crest-tint: var(--gold); }
+
+/* --------------------------------------------------------------- panel */
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 12px;
+}
+
+.sect__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.sect__title { font-size: 15px; letter-spacing: 0.09em; text-transform: uppercase; white-space: nowrap; }
+.sect__note { flex: 1 1 auto; min-width: 0; font-size: 11.5px; color: var(--text-faint); text-align: right; }
+
+.empty {
+  padding: 14px 12px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-md);
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+/* --------------------------------------------------------------- badge */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--text-dim);
+  font-family: var(--cond);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.badge__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-faint); }
+.badge--live .badge__dot { background: var(--good); }
+.badge--cache .badge__dot { background: var(--warn); }
+.badge--bundled .badge__dot { background: var(--text-faint); }
+
+/* --------------------------------------------------------------- toast */
+
+/* Fixed host, so a toast can never change document height and therefore can
+   never move the page under the user's thumb. */
+.toast-host {
+  position: fixed;
+  left: 50%;
+  bottom: calc(14px + var(--safe-b));
+  transform: translateX(-50%);
+  /* Below the hero sheet (50), not above it. A confirmation is never worth
+     covering the list the player is reading. */
+  z-index: 45;
+  pointer-events: none;
+  width: min(92vw, 420px);
+}
+.toast {
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  background: var(--raise);
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.5);
+  font-size: 13px;
+  text-align: center;
+  transition: opacity 0.18s ease;
+}
+.toast--good { border-color: color-mix(in srgb, var(--good) 55%, transparent); }
+.toast--warn { border-color: color-mix(in srgb, var(--warn) 55%, transparent); }
+.toast--out { opacity: 0; }
+
+.note {
+  margin: 0 12px 8px;
+  padding: 8px 10px;
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--warn) 12%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent);
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

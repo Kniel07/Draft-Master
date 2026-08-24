@@ -1,0 +1,281 @@
+/* ==========================================================================
+   draft.css — boards, recommendations, strength meter, brief.
+   ========================================================================== */
+
+/* --------------------------------------------------------------- boards */
+
+.boards { display: flex; flex-direction: column; gap: 8px; }
+
+.team {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 10px;
+  position: relative;
+  overflow: hidden;
+}
+/* Side colour bleeds in from the screen edge so the two teams read as sides of
+   an arena rather than as two lists. */
+.team::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--team, var(--line));
+}
+.team--ally, .team--blue { --team: var(--blue); }
+.team--enemy, .team--red { --team: var(--red); }
+.team.is-turn { border-color: color-mix(in srgb, var(--gold) 50%, var(--line)); }
+
+.team__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.team__title { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--team, var(--text)); }
+.team__you {
+  margin-left: 6px; padding: 1px 5px;
+  border: 1px solid var(--gold); border-radius: 3px;
+  color: var(--gold); font-size: 9.5px; letter-spacing: 0.1em;
+}
+.team__count { font-family: var(--cond); font-size: 13px; color: var(--text-faint); letter-spacing: 0.06em; }
+
+.bans { display: flex; gap: 4px; margin-bottom: 8px; }
+.bans::before {
+  content: 'BANS';
+  align-self: center;
+  font-family: var(--cond); font-size: 9.5px; letter-spacing: 0.14em;
+  color: var(--text-faint);
+  margin-right: 2px;
+}
+.bans__cell { flex: 0 0 auto; }
+.bans__tap {
+  width: 34px;
+  aspect-ratio: 1;
+  display: grid; place-items: center;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-sm);
+  background: transparent;
+  cursor: pointer;
+  padding: 2px;
+  position: relative;
+}
+.bans__cell.is-filled .bans__tap { border-style: solid; opacity: 0.6; }
+.bans__cell.is-filled .bans__tap::after {
+  content: '';
+  position: absolute; inset: 4px;
+  background: linear-gradient(45deg, transparent 46%, var(--red) 46%, var(--red) 54%, transparent 54%);
+}
+.bans__x { color: var(--text-faint); font-size: 14px; }
+
+/* Five tiles across, not five stacked rows. On a 360px screen this is the
+   difference between the board taking two thirds of the first screen and taking
+   a fifth of it — which is the difference between seeing a recommendation
+   without scrolling and not. */
+.slots { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+/* Grid items default to min-width:auto, which lets a long hero name push the
+   tile wider than its column instead of ellipsising. */
+.slot { position: relative; min-width: 0; }
+.slot__tap {
+  width: 100%;
+  min-width: 0;
+  min-height: 72px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 6px 2px 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--panel-2);
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.slot.is-active .slot__tap { border-color: var(--gold); }
+.slot__body { display: block; width: 100%; min-width: 0; overflow: hidden; }
+/* width:100% rather than max-width — a centred flex item sizes to its content
+   first, and only an explicit width gives text-overflow something to clip
+   against. Without this a long hero name spills out of its tile. */
+.slot__name,
+.slot__lane {
+  display: block;
+  width: 100%;
+  text-align: center;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.slot__name { font-family: var(--cond); font-size: 12px; font-weight: 600; letter-spacing: 0.01em; line-height: 1.2; }
+.slot__name--empty { color: var(--text-faint); font-weight: 500; }
+.slot__lane { font-size: 8.5px; color: var(--text-faint); letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.25; min-height: 11px; }
+
+/* The clear affordance sits on the tile rather than beside it, so removing a
+   hero costs no layout width and the tile grid stays even. */
+.slot__clear {
+  position: absolute;
+  top: 2px; right: 2px;
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 50%;
+  background: var(--raise); color: var(--text-dim);
+  font-size: 11px; line-height: 1;
+  cursor: pointer;
+}
+
+/* ----------------------------------------------------------------- turn */
+
+.turn {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--turn, var(--gold));
+  border-radius: var(--r-md);
+  background: var(--panel);
+}
+.turn--blue { --turn: var(--blue); }
+.turn--red { --turn: var(--red); }
+.turn--pick { --turn: var(--blue); }
+.turn--ban { --turn: var(--red); }
+.turn--done { --turn: var(--good); }
+.turn__phase {
+  font-family: var(--cond); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-faint);
+}
+.turn__call { font-family: var(--cond); font-size: 17px; font-weight: 600; letter-spacing: 0.04em; color: var(--gold); }
+
+.intent { display: flex; gap: 6px; margin-left: auto; }
+.intent__btn {
+  min-height: 36px; padding: 0 12px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: transparent; color: var(--text-dim);
+  font-family: var(--cond); font-size: 13px; letter-spacing: 0.05em;
+  cursor: pointer;
+}
+.intent__btn.is-active { border-color: var(--gold); color: var(--gold); background: var(--raise); }
+
+.controls { display: flex; align-items: center; gap: 8px; }
+.controls__note { margin-left: auto; font-family: var(--cond); font-size: 12px; letter-spacing: 0.08em; color: var(--text-faint); text-transform: uppercase; }
+
+/* ------------------------------------------------------ recommendations */
+
+.recs { display: flex; flex-direction: column; gap: 8px; }
+
+.rec {
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--panel-2);
+}
+/* The top row is numbered but not privileged: no gold border, no larger
+   button, no "recommended" badge. It is first in a list, not a verdict. */
+.rec.is-open { border-color: color-mix(in srgb, var(--gold) 40%, var(--line)); }
+
+.rec__head { display: flex; align-items: center; gap: 8px; }
+.rec__rank {
+  width: 20px;
+  font-family: var(--cond); font-size: 15px; font-weight: 700;
+  color: var(--text-faint); text-align: center;
+}
+.rec__body { flex: 1; min-width: 0; }
+.rec__line { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.rec__name {
+  font-family: var(--cond); font-size: 17px; font-weight: 600; letter-spacing: 0.02em;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.rec__score { font-family: var(--cond); font-size: 19px; font-weight: 700; color: var(--gold); }
+.rec__meta { font-size: 10px; color: var(--text-faint); letter-spacing: 0.1em; text-transform: uppercase; }
+
+.rec__why { margin: 8px 0 0; display: flex; flex-direction: column; gap: 3px; }
+.rec__why li {
+  position: relative; padding-left: 12px;
+  font-size: 12.5px; line-height: 1.4; color: var(--text-dim);
+}
+.rec__why li::before { content: '·'; position: absolute; left: 3px; color: var(--gold); }
+
+.rec__warn {
+  margin-top: 6px; padding: 6px 8px;
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--warn) 12%, transparent);
+  color: var(--warn); font-size: 12px;
+}
+
+.rec__actions { display: flex; gap: 6px; margin-top: 10px; }
+.rec__actions .btn { min-height: 40px; font-size: 13px; }
+
+.rec__detail { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+.rec__prose { font-size: 12.5px; color: var(--text-dim); margin-bottom: 8px; }
+.rec__scores { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; }
+.rec__scores dt {
+  display: grid; grid-template-columns: 96px 1fr; gap: 8px; align-items: center;
+  font-family: var(--cond); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint);
+}
+.rec__scores dd { margin: 0; font-family: var(--cond); font-size: 13px; color: var(--text); text-align: right; }
+.rec__scorebar { height: 5px; border-radius: 3px; background: var(--raise); overflow: hidden; }
+.rec__scorebar i { display: block; height: 100%; background: var(--gold); }
+.rec__source { margin-top: 8px; font-size: 11.5px; color: var(--text-faint); }
+
+.recs__foot { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.recs__disclaimer { margin-top: 8px; font-size: 11.5px; color: var(--text-faint); text-align: center; }
+
+/* -------------------------------------------------------------- synergy */
+
+.syn { display: flex; flex-direction: column; gap: 6px; }
+.syn__item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--line); border-radius: var(--r-md);
+  background: var(--panel-2);
+}
+.syn__body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.syn__name { font-family: var(--cond); font-size: 15px; letter-spacing: 0.02em; }
+.syn__reason { font-size: 11.5px; color: var(--text-faint); line-height: 1.3; }
+
+/* ------------------------------------------------------------- strength */
+
+.bars { display: flex; flex-direction: column; gap: 5px; }
+.bar { display: grid; grid-template-columns: 62px 1fr 28px; gap: 8px; align-items: center; }
+.bar__label { font-family: var(--cond); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+.bar__track { height: 8px; border-radius: 4px; background: var(--raise); overflow: hidden; }
+.bar__fill { display: block; height: 100%; background: color-mix(in srgb, var(--blue) 70%, var(--raise)); border-radius: 4px; transition: width 0.2s ease; }
+.bar__fill--lead { background: var(--gold); }
+.bar__value { font-family: var(--cond); font-size: 13px; text-align: right; color: var(--text-dim); }
+
+/* The signature element: blue grows leftward from the centre line, red grows
+   rightward. Two separate bar charts would make the reader do the comparison;
+   this makes the gap the shape you see first. */
+.tugs { display: flex; flex-direction: column; gap: 8px; }
+.tug__head { display: grid; grid-template-columns: 30px 1fr 30px; align-items: baseline; gap: 6px; }
+.tug__label { font-family: var(--cond); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); text-align: center; }
+.tug__val { font-family: var(--cond); font-size: 14px; font-weight: 700; }
+.tug__val--us { color: var(--blue); }
+.tug__val--them { color: var(--red); text-align: right; }
+.tug--edge-us .tug__val--us, .tug--edge-them .tug__val--them { color: var(--gold); }
+.tug__bars { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 3px; }
+.tug__side { height: 8px; background: var(--raise); border-radius: 4px; overflow: hidden; display: flex; }
+.tug__side--us { justify-content: flex-end; }
+.tug__side--us i { display: block; height: 100%; background: var(--blue); border-radius: 4px 0 0 4px; }
+.tug__side--them i { display: block; height: 100%; background: var(--red); border-radius: 0 4px 4px 0; }
+
+/* ---------------------------------------------------------------- brief */
+
+.brief { display: flex; flex-direction: column; gap: 10px; }
+.brief__block {
+  padding: 12px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+.brief__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.brief__title { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); }
+.brief__note { font-size: 11px; color: var(--text-faint); }
+.brief__headline { font-family: var(--cond); font-size: 19px; font-weight: 600; color: var(--gold); line-height: 1.25; margin-bottom: 6px; }
+.brief__list { display: flex; flex-direction: column; gap: 4px; }
+.brief__list li { position: relative; padding-left: 13px; font-size: 13px; color: var(--text-dim); line-height: 1.4; }
+.brief__list li::before { content: '•'; position: absolute; left: 2px; color: var(--text-faint); }
+.brief__pairs { display: grid; grid-template-columns: 52px 1fr; gap: 4px 10px; }
+.brief__pairs dt { font-family: var(--cond); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+.brief__pairs dd { margin: 0; font-size: 13px; color: var(--text-dim); line-height: 1.4; }
+
+.threats { display: flex; flex-direction: column; gap: 6px; }
+.threat { display: flex; align-items: center; gap: 8px; }
+.threat__body { display: flex; flex-direction: column; min-width: 0; }
+.threat__name { font-family: var(--cond); font-size: 15px; letter-spacing: 0.02em; }
+.threat__note { font-size: 11.5px; color: var(--text-faint); line-height: 1.3; }
+
+.lanecheck { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
+.lanecheck__row { display: grid; grid-template-columns: 52px 1fr; gap: 8px; align-items: baseline; font-size: 13px; }
+.lanecheck__tag { font-family: var(--cond); font-size: 11.5px; letter-spacing: 0.08em; color: var(--text-faint); }
+.lanecheck__hero { color: var(--text); }
+.lanecheck__row.is-empty .lanecheck__hero { color: var(--warn); }

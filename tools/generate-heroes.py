@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
-generate_heroes.py
+generate-heroes.py
 ------------------
-Optional authoring helper. Expands the compact hero table below into
-../data/heroes.json.
+Authoring helper. Expands the compact hero table below into ../data/heroes.json,
+the canonical hero registry.
 
-You do NOT need this script to run or update the app. data/heroes.json is
-plain, hand-editable JSON. This exists only so that bulk edits (a new patch
-touching 30 heroes) stay consistent instead of drifting row by row.
+You do NOT need this script to run the app — data/heroes.json is plain,
+hand-editable JSON. This exists so bulk edits (a patch touching 30 heroes) stay
+consistent, and so that a hero going missing is a hard error instead of a silent
+gap: build() refuses to write the file unless the table matches CANON exactly.
 
 Row format:
   id | Name | classes | lanes | tags | meta
@@ -203,16 +204,116 @@ alice|Alice|Mage,Tank|exp,mid|sustain,aoe-cc,scaling,frontline|70
 benedetta|Benedetta|Assassin,Fighter|exp,jungle|mobility,immunity,split-push,burst|74
 obsidia|Obsidia|Mage,Fighter|exp,mid|zoning,sustained-damage,sustain|72
 kalea|Kalea|Support,Tank|roam|hard-cc,peel,engage,frontline|76
+aldous|Aldous|Fighter|exp,jungle|scaling,global,single-target,burst|70
+cyclops|Cyclops|Mage|mid,jungle|hard-cc,burst,single-target,wave-clear|68
+harley|Harley|Mage,Assassin|mid,jungle|blink,burst,backline-access,mobility|72
+jawhead|Jawhead|Fighter,Tank|jungle,roam,exp|hard-cc,single-target,engage,backline-access|74
+sun|Sun|Fighter|exp,jungle|split-push,sustain,objective,wave-clear|64
 """
+
+
+# --------------------------------------------------------------------------
+# Mechanical difficulty, 1 (pick-up-and-play) to 5 (mastery hero).
+# Rank-aware scoring uses this: a rank curve in data/ranks.json lifts high
+# difficulty heroes at Mythical Glory / Immortal and lowers them at Epic.
+# Anything not listed is 3.
+# --------------------------------------------------------------------------
+DIFFICULTY = {
+    5: "fanny ling gusion lancelot kagura benedetta joy chou hayabusa",
+    4: ("aamon harith guinevere kadita valentina selena arlott paquito julian "
+        "natalia helcurt hanzo novaria esmeralda cici wanwan beatrix yi-sun-shin "
+        "mathilda khufra franco kaja suyou hirara nolan lukas obsidia zetian sora "
+        "marcel lylia luo-yi faramis vale xborg leomord badang silvanna lapu-lapu "
+        "khaleed aldous harley jawhead granger brody moskov karrie natan kimmy yin "
+        "martis lunox zhuxin edith karina claude nolan"),
+    2: ("alucard saber zilong bruno clint nana rafaela estes floryn angela hanabi "
+        "odette gord zhask minotaur lolita belerick hylos tigreal akai uranus hilda "
+        "masha phoveus alpha dyrroth thamuz argus change irithel popol-and-kupa "
+        "melissa ixia cecilion aurora vexana valir gatotkaca johnson diggie carmilla "
+        "bane barats gloo sun cyclops aulus eudora freya ruby"),
+    1: "layla miya balmond",
+}
+
+# Nicknames people actually type. Punctuation and spacing are already handled by
+# the app's search normaliser (x.borg matches "xborg", Yi Sun-shin matches
+# "yisunshin"), so only real nicknames belong here.
+ALIASES = {
+    "yu-zhong": ["yz", "yuzhong"],
+    "yi-sun-shin": ["yss", "ysh"],
+    "popol-and-kupa": ["popol", "kupa", "pk"],
+    "xborg": ["x borg", "x-borg"],
+    "change": ["change"],
+    "luo-yi": ["luoyi"],
+    "lapu-lapu": ["lapu"],
+    "esmeralda": ["esme"],
+    "benedetta": ["bene"],
+    "cecilion": ["cecil"],
+    "mathilda": ["mathi"],
+    "minsitthar": ["minsit"],
+    "gatotkaca": ["gatot"],
+    "lancelot": ["lance"],
+    "valentina": ["valen"],
+    "guinevere": ["guin"],
+    "novaria": ["nova"],
+    "fredrinn": ["fred"],
+    "silvanna": ["silva"],
+    "wanwan": ["wan wan"],
+    "jawhead": ["jaw"],
+    "beatrix": ["bea"],
+    "terizla": ["teri"],
+    "phoveus": ["phov"],
+}
+
+# The canonical Mobile Legends roster this build targets. The generator refuses
+# to write heroes.json if the table above drifts from this list in either
+# direction — that is the architectural fix for "heroes are missing": a gap is a
+# hard build error, not a silent omission.
+CANON = """
+Aamon Akai Aldous Alice Alpha Alucard Angela Argus Arlott Atlas Aulus Aurora
+Badang Balmond Bane Barats Baxia Beatrix Belerick Benedetta Brody Bruno Carmilla
+Cecilion Chang'e Chip Chou Cici Claude Clint Cyclops Diggie Dyrroth Edith
+Esmeralda Estes Eudora Fanny Faramis Floryn Franco Fredrinn Freya Gatotkaca Gloo
+Gord Granger Grock Guinevere Gusion Hanabi Hanzo Harith Harley Hayabusa Helcurt
+Hilda Hirara Hylos Irithel Ixia Jawhead Johnson Joy Julian Kadita Kagura Kaja
+Kalea Karina Karrie Khaleed Khufra Kimmy Lancelot Lapu-Lapu Layla Leomord Lesley
+Ling Lolita Lukas Lunox Luo~Yi Lylia Marcel Martis Masha Mathilda Melissa
+Minotaur Minsitthar Miya Moskov Nana Natalia Natan Nolan Novaria Obsidia Odette
+Paquito Pharsa Phoveus Popol~and~Kupa Rafaela Roger Ruby Saber Selena Silvanna
+Sora Sun Suyou Terizla Thamuz Tigreal Uranus Vale Valentina Valir Vexana Wanwan
+X.Borg Xavier Yi~Sun-shin Yin Yu~Zhong Yve Zetian Zhask Zhuxin Zilong
+"""
+
+ROLE_BY_CLASS = {
+    "Tank": "tank",
+    "Fighter": "fighter",
+    "Assassin": "assassin",
+    "Mage": "mage",
+    "Marksman": "marksman",
+    "Support": "support",
+}
 
 
 def clamp(v, lo=5, hi=99):
     return max(lo, min(hi, int(round(v))))
 
 
+def difficulty_map():
+    out = {}
+    for score, ids in DIFFICULTY.items():
+        for hid in ids.split():
+            out[hid] = score
+    return out
+
+
+def canon_names():
+    return [n.replace("~", " ") for n in CANON.split()]
+
+
 def build():
     heroes = []
     seen = set()
+    difficulty = difficulty_map()
+
     for line in ROWS.strip().splitlines():
         parts = [p.strip() for p in line.split("|")]
         if len(parts) != 6:
@@ -242,27 +343,57 @@ def build():
         heroes.append({
             "id": hid,
             "name": name,
+            "aliases": sorted(set(ALIASES.get(hid, []))),
             "classes": class_list,
+            "roles": [ROLE_BY_CLASS[c] for c in class_list],
             "lanes": lane_list,
             "tags": tag_list,
+            "difficulty": difficulty.get(hid, 3),
             "meta": int(meta),
+            "portrait": "",
+            "status": "active",
+            "releaseVersion": "",
             "stats": {k: clamp(stats[k]) for k in KEYS},
         })
 
+    # ---- completeness gate ------------------------------------------------
+    built = {h["name"] for h in heroes}
+    expected = set(canon_names())
+    missing = sorted(expected - built)
+    extra = sorted(built - expected)
+    if missing or extra:
+        lines = []
+        if missing:
+            lines.append("Missing from the table: " + ", ".join(missing))
+        if extra:
+            lines.append("Not on the canonical roster: " + ", ".join(extra))
+        raise SystemExit(
+            "heroes.json was NOT written — the hero table has drifted.\n  "
+            + "\n  ".join(lines)
+            + "\nAdd the row (or update CANON if Moonton actually shipped a change)."
+        )
+
     heroes.sort(key=lambda h: h["name"].lower())
     return {
+        "schema": 2,
         "patch": PATCH,
         "patchDate": PATCH_DATE,
         "generated": date.today().isoformat(),
-        "note": "meta = 0-100 competitive priority for this patch. Edit freely; "
-                "the app reads this file at runtime and never hardcodes hero data.",
+        "source": "bundled",
+        "note": (
+            "Canonical hero registry. meta = 0-100 competitive priority baseline for "
+            "this patch; difficulty = 1-5 mechanical demand, used by the rank curve in "
+            "ranks.json. Live pick/ban/win rates from the public API override meta at "
+            "runtime when they are reachable. The app never hardcodes a hero name."
+        ),
+        "count": len(heroes),
         "heroes": heroes,
     }
 
 
 if __name__ == "__main__":
-    out_dir = os.path.dirname(os.path.abspath(__file__))
-    out_path = os.path.abspath(os.path.join(out_dir, "heroes.json"))
+    here = os.path.dirname(os.path.abspath(__file__))
+    out_path = os.path.abspath(os.path.join(here, "..", "data", "heroes.json"))
     payload = build()
     with open(out_path, "w", encoding="utf-8") as fh:
         json.dump(payload, fh, indent=2, ensure_ascii=False)

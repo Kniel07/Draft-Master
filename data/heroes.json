@@ -1,14 +1,21 @@
 {
+  "schema": 2,
   "patch": "2.1.90",
   "patchDate": "2026-07-08",
-  "generated": "2026-08-21",
-  "note": "meta = 0-100 competitive priority for this patch. Edit freely; the app reads this file at runtime and never hardcodes hero data.",
+  "generated": "2026-08-24",
+  "source": "bundled",
+  "note": "Canonical hero registry. meta = 0-100 competitive priority baseline for this patch; difficulty = 1-5 mechanical demand, used by the rank curve in ranks.json. Live pick/ban/win rates from the public API override meta at runtime when they are reachable. The app never hardcodes a hero name.",
+  "count": 133,
   "heroes": [
     {
       "id": "aamon",
       "name": "Aamon",
+      "aliases": [],
       "classes": [
         "Assassin"
+      ],
+      "roles": [
+        "assassin"
       ],
       "lanes": [
         "jungle"
@@ -18,7 +25,11 @@
         "burst",
         "backline-access"
       ],
+      "difficulty": 4,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 64,
@@ -32,8 +43,12 @@
     {
       "id": "akai",
       "name": "Akai",
+      "aliases": [],
       "classes": [
         "Tank"
+      ],
+      "roles": [
+        "tank"
       ],
       "lanes": [
         "roam",
@@ -45,7 +60,11 @@
         "engage",
         "frontline"
       ],
+      "difficulty": 2,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 70,
         "late": 62,
@@ -57,11 +76,51 @@
       }
     },
     {
+      "id": "aldous",
+      "name": "Aldous",
+      "aliases": [],
+      "classes": [
+        "Fighter"
+      ],
+      "roles": [
+        "fighter"
+      ],
+      "lanes": [
+        "exp",
+        "jungle"
+      ],
+      "tags": [
+        "scaling",
+        "global",
+        "single-target",
+        "burst"
+      ],
+      "difficulty": 4,
+      "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
+      "stats": {
+        "early": 64,
+        "late": 76,
+        "damage": 78,
+        "survivability": 74,
+        "cc": 50,
+        "push": 66,
+        "coordination": 66
+      }
+    },
+    {
       "id": "alice",
       "name": "Alice",
+      "aliases": [],
       "classes": [
         "Mage",
         "Tank"
+      ],
+      "roles": [
+        "mage",
+        "tank"
       ],
       "lanes": [
         "exp",
@@ -73,7 +132,11 @@
         "scaling",
         "frontline"
       ],
+      "difficulty": 3,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 60,
         "late": 82,
@@ -87,8 +150,12 @@
     {
       "id": "alpha",
       "name": "Alpha",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "jungle",
@@ -99,7 +166,11 @@
         "sustain",
         "objective"
       ],
+      "difficulty": 2,
       "meta": 66,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 76,
         "late": 72,
@@ -113,8 +184,12 @@
     {
       "id": "alucard",
       "name": "Alucard",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "jungle",
@@ -125,7 +200,11 @@
         "mobility",
         "sustained-damage"
       ],
+      "difficulty": 2,
       "meta": 68,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 72,
@@ -139,8 +218,12 @@
     {
       "id": "angela",
       "name": "Angela",
+      "aliases": [],
       "classes": [
         "Support"
+      ],
+      "roles": [
+        "support"
       ],
       "lanes": [
         "roam"
@@ -151,7 +234,11 @@
         "global",
         "peel"
       ],
+      "difficulty": 2,
       "meta": 80,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 66,
         "late": 66,
@@ -165,8 +252,12 @@
     {
       "id": "argus",
       "name": "Argus",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp"
@@ -176,7 +267,11 @@
         "split-push",
         "sustained-damage"
       ],
+      "difficulty": 2,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 72,
@@ -190,9 +285,14 @@
     {
       "id": "arlott",
       "name": "Arlott",
+      "aliases": [],
       "classes": [
         "Fighter",
         "Assassin"
+      ],
+      "roles": [
+        "fighter",
+        "assassin"
       ],
       "lanes": [
         "exp",
@@ -203,7 +303,11 @@
         "mobility",
         "burst"
       ],
+      "difficulty": 4,
       "meta": 82,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 66,
@@ -217,9 +321,14 @@
     {
       "id": "atlas",
       "name": "Atlas",
+      "aliases": [],
       "classes": [
         "Tank",
         "Support"
+      ],
+      "roles": [
+        "tank",
+        "support"
       ],
       "lanes": [
         "roam"
@@ -231,7 +340,11 @@
         "frontline",
         "counter-initiate"
       ],
+      "difficulty": 3,
       "meta": 88,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 69,
         "late": 63,
@@ -245,8 +358,12 @@
     {
       "id": "aulus",
       "name": "Aulus",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "jungle",
@@ -257,7 +374,11 @@
         "mobility",
         "split-push"
       ],
+      "difficulty": 2,
       "meta": 78,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 72,
@@ -271,8 +392,12 @@
     {
       "id": "aurora",
       "name": "Aurora",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -282,7 +407,11 @@
         "aoe-cc",
         "setup"
       ],
+      "difficulty": 2,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 74,
@@ -296,8 +425,12 @@
     {
       "id": "badang",
       "name": "Badang",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp"
@@ -307,7 +440,11 @@
         "burst",
         "zoning"
       ],
+      "difficulty": 4,
       "meta": 68,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 66,
@@ -321,8 +458,12 @@
     {
       "id": "balmond",
       "name": "Balmond",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "jungle",
@@ -333,7 +474,11 @@
         "tank-shred",
         "wave-clear"
       ],
+      "difficulty": 1,
       "meta": 62,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 68,
@@ -347,9 +492,14 @@
     {
       "id": "bane",
       "name": "Bane",
+      "aliases": [],
       "classes": [
         "Mage",
         "Fighter"
+      ],
+      "roles": [
+        "mage",
+        "fighter"
       ],
       "lanes": [
         "gold",
@@ -360,7 +510,11 @@
         "objective",
         "sustained-damage"
       ],
+      "difficulty": 2,
       "meta": 68,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 79,
         "late": 78,
@@ -374,9 +528,14 @@
     {
       "id": "barats",
       "name": "Barats",
+      "aliases": [],
       "classes": [
         "Tank",
         "Fighter"
+      ],
+      "roles": [
+        "tank",
+        "fighter"
       ],
       "lanes": [
         "jungle",
@@ -388,7 +547,11 @@
         "frontline",
         "tank-shred"
       ],
+      "difficulty": 2,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 62,
         "late": 74,
@@ -402,8 +565,12 @@
     {
       "id": "baxia",
       "name": "Baxia",
+      "aliases": [],
       "classes": [
         "Tank"
+      ],
+      "roles": [
+        "tank"
       ],
       "lanes": [
         "roam",
@@ -415,7 +582,11 @@
         "frontline",
         "objective"
       ],
+      "difficulty": 3,
       "meta": 80,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 62,
@@ -429,8 +600,14 @@
     {
       "id": "beatrix",
       "name": "Beatrix",
+      "aliases": [
+        "bea"
+      ],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -441,7 +618,11 @@
         "early-game",
         "split-push"
       ],
+      "difficulty": 4,
       "meta": 82,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 78,
@@ -455,8 +636,12 @@
     {
       "id": "belerick",
       "name": "Belerick",
+      "aliases": [],
       "classes": [
         "Tank"
+      ],
+      "roles": [
+        "tank"
       ],
       "lanes": [
         "roam"
@@ -467,7 +652,11 @@
         "sustain",
         "zoning"
       ],
+      "difficulty": 2,
       "meta": 68,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 70,
         "late": 62,
@@ -481,9 +670,16 @@
     {
       "id": "benedetta",
       "name": "Benedetta",
+      "aliases": [
+        "bene"
+      ],
       "classes": [
         "Assassin",
         "Fighter"
+      ],
+      "roles": [
+        "assassin",
+        "fighter"
       ],
       "lanes": [
         "exp",
@@ -495,7 +691,11 @@
         "split-push",
         "burst"
       ],
+      "difficulty": 5,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 64,
@@ -509,8 +709,12 @@
     {
       "id": "brody",
       "name": "Brody",
+      "aliases": [],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -520,7 +724,11 @@
         "poke",
         "mobility"
       ],
+      "difficulty": 4,
       "meta": 78,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 58,
         "late": 86,
@@ -534,8 +742,12 @@
     {
       "id": "bruno",
       "name": "Bruno",
+      "aliases": [],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -545,7 +757,11 @@
         "poke",
         "early-game"
       ],
+      "difficulty": 2,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 84,
@@ -559,9 +775,14 @@
     {
       "id": "carmilla",
       "name": "Carmilla",
+      "aliases": [],
       "classes": [
         "Support",
         "Tank"
+      ],
+      "roles": [
+        "support",
+        "tank"
       ],
       "lanes": [
         "roam"
@@ -571,7 +792,11 @@
         "peel",
         "sustain"
       ],
+      "difficulty": 2,
       "meta": 66,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 67,
         "late": 65,
@@ -585,8 +810,14 @@
     {
       "id": "cecilion",
       "name": "Cecilion",
+      "aliases": [
+        "cecil"
+      ],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -597,7 +828,11 @@
         "wave-clear",
         "zoning"
       ],
+      "difficulty": 2,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 66,
         "late": 86,
@@ -611,8 +846,14 @@
     {
       "id": "change",
       "name": "Chang'e",
+      "aliases": [
+        "change"
+      ],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -623,7 +864,11 @@
         "wave-clear",
         "scaling"
       ],
+      "difficulty": 2,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 66,
         "late": 90,
@@ -637,9 +882,14 @@
     {
       "id": "chip",
       "name": "Chip",
+      "aliases": [],
       "classes": [
         "Tank",
         "Support"
+      ],
+      "roles": [
+        "tank",
+        "support"
       ],
       "lanes": [
         "roam"
@@ -650,7 +900,11 @@
         "peel",
         "frontline"
       ],
+      "difficulty": 3,
       "meta": 78,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 69,
         "late": 63,
@@ -664,8 +918,12 @@
     {
       "id": "chou",
       "name": "Chou",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp",
@@ -677,7 +935,11 @@
         "peel",
         "backline-access"
       ],
+      "difficulty": 5,
       "meta": 84,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 68,
@@ -691,8 +953,12 @@
     {
       "id": "cici",
       "name": "Cici",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp"
@@ -703,7 +969,11 @@
         "poke",
         "split-push"
       ],
+      "difficulty": 4,
       "meta": 78,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 78,
         "late": 68,
@@ -717,8 +987,12 @@
     {
       "id": "claude",
       "name": "Claude",
+      "aliases": [],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -728,7 +1002,11 @@
         "mobility",
         "sustained-damage"
       ],
+      "difficulty": 4,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 44,
         "late": 99,
@@ -742,8 +1020,12 @@
     {
       "id": "clint",
       "name": "Clint",
+      "aliases": [],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -753,7 +1035,11 @@
         "burst",
         "early-game"
       ],
+      "difficulty": 2,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 78,
@@ -765,10 +1051,49 @@
       }
     },
     {
+      "id": "cyclops",
+      "name": "Cyclops",
+      "aliases": [],
+      "classes": [
+        "Mage"
+      ],
+      "roles": [
+        "mage"
+      ],
+      "lanes": [
+        "mid",
+        "jungle"
+      ],
+      "tags": [
+        "hard-cc",
+        "burst",
+        "single-target",
+        "wave-clear"
+      ],
+      "difficulty": 2,
+      "meta": 68,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
+      "stats": {
+        "early": 68,
+        "late": 74,
+        "damage": 96,
+        "survivability": 44,
+        "cc": 70,
+        "push": 66,
+        "coordination": 60
+      }
+    },
+    {
       "id": "diggie",
       "name": "Diggie",
+      "aliases": [],
       "classes": [
         "Support"
+      ],
+      "roles": [
+        "support"
       ],
       "lanes": [
         "roam"
@@ -779,7 +1104,11 @@
         "vision",
         "peel"
       ],
+      "difficulty": 2,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 66,
         "late": 66,
@@ -793,8 +1122,12 @@
     {
       "id": "dyrroth",
       "name": "Dyrroth",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp"
@@ -804,7 +1137,11 @@
         "tank-shred",
         "mobility"
       ],
+      "difficulty": 2,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 66,
@@ -818,9 +1155,14 @@
     {
       "id": "edith",
       "name": "Edith",
+      "aliases": [],
       "classes": [
         "Tank",
         "Marksman"
+      ],
+      "roles": [
+        "tank",
+        "marksman"
       ],
       "lanes": [
         "roam",
@@ -832,7 +1174,11 @@
         "frontline",
         "engage"
       ],
+      "difficulty": 4,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 58,
         "late": 78,
@@ -846,9 +1192,16 @@
     {
       "id": "esmeralda",
       "name": "Esmeralda",
+      "aliases": [
+        "esme"
+      ],
       "classes": [
         "Mage",
         "Tank"
+      ],
+      "roles": [
+        "mage",
+        "tank"
       ],
       "lanes": [
         "exp"
@@ -859,7 +1212,11 @@
         "split-push",
         "frontline"
       ],
+      "difficulty": 4,
       "meta": 84,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 72,
@@ -873,8 +1230,12 @@
     {
       "id": "estes",
       "name": "Estes",
+      "aliases": [],
       "classes": [
         "Support"
+      ],
+      "roles": [
+        "support"
       ],
       "lanes": [
         "roam"
@@ -884,7 +1245,11 @@
         "sustain",
         "peel"
       ],
+      "difficulty": 2,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 66,
         "late": 66,
@@ -898,8 +1263,12 @@
     {
       "id": "eudora",
       "name": "Eudora",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -909,7 +1278,11 @@
         "hard-cc",
         "single-target"
       ],
+      "difficulty": 2,
       "meta": 66,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 74,
@@ -923,8 +1296,12 @@
     {
       "id": "fanny",
       "name": "Fanny",
+      "aliases": [],
       "classes": [
         "Assassin"
+      ],
+      "roles": [
+        "assassin"
       ],
       "lanes": [
         "jungle"
@@ -935,7 +1312,11 @@
         "early-game",
         "backline-access"
       ],
+      "difficulty": 5,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 84,
         "late": 56,
@@ -949,9 +1330,14 @@
     {
       "id": "faramis",
       "name": "Faramis",
+      "aliases": [],
       "classes": [
         "Support",
         "Mage"
+      ],
+      "roles": [
+        "support",
+        "mage"
       ],
       "lanes": [
         "roam",
@@ -962,7 +1348,11 @@
         "aoe-cc",
         "zoning"
       ],
+      "difficulty": 4,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 66,
         "late": 68,
@@ -976,8 +1366,12 @@
     {
       "id": "floryn",
       "name": "Floryn",
+      "aliases": [],
       "classes": [
         "Support"
+      ],
+      "roles": [
+        "support"
       ],
       "lanes": [
         "roam"
@@ -987,7 +1381,11 @@
         "global",
         "sustain"
       ],
+      "difficulty": 2,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 66,
         "late": 66,
@@ -1001,8 +1399,12 @@
     {
       "id": "franco",
       "name": "Franco",
+      "aliases": [],
       "classes": [
         "Tank"
+      ],
+      "roles": [
+        "tank"
       ],
       "lanes": [
         "roam"
@@ -1013,7 +1415,11 @@
         "engage",
         "frontline"
       ],
+      "difficulty": 4,
       "meta": 78,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 70,
         "late": 62,
@@ -1027,9 +1433,16 @@
     {
       "id": "fredrinn",
       "name": "Fredrinn",
+      "aliases": [
+        "fred"
+      ],
       "classes": [
         "Fighter",
         "Tank"
+      ],
+      "roles": [
+        "fighter",
+        "tank"
       ],
       "lanes": [
         "jungle",
@@ -1041,7 +1454,11 @@
         "frontline",
         "tank-shred"
       ],
+      "difficulty": 3,
       "meta": 84,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 66,
@@ -1055,8 +1472,12 @@
     {
       "id": "freya",
       "name": "Freya",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "jungle",
@@ -1067,7 +1488,11 @@
         "mobility",
         "sustain"
       ],
+      "difficulty": 2,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 66,
@@ -1081,9 +1506,16 @@
     {
       "id": "gatotkaca",
       "name": "Gatotkaca",
+      "aliases": [
+        "gatot"
+      ],
       "classes": [
         "Tank",
         "Fighter"
+      ],
+      "roles": [
+        "tank",
+        "fighter"
       ],
       "lanes": [
         "roam",
@@ -1094,7 +1526,11 @@
         "engage",
         "frontline"
       ],
+      "difficulty": 2,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 70,
         "late": 64,
@@ -1108,9 +1544,14 @@
     {
       "id": "gloo",
       "name": "Gloo",
+      "aliases": [],
       "classes": [
         "Tank",
         "Fighter"
+      ],
+      "roles": [
+        "tank",
+        "fighter"
       ],
       "lanes": [
         "exp",
@@ -1122,7 +1563,11 @@
         "zoning",
         "frontline"
       ],
+      "difficulty": 2,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 70,
         "late": 64,
@@ -1136,8 +1581,12 @@
     {
       "id": "gord",
       "name": "Gord",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -1147,7 +1596,11 @@
         "poke",
         "sustained-damage"
       ],
+      "difficulty": 2,
       "meta": 64,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 80,
@@ -1161,8 +1614,12 @@
     {
       "id": "granger",
       "name": "Granger",
+      "aliases": [],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -1172,7 +1629,11 @@
         "poke",
         "early-game"
       ],
+      "difficulty": 4,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 78,
@@ -1186,8 +1647,12 @@
     {
       "id": "grock",
       "name": "Grock",
+      "aliases": [],
       "classes": [
         "Tank"
+      ],
+      "roles": [
+        "tank"
       ],
       "lanes": [
         "roam",
@@ -1199,7 +1664,11 @@
         "zoning",
         "frontline"
       ],
+      "difficulty": 3,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 70,
         "late": 62,
@@ -1213,9 +1682,16 @@
     {
       "id": "guinevere",
       "name": "Guinevere",
+      "aliases": [
+        "guin"
+      ],
       "classes": [
         "Fighter",
         "Mage"
+      ],
+      "roles": [
+        "fighter",
+        "mage"
       ],
       "lanes": [
         "exp"
@@ -1226,7 +1702,11 @@
         "setup",
         "mobility"
       ],
+      "difficulty": 4,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 71,
         "late": 68,
@@ -1240,9 +1720,14 @@
     {
       "id": "gusion",
       "name": "Gusion",
+      "aliases": [],
       "classes": [
         "Assassin",
         "Mage"
+      ],
+      "roles": [
+        "assassin",
+        "mage"
       ],
       "lanes": [
         "jungle",
@@ -1253,7 +1738,11 @@
         "burst",
         "backline-access"
       ],
+      "difficulty": 5,
       "meta": 78,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 66,
@@ -1267,8 +1756,12 @@
     {
       "id": "hanabi",
       "name": "Hanabi",
+      "aliases": [],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -1278,7 +1771,11 @@
         "scaling",
         "wave-clear"
       ],
+      "difficulty": 2,
       "meta": 64,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 44,
         "late": 98,
@@ -1292,8 +1789,12 @@
     {
       "id": "hanzo",
       "name": "Hanzo",
+      "aliases": [],
       "classes": [
         "Assassin"
+      ],
+      "roles": [
+        "assassin"
       ],
       "lanes": [
         "jungle"
@@ -1304,7 +1805,11 @@
         "split-push",
         "single-target"
       ],
+      "difficulty": 4,
       "meta": 68,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 66,
         "late": 74,
@@ -1318,9 +1823,14 @@
     {
       "id": "harith",
       "name": "Harith",
+      "aliases": [],
       "classes": [
         "Mage",
         "Assassin"
+      ],
+      "roles": [
+        "mage",
+        "assassin"
       ],
       "lanes": [
         "mid",
@@ -1331,7 +1841,11 @@
         "sustained-damage",
         "scaling"
       ],
+      "difficulty": 4,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 62,
         "late": 88,
@@ -1343,10 +1857,51 @@
       }
     },
     {
+      "id": "harley",
+      "name": "Harley",
+      "aliases": [],
+      "classes": [
+        "Mage",
+        "Assassin"
+      ],
+      "roles": [
+        "mage",
+        "assassin"
+      ],
+      "lanes": [
+        "mid",
+        "jungle"
+      ],
+      "tags": [
+        "blink",
+        "burst",
+        "backline-access",
+        "mobility"
+      ],
+      "difficulty": 4,
+      "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
+      "stats": {
+        "early": 70,
+        "late": 72,
+        "damage": 99,
+        "survivability": 56,
+        "cc": 54,
+        "push": 57,
+        "coordination": 55
+      }
+    },
+    {
       "id": "hayabusa",
       "name": "Hayabusa",
+      "aliases": [],
       "classes": [
         "Assassin"
+      ],
+      "roles": [
+        "assassin"
       ],
       "lanes": [
         "jungle"
@@ -1357,7 +1912,11 @@
         "split-push",
         "backline-access"
       ],
+      "difficulty": 5,
       "meta": 78,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 64,
@@ -1371,8 +1930,12 @@
     {
       "id": "helcurt",
       "name": "Helcurt",
+      "aliases": [],
       "classes": [
         "Assassin"
+      ],
+      "roles": [
+        "assassin"
       ],
       "lanes": [
         "jungle"
@@ -1383,7 +1946,11 @@
         "single-target",
         "backline-access"
       ],
+      "difficulty": 4,
       "meta": 64,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 64,
@@ -1397,9 +1964,14 @@
     {
       "id": "hilda",
       "name": "Hilda",
+      "aliases": [],
       "classes": [
         "Fighter",
         "Tank"
+      ],
+      "roles": [
+        "fighter",
+        "tank"
       ],
       "lanes": [
         "exp"
@@ -1410,7 +1982,11 @@
         "frontline",
         "objective"
       ],
+      "difficulty": 2,
       "meta": 64,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 76,
         "late": 64,
@@ -1424,8 +2000,12 @@
     {
       "id": "hirara",
       "name": "Hirara",
+      "aliases": [],
       "classes": [
         "Assassin"
+      ],
+      "roles": [
+        "assassin"
       ],
       "lanes": [
         "jungle"
@@ -1435,7 +2015,11 @@
         "burst",
         "backline-access"
       ],
+      "difficulty": 4,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 64,
@@ -1449,8 +2033,12 @@
     {
       "id": "hylos",
       "name": "Hylos",
+      "aliases": [],
       "classes": [
         "Tank"
+      ],
+      "roles": [
+        "tank"
       ],
       "lanes": [
         "roam"
@@ -1461,7 +2049,11 @@
         "sustain",
         "engage"
       ],
+      "difficulty": 2,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 70,
         "late": 62,
@@ -1475,8 +2067,12 @@
     {
       "id": "irithel",
       "name": "Irithel",
+      "aliases": [],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -1486,7 +2082,11 @@
         "sustained-damage",
         "scaling"
       ],
+      "difficulty": 2,
       "meta": 68,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 44,
         "late": 99,
@@ -1500,8 +2100,12 @@
     {
       "id": "ixia",
       "name": "Ixia",
+      "aliases": [],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -1511,7 +2115,11 @@
         "zoning",
         "scaling"
       ],
+      "difficulty": 2,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 44,
         "late": 99,
@@ -1523,11 +2131,56 @@
       }
     },
     {
+      "id": "jawhead",
+      "name": "Jawhead",
+      "aliases": [
+        "jaw"
+      ],
+      "classes": [
+        "Fighter",
+        "Tank"
+      ],
+      "roles": [
+        "fighter",
+        "tank"
+      ],
+      "lanes": [
+        "jungle",
+        "roam",
+        "exp"
+      ],
+      "tags": [
+        "hard-cc",
+        "single-target",
+        "engage",
+        "backline-access"
+      ],
+      "difficulty": 4,
+      "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
+      "stats": {
+        "early": 72,
+        "late": 66,
+        "damage": 66,
+        "survivability": 82,
+        "cc": 68,
+        "push": 54,
+        "coordination": 67
+      }
+    },
+    {
       "id": "johnson",
       "name": "Johnson",
+      "aliases": [],
       "classes": [
         "Tank",
         "Support"
+      ],
+      "roles": [
+        "tank",
+        "support"
       ],
       "lanes": [
         "roam"
@@ -1538,7 +2191,11 @@
         "engage",
         "frontline"
       ],
+      "difficulty": 2,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 69,
         "late": 63,
@@ -1552,8 +2209,12 @@
     {
       "id": "joy",
       "name": "Joy",
+      "aliases": [],
       "classes": [
         "Assassin"
+      ],
+      "roles": [
+        "assassin"
       ],
       "lanes": [
         "jungle"
@@ -1564,7 +2225,11 @@
         "burst",
         "backline-access"
       ],
+      "difficulty": 5,
       "meta": 82,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 64,
@@ -1578,9 +2243,14 @@
     {
       "id": "julian",
       "name": "Julian",
+      "aliases": [],
       "classes": [
         "Fighter",
         "Mage"
+      ],
+      "roles": [
+        "fighter",
+        "mage"
       ],
       "lanes": [
         "jungle",
@@ -1592,7 +2262,11 @@
         "mobility",
         "sustained-damage"
       ],
+      "difficulty": 4,
       "meta": 82,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 71,
         "late": 72,
@@ -1606,8 +2280,12 @@
     {
       "id": "kadita",
       "name": "Kadita",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -1618,7 +2296,11 @@
         "aoe-cc",
         "setup"
       ],
+      "difficulty": 4,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 74,
@@ -1632,8 +2314,12 @@
     {
       "id": "kagura",
       "name": "Kagura",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -1644,7 +2330,11 @@
         "zoning",
         "poke"
       ],
+      "difficulty": 5,
       "meta": 82,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 74,
@@ -1658,9 +2348,14 @@
     {
       "id": "kaja",
       "name": "Kaja",
+      "aliases": [],
       "classes": [
         "Support",
         "Fighter"
+      ],
+      "roles": [
+        "support",
+        "fighter"
       ],
       "lanes": [
         "roam"
@@ -1671,7 +2366,11 @@
         "engage",
         "backline-access"
       ],
+      "difficulty": 4,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 66,
@@ -1685,9 +2384,14 @@
     {
       "id": "kalea",
       "name": "Kalea",
+      "aliases": [],
       "classes": [
         "Support",
         "Tank"
+      ],
+      "roles": [
+        "support",
+        "tank"
       ],
       "lanes": [
         "roam"
@@ -1698,7 +2402,11 @@
         "engage",
         "frontline"
       ],
+      "difficulty": 3,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 67,
         "late": 65,
@@ -1712,9 +2420,14 @@
     {
       "id": "karina",
       "name": "Karina",
+      "aliases": [],
       "classes": [
         "Assassin",
         "Mage"
+      ],
+      "roles": [
+        "assassin",
+        "mage"
       ],
       "lanes": [
         "jungle"
@@ -1725,7 +2438,11 @@
         "mobility",
         "backline-access"
       ],
+      "difficulty": 4,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 66,
@@ -1739,8 +2456,12 @@
     {
       "id": "karrie",
       "name": "Karrie",
+      "aliases": [],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -1751,7 +2472,11 @@
         "mobility",
         "scaling"
       ],
+      "difficulty": 4,
       "meta": 80,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 44,
         "late": 98,
@@ -1765,8 +2490,12 @@
     {
       "id": "khaleed",
       "name": "Khaleed",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp"
@@ -1776,7 +2505,11 @@
         "mobility",
         "aoe-cc"
       ],
+      "difficulty": 4,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 68,
@@ -1790,8 +2523,12 @@
     {
       "id": "khufra",
       "name": "Khufra",
+      "aliases": [],
       "classes": [
         "Tank"
+      ],
+      "roles": [
+        "tank"
       ],
       "lanes": [
         "roam"
@@ -1802,7 +2539,11 @@
         "frontline",
         "counter-initiate"
       ],
+      "difficulty": 4,
       "meta": 84,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 70,
         "late": 62,
@@ -1816,9 +2557,14 @@
     {
       "id": "kimmy",
       "name": "Kimmy",
+      "aliases": [],
       "classes": [
         "Marksman",
         "Mage"
+      ],
+      "roles": [
+        "marksman",
+        "mage"
       ],
       "lanes": [
         "gold",
@@ -1829,7 +2575,11 @@
         "sustained-damage",
         "wave-clear"
       ],
+      "difficulty": 4,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 62,
         "late": 89,
@@ -1843,8 +2593,14 @@
     {
       "id": "lancelot",
       "name": "Lancelot",
+      "aliases": [
+        "lance"
+      ],
       "classes": [
         "Assassin"
+      ],
+      "roles": [
+        "assassin"
       ],
       "lanes": [
         "jungle"
@@ -1855,7 +2611,11 @@
         "immunity",
         "backline-access"
       ],
+      "difficulty": 5,
       "meta": 82,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 64,
@@ -1869,8 +2629,14 @@
     {
       "id": "lapu-lapu",
       "name": "Lapu-Lapu",
+      "aliases": [
+        "lapu"
+      ],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp"
@@ -1880,7 +2646,11 @@
         "burst",
         "sustain"
       ],
+      "difficulty": 4,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 66,
@@ -1894,8 +2664,12 @@
     {
       "id": "layla",
       "name": "Layla",
+      "aliases": [],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -1905,7 +2679,11 @@
         "scaling",
         "wave-clear"
       ],
+      "difficulty": 1,
       "meta": 58,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 50,
         "late": 98,
@@ -1919,8 +2697,12 @@
     {
       "id": "leomord",
       "name": "Leomord",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp"
@@ -1930,7 +2712,11 @@
         "mobility",
         "hard-cc"
       ],
+      "difficulty": 4,
       "meta": 68,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 72,
@@ -1944,9 +2730,14 @@
     {
       "id": "lesley",
       "name": "Lesley",
+      "aliases": [],
       "classes": [
         "Marksman",
         "Assassin"
+      ],
+      "roles": [
+        "marksman",
+        "assassin"
       ],
       "lanes": [
         "gold"
@@ -1957,7 +2748,11 @@
         "single-target",
         "backline-access"
       ],
+      "difficulty": 3,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 64,
         "late": 80,
@@ -1971,8 +2766,12 @@
     {
       "id": "ling",
       "name": "Ling",
+      "aliases": [],
       "classes": [
         "Assassin"
+      ],
+      "roles": [
+        "assassin"
       ],
       "lanes": [
         "jungle"
@@ -1983,7 +2782,11 @@
         "backline-access",
         "scaling"
       ],
+      "difficulty": 5,
       "meta": 80,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 66,
         "late": 74,
@@ -1997,9 +2800,14 @@
     {
       "id": "lolita",
       "name": "Lolita",
+      "aliases": [],
       "classes": [
         "Tank",
         "Support"
+      ],
+      "roles": [
+        "tank",
+        "support"
       ],
       "lanes": [
         "roam"
@@ -2010,7 +2818,11 @@
         "peel",
         "counter-initiate"
       ],
+      "difficulty": 2,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 69,
         "late": 63,
@@ -2024,8 +2836,12 @@
     {
       "id": "lukas",
       "name": "Lukas",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "jungle",
@@ -2036,7 +2852,11 @@
         "burst",
         "mobility"
       ],
+      "difficulty": 4,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 66,
@@ -2050,8 +2870,12 @@
     {
       "id": "lunox",
       "name": "Lunox",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -2061,7 +2885,11 @@
         "immunity",
         "sustained-damage"
       ],
+      "difficulty": 4,
       "meta": 78,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 78,
@@ -2075,8 +2903,14 @@
     {
       "id": "luo-yi",
       "name": "Luo Yi",
+      "aliases": [
+        "luoyi"
+      ],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -2087,7 +2921,11 @@
         "setup",
         "wave-clear"
       ],
+      "difficulty": 4,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 76,
@@ -2101,8 +2939,12 @@
     {
       "id": "lylia",
       "name": "Lylia",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -2113,7 +2955,11 @@
         "poke",
         "wave-clear"
       ],
+      "difficulty": 4,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 76,
@@ -2127,9 +2973,14 @@
     {
       "id": "marcel",
       "name": "Marcel",
+      "aliases": [],
       "classes": [
         "Mage",
         "Support"
+      ],
+      "roles": [
+        "mage",
+        "support"
       ],
       "lanes": [
         "mid"
@@ -2139,7 +2990,11 @@
         "true-damage",
         "poke"
       ],
+      "difficulty": 4,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 74,
@@ -2153,8 +3008,12 @@
     {
       "id": "martis",
       "name": "Martis",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "jungle",
@@ -2166,7 +3025,11 @@
         "hard-cc",
         "objective"
       ],
+      "difficulty": 4,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 76,
         "late": 68,
@@ -2180,8 +3043,12 @@
     {
       "id": "masha",
       "name": "Masha",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp"
@@ -2191,7 +3058,11 @@
         "sustain",
         "objective"
       ],
+      "difficulty": 2,
       "meta": 66,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 76,
         "late": 68,
@@ -2205,9 +3076,16 @@
     {
       "id": "mathilda",
       "name": "Mathilda",
+      "aliases": [
+        "mathi"
+      ],
       "classes": [
         "Support",
         "Assassin"
+      ],
+      "roles": [
+        "support",
+        "assassin"
       ],
       "lanes": [
         "roam"
@@ -2218,7 +3096,11 @@
         "engage",
         "disengage"
       ],
+      "difficulty": 4,
       "meta": 82,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 66,
@@ -2232,8 +3114,12 @@
     {
       "id": "melissa",
       "name": "Melissa",
+      "aliases": [],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -2244,7 +3130,11 @@
         "split-push",
         "scaling"
       ],
+      "difficulty": 2,
       "meta": 78,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 44,
         "late": 98,
@@ -2258,9 +3148,14 @@
     {
       "id": "minotaur",
       "name": "Minotaur",
+      "aliases": [],
       "classes": [
         "Tank",
         "Support"
+      ],
+      "roles": [
+        "tank",
+        "support"
       ],
       "lanes": [
         "roam"
@@ -2270,7 +3165,11 @@
         "heal",
         "frontline"
       ],
+      "difficulty": 2,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 69,
         "late": 63,
@@ -2284,8 +3183,14 @@
     {
       "id": "minsitthar",
       "name": "Minsitthar",
+      "aliases": [
+        "minsit"
+      ],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp"
@@ -2295,7 +3200,11 @@
         "zoning",
         "counter-initiate"
       ],
+      "difficulty": 3,
       "meta": 64,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 68,
@@ -2309,8 +3218,12 @@
     {
       "id": "miya",
       "name": "Miya",
+      "aliases": [],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -2320,7 +3233,11 @@
         "immunity",
         "objective"
       ],
+      "difficulty": 1,
       "meta": 60,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 48,
         "late": 98,
@@ -2334,8 +3251,12 @@
     {
       "id": "moskov",
       "name": "Moskov",
+      "aliases": [],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -2346,7 +3267,11 @@
         "scaling",
         "global"
       ],
+      "difficulty": 4,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 50,
         "late": 98,
@@ -2360,9 +3285,14 @@
     {
       "id": "nana",
       "name": "Nana",
+      "aliases": [],
       "classes": [
         "Mage",
         "Support"
+      ],
+      "roles": [
+        "mage",
+        "support"
       ],
       "lanes": [
         "mid",
@@ -2373,7 +3303,11 @@
         "poke",
         "disengage"
       ],
+      "difficulty": 2,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 74,
@@ -2387,8 +3321,12 @@
     {
       "id": "natalia",
       "name": "Natalia",
+      "aliases": [],
       "classes": [
         "Assassin"
+      ],
+      "roles": [
+        "assassin"
       ],
       "lanes": [
         "jungle"
@@ -2398,7 +3336,11 @@
         "burst",
         "single-target"
       ],
+      "difficulty": 4,
       "meta": 66,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 64,
@@ -2412,9 +3354,14 @@
     {
       "id": "natan",
       "name": "Natan",
+      "aliases": [],
       "classes": [
         "Marksman",
         "Mage"
+      ],
+      "roles": [
+        "marksman",
+        "mage"
       ],
       "lanes": [
         "gold"
@@ -2424,7 +3371,11 @@
         "sustained-damage",
         "anti-heal"
       ],
+      "difficulty": 4,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 48,
         "late": 99,
@@ -2438,8 +3389,12 @@
     {
       "id": "nolan",
       "name": "Nolan",
+      "aliases": [],
       "classes": [
         "Assassin"
+      ],
+      "roles": [
+        "assassin"
       ],
       "lanes": [
         "jungle"
@@ -2450,7 +3405,11 @@
         "backline-access",
         "sustained-damage"
       ],
+      "difficulty": 4,
       "meta": 84,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 68,
@@ -2464,8 +3423,14 @@
     {
       "id": "novaria",
       "name": "Novaria",
+      "aliases": [
+        "nova"
+      ],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -2475,7 +3440,11 @@
         "vision",
         "zoning"
       ],
+      "difficulty": 4,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 76,
@@ -2489,9 +3458,14 @@
     {
       "id": "obsidia",
       "name": "Obsidia",
+      "aliases": [],
       "classes": [
         "Mage",
         "Fighter"
+      ],
+      "roles": [
+        "mage",
+        "fighter"
       ],
       "lanes": [
         "exp",
@@ -2502,7 +3476,11 @@
         "sustained-damage",
         "sustain"
       ],
+      "difficulty": 4,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 69,
         "late": 78,
@@ -2516,8 +3494,12 @@
     {
       "id": "odette",
       "name": "Odette",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -2527,7 +3509,11 @@
         "burst",
         "zoning"
       ],
+      "difficulty": 2,
       "meta": 64,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 74,
@@ -2541,8 +3527,12 @@
     {
       "id": "paquito",
       "name": "Paquito",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "jungle",
@@ -2553,7 +3543,11 @@
         "mobility",
         "hard-cc"
       ],
+      "difficulty": 4,
       "meta": 80,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 66,
@@ -2567,8 +3561,12 @@
     {
       "id": "pharsa",
       "name": "Pharsa",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -2579,7 +3577,11 @@
         "zoning",
         "wave-clear"
       ],
+      "difficulty": 3,
       "meta": 80,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 74,
@@ -2593,8 +3595,14 @@
     {
       "id": "phoveus",
       "name": "Phoveus",
+      "aliases": [
+        "phov"
+      ],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp"
@@ -2604,7 +3612,11 @@
         "sustain",
         "frontline"
       ],
+      "difficulty": 2,
       "meta": 66,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 68,
@@ -2618,8 +3630,16 @@
     {
       "id": "popol-and-kupa",
       "name": "Popol and Kupa",
+      "aliases": [
+        "kupa",
+        "pk",
+        "popol"
+      ],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -2629,7 +3649,11 @@
         "vision",
         "zoning"
       ],
+      "difficulty": 2,
       "meta": 66,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 52,
         "late": 88,
@@ -2643,8 +3667,12 @@
     {
       "id": "rafaela",
       "name": "Rafaela",
+      "aliases": [],
       "classes": [
         "Support"
+      ],
+      "roles": [
+        "support"
       ],
       "lanes": [
         "roam"
@@ -2654,7 +3682,11 @@
         "purify",
         "peel"
       ],
+      "difficulty": 2,
       "meta": 66,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 66,
         "late": 66,
@@ -2668,9 +3700,14 @@
     {
       "id": "roger",
       "name": "Roger",
+      "aliases": [],
       "classes": [
         "Marksman",
         "Fighter"
+      ],
+      "roles": [
+        "marksman",
+        "fighter"
       ],
       "lanes": [
         "jungle",
@@ -2681,7 +3718,11 @@
         "burst",
         "early-game"
       ],
+      "difficulty": 3,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 67,
         "late": 73,
@@ -2695,9 +3736,14 @@
     {
       "id": "ruby",
       "name": "Ruby",
+      "aliases": [],
       "classes": [
         "Fighter",
         "Tank"
+      ],
+      "roles": [
+        "fighter",
+        "tank"
       ],
       "lanes": [
         "exp",
@@ -2709,7 +3755,11 @@
         "setup",
         "frontline"
       ],
+      "difficulty": 2,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 66,
@@ -2723,8 +3773,12 @@
     {
       "id": "saber",
       "name": "Saber",
+      "aliases": [],
       "classes": [
         "Assassin"
+      ],
+      "roles": [
+        "assassin"
       ],
       "lanes": [
         "jungle"
@@ -2734,7 +3788,11 @@
         "burst",
         "backline-access"
       ],
+      "difficulty": 2,
       "meta": 64,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 64,
@@ -2748,9 +3806,14 @@
     {
       "id": "selena",
       "name": "Selena",
+      "aliases": [],
       "classes": [
         "Assassin",
         "Mage"
+      ],
+      "roles": [
+        "assassin",
+        "mage"
       ],
       "lanes": [
         "roam",
@@ -2762,7 +3825,11 @@
         "vision",
         "poke"
       ],
+      "difficulty": 4,
       "meta": 84,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 78,
         "late": 66,
@@ -2776,9 +3843,16 @@
     {
       "id": "silvanna",
       "name": "Silvanna",
+      "aliases": [
+        "silva"
+      ],
       "classes": [
         "Fighter",
         "Mage"
+      ],
+      "roles": [
+        "fighter",
+        "mage"
       ],
       "lanes": [
         "exp"
@@ -2788,7 +3862,11 @@
         "single-target",
         "backline-access"
       ],
+      "difficulty": 4,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 71,
         "late": 70,
@@ -2802,8 +3880,12 @@
     {
       "id": "sora",
       "name": "Sora",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -2813,7 +3895,11 @@
         "poke",
         "mobility"
       ],
+      "difficulty": 4,
       "meta": 70,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 76,
@@ -2825,11 +3911,51 @@
       }
     },
     {
+      "id": "sun",
+      "name": "Sun",
+      "aliases": [],
+      "classes": [
+        "Fighter"
+      ],
+      "roles": [
+        "fighter"
+      ],
+      "lanes": [
+        "exp",
+        "jungle"
+      ],
+      "tags": [
+        "split-push",
+        "sustain",
+        "objective",
+        "wave-clear"
+      ],
+      "difficulty": 2,
+      "meta": 64,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
+      "stats": {
+        "early": 76,
+        "late": 68,
+        "damage": 66,
+        "survivability": 84,
+        "cc": 50,
+        "push": 90,
+        "coordination": 52
+      }
+    },
+    {
       "id": "suyou",
       "name": "Suyou",
+      "aliases": [],
       "classes": [
         "Assassin",
         "Fighter"
+      ],
+      "roles": [
+        "assassin",
+        "fighter"
       ],
       "lanes": [
         "jungle"
@@ -2839,7 +3965,11 @@
         "burst",
         "backline-access"
       ],
+      "difficulty": 4,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 64,
@@ -2853,8 +3983,14 @@
     {
       "id": "terizla",
       "name": "Terizla",
+      "aliases": [
+        "teri"
+      ],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp"
@@ -2865,7 +4001,11 @@
         "tank-shred",
         "frontline"
       ],
+      "difficulty": 3,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 68,
@@ -2879,8 +4019,12 @@
     {
       "id": "thamuz",
       "name": "Thamuz",
+      "aliases": [],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp"
@@ -2890,7 +4034,11 @@
         "true-damage",
         "frontline"
       ],
+      "difficulty": 2,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 68,
@@ -2904,8 +4052,12 @@
     {
       "id": "tigreal",
       "name": "Tigreal",
+      "aliases": [],
       "classes": [
         "Tank"
+      ],
+      "roles": [
+        "tank"
       ],
       "lanes": [
         "roam"
@@ -2916,7 +4068,11 @@
         "setup",
         "frontline"
       ],
+      "difficulty": 2,
       "meta": 82,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 70,
         "late": 62,
@@ -2930,8 +4086,12 @@
     {
       "id": "uranus",
       "name": "Uranus",
+      "aliases": [],
       "classes": [
         "Tank"
+      ],
+      "roles": [
+        "tank"
       ],
       "lanes": [
         "exp"
@@ -2941,7 +4101,11 @@
         "frontline",
         "wave-clear"
       ],
+      "difficulty": 2,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 70,
         "late": 62,
@@ -2955,8 +4119,12 @@
     {
       "id": "vale",
       "name": "Vale",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -2966,7 +4134,11 @@
         "burst",
         "setup"
       ],
+      "difficulty": 4,
       "meta": 66,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 74,
@@ -2980,8 +4152,14 @@
     {
       "id": "valentina",
       "name": "Valentina",
+      "aliases": [
+        "valen"
+      ],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -2992,7 +4170,11 @@
         "counter-initiate",
         "zoning"
       ],
+      "difficulty": 4,
       "meta": 84,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 74,
@@ -3006,8 +4188,12 @@
     {
       "id": "valir",
       "name": "Valir",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -3018,7 +4204,11 @@
         "poke",
         "disengage"
       ],
+      "difficulty": 2,
       "meta": 72,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 76,
@@ -3032,8 +4222,12 @@
     {
       "id": "vexana",
       "name": "Vexana",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -3043,7 +4237,11 @@
         "burst",
         "setup"
       ],
+      "difficulty": 2,
       "meta": 68,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 74,
@@ -3057,8 +4255,14 @@
     {
       "id": "wanwan",
       "name": "Wanwan",
+      "aliases": [
+        "wan wan"
+      ],
       "classes": [
         "Marksman"
+      ],
+      "roles": [
+        "marksman"
       ],
       "lanes": [
         "gold"
@@ -3069,7 +4273,11 @@
         "immunity",
         "backline-access"
       ],
+      "difficulty": 4,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 44,
         "late": 98,
@@ -3083,8 +4291,15 @@
     {
       "id": "xborg",
       "name": "X.Borg",
+      "aliases": [
+        "x borg",
+        "x-borg"
+      ],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp"
@@ -3095,7 +4310,11 @@
         "zoning",
         "tank-shred"
       ],
+      "difficulty": 4,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 68,
@@ -3109,8 +4328,12 @@
     {
       "id": "xavier",
       "name": "Xavier",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -3121,7 +4344,11 @@
         "global",
         "zoning"
       ],
+      "difficulty": 3,
       "meta": 78,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 66,
         "late": 86,
@@ -3135,9 +4362,17 @@
     {
       "id": "yi-sun-shin",
       "name": "Yi Sun-shin",
+      "aliases": [
+        "ysh",
+        "yss"
+      ],
       "classes": [
         "Marksman",
         "Assassin"
+      ],
+      "roles": [
+        "marksman",
+        "assassin"
       ],
       "lanes": [
         "jungle"
@@ -3148,7 +4383,11 @@
         "poke",
         "mobility"
       ],
+      "difficulty": 4,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 82,
@@ -3162,9 +4401,14 @@
     {
       "id": "yin",
       "name": "Yin",
+      "aliases": [],
       "classes": [
         "Assassin",
         "Fighter"
+      ],
+      "roles": [
+        "assassin",
+        "fighter"
       ],
       "lanes": [
         "jungle"
@@ -3174,7 +4418,11 @@
         "burst",
         "mobility"
       ],
+      "difficulty": 4,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 64,
@@ -3188,8 +4436,15 @@
     {
       "id": "yu-zhong",
       "name": "Yu Zhong",
+      "aliases": [
+        "yuzhong",
+        "yz"
+      ],
       "classes": [
         "Fighter"
+      ],
+      "roles": [
+        "fighter"
       ],
       "lanes": [
         "exp"
@@ -3200,7 +4455,11 @@
         "mobility",
         "frontline"
       ],
+      "difficulty": 3,
       "meta": 82,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 68,
@@ -3214,8 +4473,12 @@
     {
       "id": "yve",
       "name": "Yve",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -3226,7 +4489,11 @@
         "poke",
         "wave-clear"
       ],
+      "difficulty": 3,
       "meta": 76,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 76,
@@ -3240,8 +4507,12 @@
     {
       "id": "zetian",
       "name": "Zetian",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -3251,7 +4522,11 @@
         "aoe-cc",
         "poke"
       ],
+      "difficulty": 4,
       "meta": 74,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 76,
@@ -3265,8 +4540,12 @@
     {
       "id": "zhask",
       "name": "Zhask",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -3276,7 +4555,11 @@
         "poke",
         "wave-clear"
       ],
+      "difficulty": 2,
       "meta": 62,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 74,
         "late": 76,
@@ -3290,8 +4573,12 @@
     {
       "id": "zhuxin",
       "name": "Zhuxin",
+      "aliases": [],
       "classes": [
         "Mage"
+      ],
+      "roles": [
+        "mage"
       ],
       "lanes": [
         "mid"
@@ -3301,7 +4588,11 @@
         "aoe-cc",
         "sustained-damage"
       ],
+      "difficulty": 4,
       "meta": 86,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 68,
         "late": 80,
@@ -3315,9 +4606,14 @@
     {
       "id": "zilong",
       "name": "Zilong",
+      "aliases": [],
       "classes": [
         "Fighter",
         "Assassin"
+      ],
+      "roles": [
+        "fighter",
+        "assassin"
       ],
       "lanes": [
         "jungle",
@@ -3328,7 +4624,11 @@
         "mobility",
         "backline-access"
       ],
+      "difficulty": 2,
       "meta": 66,
+      "portrait": "",
+      "status": "active",
+      "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 68,
