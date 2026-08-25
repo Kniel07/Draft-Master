@@ -76,6 +76,8 @@ confirm `scrollY` is unchanged across a whole draft.
 
 ```
 data/
+  sources/
+    mlbb-official-heroes.json   official role, lane and hero id — the source of truth
   heroes.json      canonical hero registry — all 133 heroes
   meta.json        patch info + how live rates become a 0-100 meta score
   counters.json    tag, class and named counter rules
@@ -121,6 +123,24 @@ The badge in the header is never decorative:
 
 When the source is unreachable the app boots normally on bundled data and every
 feature keeps working. It is never blank and never blocked.
+
+### Where hero role and lane come from
+
+Not from anyone's memory. `classes`, `lanes` and `apiId` are read from
+`data/sources/mlbb-official-heroes.json`, a committed snapshot of the official
+hero list. Heroes released after that snapshot sit in the same file under
+`manual`, each with the URL that was checked.
+
+`flexLanes` holds the lanes a hero is actually drafted into that the game does
+not list — officially Akai is Roam, but Akai jungles. Filters and eligibility
+read the union of both, so nothing became harder to find.
+
+`node tools/audit-roles.mjs` re-checks every row against the source and fails on
+any disagreement. Run it after editing hero data.
+
+This exists because field testing found Obsidia listed as a Mage/Fighter playing
+Mid and EXP when she is a Marksman who plays Gold Lane — and no internal check
+could have caught it, because the row was consistent and simply wrong.
 
 ### Adding or changing a hero
 
@@ -191,9 +211,10 @@ python3 -m http.server 8000
 
 ```bash
 node tools/validate-data.mjs   # data checks + engine smoke test
+node tools/audit-roles.mjs     # role/lane/id against the official snapshot
 python3 tools/generate-heroes.py
 
-npm i jsdom && node tools/ui-test.mjs   # 131 assertions against the real UI
+npm i jsdom && node tools/ui-test.mjs   # 145 assertions against the real UI
 ```
 
 `tools/ui-test.mjs` includes a nine-case API resilience matrix — unreachable,

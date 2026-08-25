@@ -122,6 +122,11 @@ export function highlights(registry, comp) {
  * @param {Array}  heroes    the locked picks for one side
  * @param {object} explicit  heroId -> laneId, set by the player
  */
+/** Every lane a hero is actually drafted into: the game's classification plus meta flex. */
+function playable(hero) {
+  return hero.playableLanes || hero.lanes || [];
+}
+
 export function assignLanes(registry, heroes, explicit = {}) {
   const lanes = registry.config.lanes;
   const laneIds = lanes.map((l) => l.id);
@@ -141,9 +146,9 @@ export function assignLanes(registry, heroes, explicit = {}) {
   heroes
     .filter((hero) => !placed.has(hero.id))
     .slice()
-    .sort((a, b) => (a.lanes || []).length - (b.lanes || []).length)
+    .sort((a, b) => playable(a).length - playable(b).length)
     .forEach((hero) => {
-      const target = (hero.lanes || []).find((lane) => !assigned.has(lane));
+      const target = playable(hero).find((lane) => !assigned.has(lane));
       if (!target) return;
       assigned.set(target, { hero, source: 'natural' });
       placed.add(hero.id);
@@ -174,8 +179,8 @@ export function assignLanes(registry, heroes, explicit = {}) {
       // A property of the pairing, not of how we arrived at it: an explicit
       // off-role assignment and an inferred one are equally unorthodox, and
       // equally valid. A hero with no lane data at all is neither.
-      unorthodox: Boolean(hero && (hero.lanes || []).length && !hero.lanes.includes(lane.id)),
-      knownLanes: hero ? hero.lanes || [] : []
+      unorthodox: Boolean(hero && playable(hero).length && !playable(hero).includes(lane.id)),
+      knownLanes: hero ? playable(hero) : []
     };
   });
 

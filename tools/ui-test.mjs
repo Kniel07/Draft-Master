@@ -304,6 +304,14 @@ api.configureApi({ ...config.api, timeoutMs: 150, cacheHours: { heroes: 0, rank:
 
 const RANK_URL = '/heroes/rank';
 
+// Real official hero ids, read from the registry rather than invented. A made-up
+// id is no longer harmless: identity resolution matches on it first, so a
+// fixture claiming Fanny is id 21 now correctly binds that row to Hayabusa.
+const registryHeroes = JSON.parse(fs.readFileSync(path.join(root, 'data/heroes.json'), 'utf8')).heroes;
+const idOf = (name) => registryHeroes.find((h) => h.name === name).apiId;
+const FANNY_ID = idOf('Fanny');
+const LANCELOT_ID = idOf('Lancelot');
+
 /** A hero record in the shape the upstream actually sends. */
 function rankRecord(id, name, { pick = 0.03, ban = null, win = 0.51 } = {}) {
   return {
@@ -373,12 +381,12 @@ section('API 1/9 — a normal live response');
 let result = await refreshWith((url) =>
   url.includes(RANK_URL)
     ? payload([
-        rankRecord(21, 'Fanny', { pick: 0.031, ban: 0.42, win: 0.508 }),
-        rankRecord(35, 'Lancelot', { pick: 0.05, ban: null, win: 0.52 }),
+        rankRecord(FANNY_ID, 'Fanny', { pick: 0.031, ban: 0.42, win: 0.508 }),
+        rankRecord(LANCELOT_ID, 'Lancelot', { pick: 0.05, ban: null, win: 0.52 }),
         // A record with no name at all.
         { data: { main_heroid: 1000, main_hero: { data: { head: 'https://cdn.test/x.png' } } } }
       ])
-    : payload([listRecord(21, 'Fanny'), listRecord(35, 'Lancelot')])
+    : payload([listRecord(FANNY_ID, 'Fanny'), listRecord(LANCELOT_ID, 'Lancelot')])
 );
 ok('badge reads live', /live/i.test(result.badge), result.badge);
 ok('source names the public data', /public/i.test(result.source), result.source);
@@ -399,8 +407,8 @@ ok('and are still recommended', $$('#recommendations .rec').length > 0);
 section('API 3/9 — a newly released hero');
 result = await refreshWith((url) =>
   url.includes(RANK_URL)
-    ? payload([rankRecord(21, 'Fanny', { ban: 0.42 }), rankRecord(9001, 'Novahex', { pick: 0.06, ban: 0.3 })])
-    : payload([listRecord(21, 'Fanny'), listRecord(9001, 'Novahex')])
+    ? payload([rankRecord(FANNY_ID, 'Fanny', { ban: 0.42 }), rankRecord(9001, 'Novahex', { pick: 0.06, ban: 0.3 })])
+    : payload([listRecord(FANNY_ID, 'Fanny'), listRecord(9001, 'Novahex')])
 );
 ok('an unknown hero is added, not dropped', result.heroes === 134, String(result.heroes));
 ok('the addition is surfaced', /not in the/i.test(result.hints) && /Novahex/.test(result.hints), result.hints.slice(0, 200));
@@ -413,8 +421,8 @@ section('API 4/9 — the source renames a hero');
 // manufacture a second one. This is the bug the matrix was written for.
 result = await refreshWith((url) =>
   url.includes(RANK_URL)
-    ? payload([rankRecord(21, 'Fanny Awakened', { ban: 0.51 })])
-    : payload([listRecord(21, 'Fanny Awakened')])
+    ? payload([rankRecord(FANNY_ID, 'Fanny Awakened', { ban: 0.51 })])
+    : payload([listRecord(FANNY_ID, 'Fanny Awakened')])
 );
 ok('a rename creates no new hero', result.heroes === 134, String(result.heroes));
 cards = await inspectHero('Fanny');
@@ -462,7 +470,7 @@ ok(`the guard confuses no two of the ${roster.length} real heroes`, collisions.l
 
 // A remembered id that contradicts an exact name match must yield to the name.
 const stale = identity.resolveIdentities(
-  [{ apiId: 21, name: 'Lancelot', slug: 'lancelot' }], roster, { fanny: 21 }
+  [{ apiId: FANNY_ID, name: 'Lancelot', slug: 'lancelot' }], roster, { fanny: FANNY_ID }
 );
 ok('a stale learned id defers to an exact name', stale.matched.has('lancelot') && !stale.matched.has('fanny'),
   JSON.stringify([...stale.matched.keys()]));
@@ -472,11 +480,11 @@ section('API 6/9 — duplicate records in one payload');
 result = await refreshWith((url) =>
   url.includes(RANK_URL)
     ? payload([
-        rankRecord(21, 'Fanny', { ban: 0.4 }),
-        rankRecord(21, 'Fanny', { ban: 0.9 }),
-        rankRecord(35, 'Lancelot', { ban: 0.1 })
+        rankRecord(FANNY_ID, 'Fanny', { ban: 0.4 }),
+        rankRecord(FANNY_ID, 'Fanny', { ban: 0.9 }),
+        rankRecord(LANCELOT_ID, 'Lancelot', { ban: 0.1 })
       ])
-    : payload([listRecord(21, 'Fanny')])
+    : payload([listRecord(FANNY_ID, 'Fanny')])
 );
 ok('a duplicated hero does not duplicate the registry', result.heroes === 134, String(result.heroes));
 cards = await inspectHero('Fanny');
@@ -505,7 +513,7 @@ section('API 9/9 — cached data, then the source goes away');
 // Cache entries are stale by configuration here, so this is the real fallback:
 // the client tries the network, fails, and serves what it stored last time.
 cacheModule.clearApiCache();
-cacheModule.writeCache('rank:mythic:7', payload([rankRecord(21, 'Fanny', { ban: 0.66 })]));
+cacheModule.writeCache('rank:mythic:7', payload([rankRecord(FANNY_ID, 'Fanny', { ban: 0.66 })]));
 result = await refreshWith(() => {
   throw new Error('offline');
 });
@@ -619,9 +627,18 @@ section('Field test #2 — the player can change the assignment');
 // inferred placement is still EXP and still unorthodox — the explicit
 // assignment confirmed that reading rather than creating it.
 store.clearLaneAssignment('belerick');
-ok('releasing does not move the hero', store.laneFor('belerick').laneId === 'exp',
-  JSON.stringify(store.laneFor('belerick')));
-ok('and it is still flagged unorthodox', store.laneFor('belerick').unorthodox === true);
+// Where an unpinned hero lands depends on what the rest of the board leaves
+// free, so assert the property rather than a specific lane: a released hero is
+// still placed, the plan stays complete, and an off-role placement is still
+// flagged. Belerick is Roam-only officially and Kaja holds Roam, so wherever he
+// goes is unorthodox by definition.
+const released = store.laneFor('belerick');
+ok('a released hero is still placed somewhere', Boolean(released && released.laneId),
+  JSON.stringify(released));
+ok('the placement is inferred, not pinned', released.source !== 'explicit', released.source);
+ok('and it is still flagged unorthodox', released.unorthodox === true);
+ok('the plan is still complete', store.getLanePlan('ally').empty.length === 0 &&
+  store.getLanePlan('ally').overflow.length === 0);
 
 const laneRow = Array.from(laneBlock.querySelectorAll('.lanecheck__row')).find((row) =>
   /Belerick/.test(row.textContent)
@@ -682,6 +699,77 @@ ok('a banned hero is on no lane', (store.setIntent('ban'),
   store.laneFor('fanny') === null));
 store.resetDraft();
 store.setIntent('pick');
+
+section('Gate 2 — hero knowledge is sourced, not remembered');
+// The failure this gate exists for. Obsidia was listed as a Mage/Fighter
+// playing Mid and EXP; she is a Marksman who plays Gold Lane. The row was
+// schema-valid and internally consistent, so no internal check could have
+// caught it — which is the whole argument for an external source.
+const obsidia = registryHeroes.find((h) => h.name === 'Obsidia');
+ok('Obsidia is a Marksman', obsidia.classes.join(',') === 'Marksman', obsidia.classes.join(','));
+ok('Obsidia plays Gold Lane', obsidia.lanes.join(',') === 'gold', obsidia.lanes.join(','));
+// registryHeroes is the file on disk; playableLanes is derived at load time.
+const playableOf = (h) => h.lanes.concat(h.flexLanes || []);
+ok('Obsidia is not listed for Mid or EXP',
+  !playableOf(obsidia).includes('mid') && !playableOf(obsidia).includes('exp'),
+  playableOf(obsidia).join(','));
+
+ok('every hero declares where its role data came from',
+  registryHeroes.every((h) => h.provenance), 
+  registryHeroes.filter((h) => !h.provenance).map((h) => h.name).join(', '));
+ok('no hero relies on unverified authored role data',
+  registryHeroes.every((h) => h.provenance !== 'authored'),
+  registryHeroes.filter((h) => h.provenance === 'authored').map((h) => h.name).join(', '));
+ok('every hero carries the official numeric id',
+  registryHeroes.every((h) => typeof h.apiId === 'number'),
+  registryHeroes.filter((h) => typeof h.apiId !== 'number').map((h) => h.name).join(', '));
+ok('official ids are unique',
+  new Set(registryHeroes.map((h) => h.apiId)).size === registryHeroes.length);
+
+// The registry must agree with the vendored snapshot on every hero it covers.
+const snapshot = JSON.parse(
+  fs.readFileSync(path.join(root, 'data/sources/mlbb-official-heroes.json'), 'utf8')
+);
+const LANE_MAP = { 'gold lane': 'gold', 'exp lane': 'exp', 'mid lane': 'mid', jungle: 'jungle', roam: 'roam' };
+const bySlugName = new Map(registryHeroes.map((h) => [slugOf(h.name), h]));
+function slugOf(v) {
+  return String(v || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+const drift = [];
+snapshot.heroes.forEach((row) => {
+  const hero = bySlugName.get(slugOf(row.name));
+  if (!hero) return drift.push(`${row.name}: missing from registry`);
+  const lanes = row.lane.map((l) => LANE_MAP[l.toLowerCase()]).filter(Boolean).sort();
+  if (hero.classes.slice().sort().join(',') !== row.role.slice().sort().join(',')) {
+    drift.push(`${row.name}: role ${hero.classes} vs ${row.role}`);
+  }
+  if (lanes.length && hero.lanes.slice().sort().join(',') !== lanes.join(',')) {
+    drift.push(`${row.name}: lane ${hero.lanes} vs ${lanes}`);
+  }
+  if (hero.apiId !== row.id) drift.push(`${row.name}: id ${hero.apiId} vs ${row.id}`);
+});
+ok(`all ${snapshot.count} snapshot heroes agree with the registry`, drift.length === 0,
+  drift.slice(0, 4).join(' | '));
+
+section('Gate 2 — flex lanes preserve what the game does not list');
+// The official classification is narrower than how heroes are actually drafted.
+// Splitting the two must not make a hero unfindable: lanes + flexLanes is the
+// complete set, and that union is what every filter and eligibility check reads.
+const akai = registryHeroes.find((h) => h.name === 'Akai');
+ok('Akai is officially Roam only', akai.lanes.join(',') === 'roam', akai.lanes.join(','));
+ok('but jungle is kept as a flex lane', akai.flexLanes.includes('jungle'), akai.flexLanes.join(','));
+
+goTo('draft');
+tap($('#actionbar .btn') || $('.recs__foot .btn--browse'));
+await new Promise((r) => setTimeout(r, 60));
+const jungChipInSheet = Array.from($$('.sheet .chips .chip')).find((c) => c.textContent === 'JUNG');
+tap(jungChipInSheet);
+await new Promise((r) => setTimeout(r, 200));
+const jungleNames = $$('.sheet .hcard').map((c) => c.dataset.heroId);
+ok('a flex-lane hero is still found by the lane filter', jungleNames.includes('akai'),
+  jungleNames.slice(0, 8).join(', '));
+ok('an off-lane hero is not', !jungleNames.includes('obsidia'));
+tap($('.sheet__close'));
 
 section('Result');
 console.log(`${checks - failures}/${checks} checks passed`);

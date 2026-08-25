@@ -126,7 +126,80 @@ discover a matchup nobody has written down.
 
 ---
 
-## 4a. Lane assignment: three things, not one
+## 4. Hero knowledge: sourced, not remembered
+
+Field testing found Obsidia in the registry as a **Mage/Fighter playing Mid and
+EXP**. She is a **Marksman who plays Gold Lane** — wrong class and wrong lane.
+
+The important part is not the wrong row. It is that nothing could have caught
+it. The row was schema-valid. It passed every structural check. It was
+internally consistent: the class matched the lane, the lane matched the tags,
+the tags matched the stats. A validator that reasons about internal consistency
+is exactly the wrong tool, because the data was consistent and false.
+
+Running a class↔lane plausibility check across all 133 heroes returned **zero
+flags**. That result is the argument for this section.
+
+### Where the data comes from now
+
+`classes`, `lanes` and `apiId` are read from
+`data/sources/mlbb-official-heroes.json` — a vendored snapshot of the official
+hero list, scraped from Moonton's own hero page, carrying role, lane and the
+official numeric hero id. It is committed rather than fetched so the audit is
+reproducible and reviewable, and so a diff shows when it changes.
+
+Diffing the snapshot against the previous authored table found **19 role
+disagreements and 34 lane disagreements across 129 heroes** — roughly 15% and
+26% of the roster. The four heroes the snapshot predates (Obsidia, Sora, Marcel,
+Hirara) were **all four wrong**, which is the shape of the problem: the errors
+cluster where authored knowledge is thinnest, and authored knowledge cannot
+report its own thinness.
+
+Those four live in the same file under `manual`, each carrying the URL that was
+actually checked. The generator and the audit tool both read that file, so there
+is one place to correct and one place to review.
+
+### Common lanes and flex lanes
+
+The official classification is narrower than how heroes are drafted: officially
+Akai is Roam, but Akai jungles. Discarding that knowledge would make the app
+worse; keeping it in `lanes` would make "off-role" meaningless.
+
+So the two are separate, as `lanes` (what the game says) and `flexLanes` (what
+the meta adds). Their union is exactly the old `lanes` field, which is why
+routing every filter, search and eligibility check through
+`hero.playableLanes` reproduces the previous behaviour precisely while making
+the canonical half available for display and for provenance.
+
+**No scoring weight, formula or threshold changed in this work.** Recommendations
+move only because the inputs are now true.
+
+### The standing gate
+
+`tools/audit-roles.mjs` re-diffs the registry against the snapshot and against
+the cited sources for the manual rows, and exits non-zero on any disagreement.
+The committed suite asserts the same thing, plus that every hero declares its
+`provenance`, that none is left as unverified authored guesswork, and that every
+hero carries a unique official id.
+
+Both were mutation-tested: reintroducing the Obsidia row makes the audit report
+two mismatches and the suite fail three assertions, rather than passing
+regardless.
+
+### What this bought elsewhere
+
+Every hero now carries its official numeric id, so identity resolution matches
+on it from the first load instead of having to learn it. The learned-id map
+remains as a fallback for heroes the snapshot has not caught up with.
+
+**The limit.** The snapshot is a scrape of a third-party mirror of the official
+list, not a first-party feed, and it is a point-in-time capture. It is a
+verifiable, inspectable, re-checkable source — which authored recollection was
+not — but it is not infallible, and refreshing it is a manual step.
+
+---
+
+## 4a. Lane assignment: what the game says vs what the team decided
 
 Field testing surfaced the failure this section exists to prevent. A team put
 Kaja on Roam and Belerick on EXP — both canonically Roam-only, both intentional.
@@ -360,7 +433,7 @@ Two network requests per session, both cached. Portraits are `loading="lazy"`.
 
 Committed and repeatable:
 
-- **`tools/ui-test.mjs` — 131 assertions**, the real UI under jsdom. Offline
+- **`tools/ui-test.mjs` — 145 assertions**, the real UI under jsdom. Offline
   boot; partial search ("yuz" → Yu Zhong); picking a hero the engine did not
   suggest; ignore removing one row and committing nothing; Why? opening the real
   components; the ban list; unavailable heroes still findable, struck through
@@ -377,6 +450,8 @@ Committed and repeatable:
   engine smoke test on an empty board.
 - **`tools/generate-heroes.py`** — refuses to write `heroes.json` unless the
   hero table matches the canonical roster exactly, in both directions.
+- **`tools/audit-roles.mjs`** — every hero's role, lane and id against the
+  vendored official snapshot and the cited sources; exits non-zero on drift.
 
 Run once, by hand, and **not** committed as a repeatable check:
 

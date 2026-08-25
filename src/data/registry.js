@@ -115,6 +115,23 @@ function validate(heroes, config, counters, synergies) {
       }
     }
 
+    if (!Array.isArray(hero.flexLanes)) hero.flexLanes = [];
+    hero.flexLanes = hero.flexLanes.filter((lane) => laneIds.has(lane) && !hero.lanes.includes(lane));
+
+    // Every lane this hero is actually drafted into: what the game lists, plus
+    // what the meta adds. `lanes` alone is the game's classification and is what
+    // makes a pairing "off-role"; this union is what makes it *playable*, and it
+    // is what every filter, search and eligibility check reads.
+    hero.playableLanes = hero.lanes.concat(hero.flexLanes);
+
+    if (!hero.provenance) hero.provenance = 'authored';
+    if (hero.provenance === 'authored') {
+      warnings.push(
+        `Hero "${hero.name}" has no canonical source for its role and lane — the values are authored ` +
+          `and unverified.`
+      );
+    }
+
     if (!Array.isArray(hero.classes) || hero.classes.length === 0) {
       warnings.push(`Hero "${hero.name}" has no role — treated as Fighter for scoring.`);
       hero.classes = ['Fighter'];
@@ -152,6 +169,7 @@ function validate(heroes, config, counters, synergies) {
     }
   });
 
+  const unverified = heroes.filter((h) => h.provenance === 'authored').length;
   const noPortrait = heroes.filter((h) => h.missingPortrait).length;
   const noCounterRule = heroes.filter(
     (h) => !(counters.heroCounters || []).some((r) => r.hero === h.id || r.against === h.id)
@@ -162,6 +180,7 @@ function validate(heroes, config, counters, synergies) {
     warnings,
     summary: {
       heroes: byId.size,
+      unverifiedRoleData: unverified,
       missingPortraits: noPortrait,
       withoutNamedCounterRule: noCounterRule
     }
@@ -212,7 +231,7 @@ function buildIndexes(heroes, counters, synergies, config) {
 
   const heroesByLane = new Map();
   (config.lanes || []).forEach((lane) => {
-    heroesByLane.set(lane.id, heroes.filter((h) => h.lanes.includes(lane.id)));
+    heroesByLane.set(lane.id, heroes.filter((h) => h.playableLanes.includes(lane.id)));
   });
 
   // Prebuilt search haystack: name + id + aliases + roles + lanes + tags, all
@@ -223,7 +242,7 @@ function buildIndexes(heroes, counters, synergies, config) {
     const parts = [hero.name, hero.id]
       .concat(hero.aliases || [])
       .concat(hero.classes || [])
-      .concat(hero.lanes || [])
+      .concat(hero.playableLanes || [])
       .concat((hero.tags || []).map((t) => t.replace(/-/g, ' ')));
     searchIndex.set(hero.id, {
       name: slug(hero.name),
@@ -368,6 +387,8 @@ export function applyLiveLayer(registry, { rankRows = [], heroRows = [], rankId,
       classes: ['Fighter'],
       roles: ['fighter'],
       lanes: [],
+      flexLanes: [],
+      playableLanes: [],
       tags: [],
       difficulty: 3,
       meta: 60,

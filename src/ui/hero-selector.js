@@ -34,7 +34,7 @@ export function searchHeroes(registry, query) {
 
 export function filterHeroes(registry, { query, lane, comfortIds, onlyComfort }) {
   return searchHeroes(registry, query).filter((hero) => {
-    if (lane && lane !== 'all' && !(hero.lanes || []).includes(lane)) return false;
+    if (lane && lane !== 'all' && !(hero.playableLanes || hero.lanes || []).includes(lane)) return false;
     if (onlyComfort && comfortIds && !comfortIds.has(hero.id)) return false;
     return true;
   });
@@ -67,8 +67,8 @@ export function heroCard(registry, hero, options = {}) {
   const body = el('div', 'hcard__body');
   body.appendChild(el('span', 'hcard__name', hero.name));
   const sub = el('span', 'hcard__sub');
-  sub.textContent = (hero.lanes || []).length
-    ? (hero.lanes || []).map((l) => laneShort(registry, l)).join(' · ')
+  sub.textContent = (hero.playableLanes || hero.lanes || []).length
+    ? (hero.playableLanes || hero.lanes).map((l) => laneShort(registry, l)).join(' · ')
     : (hero.classes || []).join(' · ');
   body.appendChild(sub);
   if (rating) body.appendChild(el('span', 'hcard__stars', stars(rating)));

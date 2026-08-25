@@ -20,6 +20,8 @@ Anything derived can be overridden by hand afterwards in heroes.json.
 
 import json
 import os
+import re
+import unicodedata
 from datetime import date
 
 PATCH = "2.1.90"
@@ -114,7 +116,7 @@ nolan|Nolan|Assassin|jungle|mobility,burst,backline-access,sustained-damage|84
 yin|Yin|Assassin,Fighter|jungle|single-target,burst,mobility|76
 julian|Julian|Fighter,Mage|jungle,exp|hard-cc,burst,mobility,sustained-damage|82
 suyou|Suyou|Assassin,Fighter|jungle|mobility,burst,backline-access|76
-hirara|Hirara|Assassin|jungle|mobility,burst,backline-access|74
+hirara|Hirara|Assassin|exp,jungle|mobility,burst,backline-access|74
 lukas|Lukas|Fighter|jungle,exp|sustain,burst,mobility|72
 fredrinn|Fredrinn|Fighter,Tank|jungle,exp|aoe-cc,sustain,frontline,tank-shred|84
 barats|Barats|Tank,Fighter|jungle,exp|hard-cc,scaling,frontline,tank-shred|70
@@ -156,8 +158,8 @@ odette|Odette|Mage|mid|aoe-cc,burst,zoning|64
 zhask|Zhask|Mage|mid|split-push,poke,wave-clear|62
 gord|Gord|Mage|mid|true-damage,poke,sustained-damage|64
 vale|Vale|Mage|mid|aoe-cc,burst,setup|66
-marcel|Marcel|Mage,Support|mid|shield,true-damage,poke|72
-sora|Sora|Mage|mid|zoning,poke,mobility|70
+marcel|Marcel|Support|roam|shield,peel,aoe-cc,vision|72
+sora|Sora|Fighter,Assassin|exp|mobility,burst,sustain|70
 zetian|Zetian|Mage|mid|zoning,aoe-cc,poke|74
 beatrix|Beatrix|Marksman|gold|poke,burst,early-game,split-push|82
 brody|Brody|Marksman|gold|burst,poke,mobility|78
@@ -202,7 +204,7 @@ hilda|Hilda|Fighter,Tank|exp|sustain,burst,frontline,objective|64
 lapu-lapu|Lapu-Lapu|Fighter|exp|aoe-cc,burst,sustain|72
 alice|Alice|Mage,Tank|exp,mid|sustain,aoe-cc,scaling,frontline|70
 benedetta|Benedetta|Assassin,Fighter|exp,jungle|mobility,immunity,split-push,burst|74
-obsidia|Obsidia|Mage,Fighter|exp,mid|zoning,sustained-damage,sustain|72
+obsidia|Obsidia|Marksman|gold|sustained-damage,scaling,mobility,single-target|72
 kalea|Kalea|Support,Tank|roam|hard-cc,peel,engage,frontline|76
 aldous|Aldous|Fighter|exp,jungle|scaling,global,single-target,burst|70
 cyclops|Cyclops|Mage|mid,jungle|hard-cc,burst,single-target,wave-clear|68
@@ -283,15 +285,73 @@ Sora Sun Suyou Terizla Thamuz Tigreal Uranus Vale Valentina Valir Vexana Wanwan
 X.Borg Xavier Yi~Sun-shin Yin Yu~Zhong Yve Zetian Zhask Zhuxin Zilong
 """
 
-# Upstream numeric hero ids, when they are known: {"fanny": 21, ...}.
+# --------------------------------------------------------------------------
+# Canonical hero knowledge — role, lane and the official numeric id.
 #
-# Deliberately empty. This build has never seen a live response, and inventing
-# ids would be worse than having none — a wrong id binds another hero's
-# statistics. The app learns them at runtime instead: the first load that
-# identifies a hero by name records its id and every later load matches on that,
-# which is what makes a rename harmless. Bake them in here once you have a real
-# payload to read them from, and they take priority over anything learned.
-API_IDS = {}
+# This does NOT come from the table below. The table is authored knowledge about
+# how heroes are *drafted*; this is what the game says a hero *is*, and the two
+# are different things that were previously conflated.
+#
+# Field testing found Obsidia listed as a Mage/Fighter playing Mid and EXP. She
+# is a Marksman who plays Gold Lane — wrong class and wrong lane. The internal
+# validator could not catch it, because the row was self-consistent and simply
+# false. No amount of internal checking finds that class of error; only an
+# external source does.
+#
+# So role, lane and id are read from data/sources/mlbb-official-heroes.json, a
+# vendored snapshot of the official hero list. Anything the snapshot does not
+# cover is listed in MANUAL_OFFICIAL below with the source that verified it, and
+# is reported as unverified until the snapshot catches up.
+# --------------------------------------------------------------------------
+
+SNAPSHOT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        "..", "data", "sources", "mlbb-official-heroes.json")
+
+LANE_FROM_OFFICIAL = {
+    "gold lane": "gold",
+    "exp lane": "exp",
+    "mid lane": "mid",
+    "jungle": "jungle",
+    "roam": "roam",
+}
+
+def load_official():
+    """name-slug -> {id, roles[], lanes[], verified}."""
+    with open(SNAPSHOT, encoding="utf-8") as fh:
+        payload = json.load(fh)
+
+    table = {}
+    for row in payload["heroes"]:
+        lanes = [LANE_FROM_OFFICIAL[l.lower()] for l in row["lane"]
+                 if l.lower() in LANE_FROM_OFFICIAL]
+        table[slugify(row["name"])] = {
+            "id": row["id"],
+            "roles": list(row["role"]),
+            "lanes": lanes,
+            "verified": "official-snapshot",
+        }
+
+    # Heroes released after the snapshot was captured. Each carries the source
+    # that was actually checked, in the same file, so the audit can verify them
+    # too instead of trusting them.
+    for row in payload.get("manual", []):
+        lanes = [LANE_FROM_OFFICIAL[l.lower()] for l in row["lane"]
+                 if l.lower() in LANE_FROM_OFFICIAL]
+        table[slugify(row["name"])] = {
+            "id": row["id"],
+            "roles": list(row["role"]),
+            "lanes": lanes,
+            "verified": "manual",
+            "source": row["source"],
+        }
+    return table
+
+
+def slugify(value):
+    cleaned = unicodedata.normalize("NFD", str(value or ""))
+    cleaned = cleaned.encode("ascii", "ignore").decode()
+    return re.sub(r"[^a-z0-9]", "", cleaned.lower())
+
 
 ROLE_BY_CLASS = {
     "Tank": "tank",
@@ -323,6 +383,8 @@ def build():
     heroes = []
     seen = set()
     difficulty = difficulty_map()
+    official = load_official()
+    unverified = []
 
     for line in ROWS.strip().splitlines():
         parts = [p.strip() for p in line.split("|")]
@@ -333,9 +395,29 @@ def build():
             raise ValueError("Duplicate hero id: %s" % hid)
         seen.add(hid)
 
-        class_list = [c.strip() for c in classes.split(",") if c.strip()]
-        lane_list = [l.strip() for l in lanes.split(",") if l.strip()]
+        authored_classes = [c.strip() for c in classes.split(",") if c.strip()]
+        authored_lanes = [l.strip() for l in lanes.split(",") if l.strip()]
         tag_list = [t.strip() for t in tags.split(",") if t.strip()]
+
+        # Canonical layer wins for role and lane. The authored values are not
+        # discarded — the lanes the game does not list become flexLanes, which
+        # is where the knowledge that Akai can jungle actually belongs.
+        # The row id is kebab-case ("yu-zhong"); the snapshot is keyed by a
+        # slugged display name ("yuzhong"). Match on either.
+        canon = official.get(slugify(hid)) or official.get(slugify(name))
+        if canon:
+            class_list = canon["roles"]
+            lane_list = canon["lanes"] or authored_lanes
+            flex_lanes = [l for l in authored_lanes if l not in lane_list]
+            provenance = canon["verified"]
+            api_id = canon["id"]
+        else:
+            class_list = authored_classes
+            lane_list = authored_lanes
+            flex_lanes = []
+            provenance = "authored"
+            api_id = None
+            unverified.append(name)
 
         base = BASELINE[class_list[0]]
         stats = dict(zip(KEYS, base))
@@ -357,10 +439,12 @@ def build():
             "classes": class_list,
             "roles": [ROLE_BY_CLASS[c] for c in class_list],
             "lanes": lane_list,
+            "flexLanes": flex_lanes,
             "tags": tag_list,
             "difficulty": difficulty.get(hid, 3),
             "meta": int(meta),
-            **({"apiId": API_IDS[hid]} if hid in API_IDS else {}),
+            **({"apiId": api_id} if api_id is not None else {}),
+            "provenance": provenance,
             "portrait": "",
             "status": "active",
             "releaseVersion": "",
@@ -384,18 +468,30 @@ def build():
             + "\nAdd the row (or update CANON if Moonton actually shipped a change)."
         )
 
+    if unverified:
+        print("  UNVERIFIED (no canonical source): %s" % ", ".join(sorted(unverified)))
+
+    counts = {}
+    for hero in heroes:
+        counts[hero["provenance"]] = counts.get(hero["provenance"], 0) + 1
+    print("  provenance: %s" % counts)
+
     heroes.sort(key=lambda h: h["name"].lower())
     return {
-        "schema": 2,
+        "schema": 3,
+        "provenance": counts,
         "patch": PATCH,
         "patchDate": PATCH_DATE,
         "generated": date.today().isoformat(),
         "source": "bundled",
         "note": (
-            "Canonical hero registry. meta = 0-100 competitive priority baseline for "
-            "this patch; difficulty = 1-5 mechanical demand, used by the rank curve in "
-            "ranks.json. Live pick/ban/win rates from the public API override meta at "
-            "runtime when they are reachable. The app never hardcodes a hero name."
+            "Canonical hero registry. `classes`, `lanes` and `apiId` come from the "
+            "official snapshot in data/sources/ — not from authored knowledge, because "
+            "authored role data was found to be confidently wrong. `flexLanes` are lanes "
+            "a hero is drafted into that the game does not list. `meta` is a 0-100 "
+            "competitive priority baseline and `difficulty` a 1-5 mechanical demand; both "
+            "are authored and are overridden by live rank statistics when reachable. "
+            "`provenance` says which layer each row's role and lane came from."
         ),
         "count": len(heroes),
         "heroes": heroes,

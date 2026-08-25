@@ -55,8 +55,8 @@ export function createLanePicker(registry, { onAssign, onClose }) {
       el(
         'span',
         'lanepick__known',
-        (hero.lanes || []).length
-          ? `Known roles: ${hero.lanes.map((l) => laneShort(registry, l)).join(' · ')}`
+        (hero.playableLanes || hero.lanes || []).length
+          ? `Known roles: ${(hero.playableLanes || hero.lanes).map((l) => laneShort(registry, l)).join(' · ')}`
           : 'No role data for this hero'
       )
     );
@@ -73,7 +73,8 @@ export function createLanePicker(registry, { onAssign, onClose }) {
       // than by the player. Shown differently from an explicit choice so
       // "nothing is selected" never means "nowhere assigned".
       const inferred = !assigned && playing === lane.id;
-      const off = (hero.lanes || []).length && !hero.lanes.includes(lane.id);
+      const known = hero.playableLanes || hero.lanes || [];
+      const off = known.length && !known.includes(lane.id);
       const chip = button(
         `chip chip--lg${active ? ' is-active' : ''}${inferred ? ' is-current' : ''}${off ? ' chip--off' : ''}`,
         lane.short,

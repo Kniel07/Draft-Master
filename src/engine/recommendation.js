@@ -31,8 +31,9 @@ function laneLabel(registry, laneId) {
 
 /** Role fit: does this hero answer the slot we still have to fill? */
 function roleComponent(registry, hero, openLanes, selectedRole) {
+  const playable = hero.playableLanes || hero.lanes || [];
   if (selectedRole) {
-    const fits = (hero.lanes || []).includes(selectedRole);
+    const fits = playable.includes(selectedRole);
     return fits
       ? {
           score: 95,
@@ -42,7 +43,7 @@ function roleComponent(registry, hero, openLanes, selectedRole) {
   }
   if (!openLanes.length) return { score: 50, reason: null };
 
-  const fits = (hero.lanes || []).filter((lane) => openLanes.includes(lane));
+  const fits = playable.filter((lane) => openLanes.includes(lane));
   if (!fits.length) return { score: 20, reason: null };
   return {
     score: 92,
@@ -55,7 +56,7 @@ function roleComponent(registry, hero, openLanes, selectedRole) {
 
 /** Flexibility: how many lanes this hero can be drafted into. */
 function flexComponent(registry, hero) {
-  const lanes = (hero.lanes || []).length;
+  const lanes = (hero.playableLanes || hero.lanes || []).length;
   const laneCount = registry.config.lanes.length;
   const score = clamp((lanes / Math.min(3, laneCount)) * 100);
   return {
@@ -164,7 +165,7 @@ export function recommendPicks(registry, snapshot, context, limit = 6) {
         const worst = counter.riskReasons.slice().sort((a, b) => b.weight - a.weight)[0];
         warnings.push(worst ? worst.text : 'The enemy draft already answers this hero');
       }
-      if (snapshot.selectedRole && !(hero.lanes || []).includes(snapshot.selectedRole)) {
+      if (snapshot.selectedRole && !(hero.playableLanes || hero.lanes || []).includes(snapshot.selectedRole)) {
         warnings.push(`Off-role for your ${laneLabel(registry, snapshot.selectedRole)}`);
       }
 

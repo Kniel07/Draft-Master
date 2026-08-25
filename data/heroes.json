@@ -1,10 +1,14 @@
 {
-  "schema": 2,
+  "schema": 3,
+  "provenance": {
+    "official-snapshot": 129,
+    "manual": 4
+  },
   "patch": "2.1.90",
   "patchDate": "2026-07-08",
-  "generated": "2026-08-24",
+  "generated": "2026-08-25",
   "source": "bundled",
-  "note": "Canonical hero registry. meta = 0-100 competitive priority baseline for this patch; difficulty = 1-5 mechanical demand, used by the rank curve in ranks.json. Live pick/ban/win rates from the public API override meta at runtime when they are reachable. The app never hardcodes a hero name.",
+  "note": "Canonical hero registry. `classes`, `lanes` and `apiId` come from the official snapshot in data/sources/ — not from authored knowledge, because authored role data was found to be confidently wrong. `flexLanes` are lanes a hero is drafted into that the game does not list. `meta` is a 0-100 competitive priority baseline and `difficulty` a 1-5 mechanical demand; both are authored and are overridden by live rank statistics when reachable. `provenance` says which layer each row's role and lane came from.",
   "count": 133,
   "heroes": [
     {
@@ -20,6 +24,7 @@
       "lanes": [
         "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "invisible",
         "burst",
@@ -27,6 +32,8 @@
       ],
       "difficulty": 4,
       "meta": 72,
+      "apiId": 109,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -51,7 +58,9 @@
         "tank"
       ],
       "lanes": [
-        "roam",
+        "roam"
+      ],
+      "flexLanes": [
         "jungle"
       ],
       "tags": [
@@ -62,6 +71,8 @@
       ],
       "difficulty": 2,
       "meta": 76,
+      "apiId": 9,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -86,7 +97,9 @@
         "fighter"
       ],
       "lanes": [
-        "exp",
+        "exp"
+      ],
+      "flexLanes": [
         "jungle"
       ],
       "tags": [
@@ -97,6 +110,8 @@
       ],
       "difficulty": 4,
       "meta": 70,
+      "apiId": 64,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -124,6 +139,9 @@
       ],
       "lanes": [
         "exp",
+        "jungle"
+      ],
+      "flexLanes": [
         "mid"
       ],
       "tags": [
@@ -134,6 +152,8 @@
       ],
       "difficulty": 3,
       "meta": 70,
+      "apiId": 4,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -161,6 +181,7 @@
         "jungle",
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "sustained-damage",
         "sustain",
@@ -168,6 +189,8 @@
       ],
       "difficulty": 2,
       "meta": 66,
+      "apiId": 28,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -186,13 +209,17 @@
       "name": "Alucard",
       "aliases": [],
       "classes": [
-        "Fighter"
+        "Fighter",
+        "Assassin"
       ],
       "roles": [
-        "fighter"
+        "fighter",
+        "assassin"
       ],
       "lanes": [
-        "jungle",
+        "jungle"
+      ],
+      "flexLanes": [
         "exp"
       ],
       "tags": [
@@ -202,17 +229,19 @@
       ],
       "difficulty": 2,
       "meta": 68,
+      "apiId": 7,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 72,
-        "damage": 72,
-        "survivability": 90,
-        "cc": 50,
-        "push": 60,
-        "coordination": 58
+        "damage": 77,
+        "survivability": 82,
+        "cc": 47,
+        "push": 59,
+        "coordination": 56
       }
     },
     {
@@ -228,6 +257,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "shield",
         "heal",
@@ -236,6 +266,8 @@
       ],
       "difficulty": 2,
       "meta": 80,
+      "apiId": 55,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -262,6 +294,7 @@
       "lanes": [
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "immunity",
         "split-push",
@@ -269,6 +302,8 @@
       ],
       "difficulty": 2,
       "meta": 70,
+      "apiId": 45,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -295,7 +330,9 @@
         "assassin"
       ],
       "lanes": [
-        "exp",
+        "exp"
+      ],
+      "flexLanes": [
         "jungle"
       ],
       "tags": [
@@ -305,6 +342,8 @@
       ],
       "difficulty": 4,
       "meta": 82,
+      "apiId": 120,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -323,16 +362,15 @@
       "name": "Atlas",
       "aliases": [],
       "classes": [
-        "Tank",
-        "Support"
+        "Tank"
       ],
       "roles": [
-        "tank",
-        "support"
+        "tank"
       ],
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "aoe-cc",
         "engage",
@@ -342,16 +380,18 @@
       ],
       "difficulty": 3,
       "meta": 88,
+      "apiId": 93,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 69,
-        "late": 63,
-        "damage": 30,
-        "survivability": 94,
-        "cc": 98,
-        "push": 34,
+        "early": 70,
+        "late": 62,
+        "damage": 28,
+        "survivability": 99,
+        "cc": 99,
+        "push": 35,
         "coordination": 99
       }
     },
@@ -366,7 +406,9 @@
         "fighter"
       ],
       "lanes": [
-        "jungle",
+        "jungle"
+      ],
+      "flexLanes": [
         "exp"
       ],
       "tags": [
@@ -376,6 +418,8 @@
       ],
       "difficulty": 2,
       "meta": 78,
+      "apiId": 108,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -402,6 +446,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "burst",
         "aoe-cc",
@@ -409,6 +454,8 @@
       ],
       "difficulty": 2,
       "meta": 70,
+      "apiId": 36,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -435,6 +482,7 @@
       "lanes": [
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "hard-cc",
         "burst",
@@ -442,6 +490,8 @@
       ],
       "difficulty": 4,
       "meta": 68,
+      "apiId": 77,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -469,6 +519,7 @@
         "jungle",
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "sustain",
         "tank-shred",
@@ -476,6 +527,8 @@
       ],
       "difficulty": 1,
       "meta": 62,
+      "apiId": 2,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -494,16 +547,19 @@
       "name": "Bane",
       "aliases": [],
       "classes": [
-        "Mage",
-        "Fighter"
+        "Fighter",
+        "Mage"
       ],
       "roles": [
-        "mage",
-        "fighter"
+        "fighter",
+        "mage"
       ],
       "lanes": [
-        "gold",
+        "jungle",
         "exp"
+      ],
+      "flexLanes": [
+        "gold"
       ],
       "tags": [
         "poke",
@@ -512,17 +568,19 @@
       ],
       "difficulty": 2,
       "meta": 68,
+      "apiId": 11,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 79,
-        "late": 78,
-        "damage": 90,
-        "survivability": 52,
-        "cc": 58,
-        "push": 66,
-        "coordination": 61
+        "early": 81,
+        "late": 74,
+        "damage": 80,
+        "survivability": 66,
+        "cc": 52,
+        "push": 68,
+        "coordination": 59
       }
     },
     {
@@ -538,7 +596,9 @@
         "fighter"
       ],
       "lanes": [
-        "jungle",
+        "jungle"
+      ],
+      "flexLanes": [
         "exp"
       ],
       "tags": [
@@ -549,6 +609,8 @@
       ],
       "difficulty": 2,
       "meta": 70,
+      "apiId": 99,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -573,8 +635,10 @@
         "tank"
       ],
       "lanes": [
-        "roam",
         "jungle"
+      ],
+      "flexLanes": [
+        "roam"
       ],
       "tags": [
         "anti-heal",
@@ -584,6 +648,8 @@
       ],
       "difficulty": 3,
       "meta": 80,
+      "apiId": 87,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -612,6 +678,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "poke",
         "burst",
@@ -620,6 +687,8 @@
       ],
       "difficulty": 4,
       "meta": 82,
+      "apiId": 105,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -646,6 +715,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "peel",
         "frontline",
@@ -654,6 +724,8 @@
       ],
       "difficulty": 2,
       "meta": 68,
+      "apiId": 70,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -682,7 +754,9 @@
         "fighter"
       ],
       "lanes": [
-        "exp",
+        "exp"
+      ],
+      "flexLanes": [
         "jungle"
       ],
       "tags": [
@@ -693,6 +767,8 @@
       ],
       "difficulty": 5,
       "meta": 74,
+      "apiId": 97,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -719,6 +795,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "burst",
         "poke",
@@ -726,6 +803,8 @@
       ],
       "difficulty": 4,
       "meta": 78,
+      "apiId": 100,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -752,6 +831,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "sustained-damage",
         "poke",
@@ -759,6 +839,8 @@
       ],
       "difficulty": 2,
       "meta": 72,
+      "apiId": 12,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -787,6 +869,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "aoe-cc",
         "peel",
@@ -794,6 +877,8 @@
       ],
       "difficulty": 2,
       "meta": 66,
+      "apiId": 92,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -822,6 +907,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "scaling",
         "poke",
@@ -830,6 +916,8 @@
       ],
       "difficulty": 2,
       "meta": 76,
+      "apiId": 91,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -858,6 +946,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "poke",
         "sustained-damage",
@@ -866,6 +955,8 @@
       ],
       "difficulty": 2,
       "meta": 70,
+      "apiId": 61,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -884,16 +975,17 @@
       "name": "Chip",
       "aliases": [],
       "classes": [
-        "Tank",
-        "Support"
+        "Support",
+        "Tank"
       ],
       "roles": [
-        "tank",
-        "support"
+        "support",
+        "tank"
       ],
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "global",
         "engage",
@@ -902,16 +994,18 @@
       ],
       "difficulty": 3,
       "meta": 78,
+      "apiId": 124,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 69,
-        "late": 63,
-        "damage": 30,
-        "survivability": 98,
-        "cc": 78,
-        "push": 40,
+        "early": 67,
+        "late": 65,
+        "damage": 32,
+        "survivability": 84,
+        "cc": 74,
+        "push": 39,
         "coordination": 99
       }
     },
@@ -929,6 +1023,7 @@
         "exp",
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "hard-cc",
         "immunity",
@@ -937,6 +1032,8 @@
       ],
       "difficulty": 5,
       "meta": 84,
+      "apiId": 26,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -963,6 +1060,7 @@
       "lanes": [
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "sustain",
         "mobility",
@@ -971,6 +1069,8 @@
       ],
       "difficulty": 4,
       "meta": 78,
+      "apiId": 123,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -997,6 +1097,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "scaling",
         "mobility",
@@ -1004,6 +1105,8 @@
       ],
       "difficulty": 4,
       "meta": 76,
+      "apiId": 65,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1030,6 +1133,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "poke",
         "burst",
@@ -1037,6 +1141,8 @@
       ],
       "difficulty": 2,
       "meta": 70,
+      "apiId": 13,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1061,7 +1167,9 @@
         "mage"
       ],
       "lanes": [
-        "mid",
+        "mid"
+      ],
+      "flexLanes": [
         "jungle"
       ],
       "tags": [
@@ -1072,6 +1180,8 @@
       ],
       "difficulty": 2,
       "meta": 68,
+      "apiId": 33,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1098,6 +1208,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "purify",
         "disengage",
@@ -1106,6 +1217,8 @@
       ],
       "difficulty": 2,
       "meta": 74,
+      "apiId": 48,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1130,8 +1243,10 @@
         "fighter"
       ],
       "lanes": [
-        "exp"
+        "exp",
+        "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "burst",
         "tank-shred",
@@ -1139,6 +1254,8 @@
       ],
       "difficulty": 2,
       "meta": 76,
+      "apiId": 85,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1165,9 +1282,10 @@
         "marksman"
       ],
       "lanes": [
-        "roam",
-        "exp"
+        "exp",
+        "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "aoe-cc",
         "scaling",
@@ -1176,6 +1294,8 @@
       ],
       "difficulty": 4,
       "meta": 74,
+      "apiId": 111,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1196,16 +1316,17 @@
         "esme"
       ],
       "classes": [
-        "Mage",
-        "Tank"
+        "Tank",
+        "Mage"
       ],
       "roles": [
-        "mage",
-        "tank"
+        "tank",
+        "mage"
       ],
       "lanes": [
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "sustain",
         "shield",
@@ -1214,17 +1335,19 @@
       ],
       "difficulty": 4,
       "meta": 84,
+      "apiId": 81,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 68,
-        "late": 72,
-        "damage": 70,
-        "survivability": 79,
-        "cc": 65,
-        "push": 66,
-        "coordination": 66
+        "early": 70,
+        "late": 66,
+        "damage": 42,
+        "survivability": 99,
+        "cc": 75,
+        "push": 55,
+        "coordination": 77
       }
     },
     {
@@ -1240,6 +1363,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "heal",
         "sustain",
@@ -1247,6 +1371,8 @@
       ],
       "difficulty": 2,
       "meta": 70,
+      "apiId": 34,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1273,6 +1399,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "burst",
         "hard-cc",
@@ -1280,6 +1407,8 @@
       ],
       "difficulty": 2,
       "meta": 66,
+      "apiId": 15,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1306,6 +1435,7 @@
       "lanes": [
         "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "mobility",
         "burst",
@@ -1314,6 +1444,8 @@
       ],
       "difficulty": 5,
       "meta": 76,
+      "apiId": 17,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1340,8 +1472,10 @@
         "mage"
       ],
       "lanes": [
-        "roam",
         "mid"
+      ],
+      "flexLanes": [
+        "roam"
       ],
       "tags": [
         "revive",
@@ -1350,6 +1484,8 @@
       ],
       "difficulty": 4,
       "meta": 72,
+      "apiId": 76,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1376,6 +1512,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "heal",
         "global",
@@ -1383,6 +1520,8 @@
       ],
       "difficulty": 2,
       "meta": 72,
+      "apiId": 112,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1409,6 +1548,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "hard-cc",
         "single-target",
@@ -1417,6 +1557,8 @@
       ],
       "difficulty": 4,
       "meta": 78,
+      "apiId": 10,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1445,7 +1587,9 @@
         "tank"
       ],
       "lanes": [
-        "jungle",
+        "jungle"
+      ],
+      "flexLanes": [
         "exp"
       ],
       "tags": [
@@ -1456,6 +1600,8 @@
       ],
       "difficulty": 3,
       "meta": 84,
+      "apiId": 117,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1480,9 +1626,10 @@
         "fighter"
       ],
       "lanes": [
-        "jungle",
-        "exp"
+        "exp",
+        "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "burst",
         "mobility",
@@ -1490,6 +1637,8 @@
       ],
       "difficulty": 2,
       "meta": 72,
+      "apiId": 22,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1521,6 +1670,7 @@
         "roam",
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "aoe-cc",
         "engage",
@@ -1528,6 +1678,8 @@
       ],
       "difficulty": 2,
       "meta": 70,
+      "apiId": 41,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1546,17 +1698,16 @@
       "name": "Gloo",
       "aliases": [],
       "classes": [
-        "Tank",
-        "Fighter"
+        "Tank"
       ],
       "roles": [
-        "tank",
-        "fighter"
+        "tank"
       ],
       "lanes": [
         "exp",
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "hard-cc",
         "sustain",
@@ -1565,17 +1716,19 @@
       ],
       "difficulty": 2,
       "meta": 70,
+      "apiId": 104,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
         "early": 70,
-        "late": 64,
-        "damage": 38,
+        "late": 62,
+        "damage": 28,
         "survivability": 99,
-        "cc": 88,
-        "push": 41,
-        "coordination": 82
+        "cc": 96,
+        "push": 35,
+        "coordination": 89
       }
     },
     {
@@ -1591,6 +1744,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "true-damage",
         "poke",
@@ -1598,6 +1752,8 @@
       ],
       "difficulty": 2,
       "meta": 64,
+      "apiId": 23,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1624,6 +1780,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "burst",
         "poke",
@@ -1631,6 +1788,8 @@
       ],
       "difficulty": 4,
       "meta": 76,
+      "apiId": 79,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1649,13 +1808,17 @@
       "name": "Grock",
       "aliases": [],
       "classes": [
-        "Tank"
+        "Tank",
+        "Fighter"
       ],
       "roles": [
-        "tank"
+        "tank",
+        "fighter"
       ],
       "lanes": [
-        "roam",
+        "roam"
+      ],
+      "flexLanes": [
         "exp"
       ],
       "tags": [
@@ -1666,17 +1829,19 @@
       ],
       "difficulty": 3,
       "meta": 74,
+      "apiId": 44,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
         "early": 70,
-        "late": 62,
-        "damage": 28,
-        "survivability": 99,
-        "cc": 98,
-        "push": 35,
-        "coordination": 99
+        "late": 64,
+        "damage": 38,
+        "survivability": 96,
+        "cc": 90,
+        "push": 41,
+        "coordination": 96
       }
     },
     {
@@ -1686,16 +1851,15 @@
         "guin"
       ],
       "classes": [
-        "Fighter",
-        "Mage"
+        "Fighter"
       ],
       "roles": [
-        "fighter",
-        "mage"
+        "fighter"
       ],
       "lanes": [
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "aoe-cc",
         "burst",
@@ -1704,17 +1868,19 @@
       ],
       "difficulty": 4,
       "meta": 74,
+      "apiId": 80,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 71,
-        "late": 68,
-        "damage": 78,
-        "survivability": 72,
-        "cc": 68,
+        "early": 72,
+        "late": 66,
+        "damage": 74,
+        "survivability": 80,
+        "cc": 66,
         "push": 60,
-        "coordination": 73
+        "coordination": 72
       }
     },
     {
@@ -1722,15 +1888,15 @@
       "name": "Gusion",
       "aliases": [],
       "classes": [
-        "Assassin",
-        "Mage"
+        "Assassin"
       ],
       "roles": [
-        "assassin",
-        "mage"
+        "assassin"
       ],
       "lanes": [
-        "jungle",
+        "jungle"
+      ],
+      "flexLanes": [
         "mid"
       ],
       "tags": [
@@ -1740,17 +1906,19 @@
       ],
       "difficulty": 5,
       "meta": 78,
+      "apiId": 56,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 72,
-        "late": 66,
+        "early": 74,
+        "late": 64,
         "damage": 99,
         "survivability": 48,
-        "cc": 44,
-        "push": 56,
-        "coordination": 49
+        "cc": 38,
+        "push": 55,
+        "coordination": 46
       }
     },
     {
@@ -1766,6 +1934,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "purify",
         "scaling",
@@ -1773,6 +1942,8 @@
       ],
       "difficulty": 2,
       "meta": 64,
+      "apiId": 60,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1799,6 +1970,7 @@
       "lanes": [
         "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "scaling",
         "burst",
@@ -1807,6 +1979,8 @@
       ],
       "difficulty": 4,
       "meta": 68,
+      "apiId": 69,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1825,15 +1999,16 @@
       "name": "Harith",
       "aliases": [],
       "classes": [
-        "Mage",
-        "Assassin"
+        "Mage"
       ],
       "roles": [
-        "mage",
-        "assassin"
+        "mage"
       ],
       "lanes": [
-        "mid",
+        "gold",
+        "mid"
+      ],
+      "flexLanes": [
         "jungle"
       ],
       "tags": [
@@ -1843,17 +2018,19 @@
       ],
       "difficulty": 4,
       "meta": 76,
+      "apiId": 73,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 62,
-        "late": 88,
+        "early": 60,
+        "late": 90,
         "damage": 90,
         "survivability": 50,
-        "cc": 54,
-        "push": 57,
-        "coordination": 59
+        "cc": 60,
+        "push": 58,
+        "coordination": 62
       }
     },
     {
@@ -1861,16 +2038,18 @@
       "name": "Harley",
       "aliases": [],
       "classes": [
-        "Mage",
-        "Assassin"
+        "Assassin",
+        "Mage"
       ],
       "roles": [
-        "mage",
-        "assassin"
+        "assassin",
+        "mage"
       ],
       "lanes": [
-        "mid",
         "jungle"
+      ],
+      "flexLanes": [
+        "mid"
       ],
       "tags": [
         "blink",
@@ -1880,17 +2059,19 @@
       ],
       "difficulty": 4,
       "meta": 72,
+      "apiId": 42,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 70,
-        "late": 72,
+        "early": 72,
+        "late": 66,
         "damage": 99,
-        "survivability": 56,
-        "cc": 54,
-        "push": 57,
-        "coordination": 55
+        "survivability": 54,
+        "cc": 44,
+        "push": 56,
+        "coordination": 49
       }
     },
     {
@@ -1906,6 +2087,7 @@
       "lanes": [
         "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "mobility",
         "burst",
@@ -1914,6 +2096,8 @@
       ],
       "difficulty": 5,
       "meta": 78,
+      "apiId": 21,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1940,6 +2124,7 @@
       "lanes": [
         "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "invisible",
         "burst",
@@ -1948,6 +2133,8 @@
       ],
       "difficulty": 4,
       "meta": 64,
+      "apiId": 51,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -1974,8 +2161,10 @@
         "tank"
       ],
       "lanes": [
+        "roam",
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "sustain",
         "burst",
@@ -1984,6 +2173,8 @@
       ],
       "difficulty": 2,
       "meta": 64,
+      "apiId": 35,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2008,8 +2199,10 @@
         "assassin"
       ],
       "lanes": [
+        "exp",
         "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "mobility",
         "burst",
@@ -2017,6 +2210,8 @@
       ],
       "difficulty": 4,
       "meta": 74,
+      "apiId": 133,
+      "provenance": "manual",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2043,6 +2238,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "aoe-cc",
         "frontline",
@@ -2051,6 +2247,8 @@
       ],
       "difficulty": 2,
       "meta": 76,
+      "apiId": 49,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2077,6 +2275,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "mobility",
         "sustained-damage",
@@ -2084,6 +2283,8 @@
       ],
       "difficulty": 2,
       "meta": 68,
+      "apiId": 43,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2110,6 +2311,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "sustained-damage",
         "zoning",
@@ -2117,6 +2319,8 @@
       ],
       "difficulty": 2,
       "meta": 72,
+      "apiId": 121,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2137,17 +2341,17 @@
         "jaw"
       ],
       "classes": [
-        "Fighter",
-        "Tank"
+        "Fighter"
       ],
       "roles": [
-        "fighter",
-        "tank"
+        "fighter"
       ],
       "lanes": [
-        "jungle",
         "roam",
         "exp"
+      ],
+      "flexLanes": [
+        "jungle"
       ],
       "tags": [
         "hard-cc",
@@ -2157,17 +2361,19 @@
       ],
       "difficulty": 4,
       "meta": 74,
+      "apiId": 54,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
         "early": 72,
-        "late": 66,
-        "damage": 66,
-        "survivability": 82,
-        "cc": 68,
-        "push": 54,
-        "coordination": 67
+        "late": 68,
+        "damage": 76,
+        "survivability": 78,
+        "cc": 60,
+        "push": 60,
+        "coordination": 60
       }
     },
     {
@@ -2185,6 +2391,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "hard-cc",
         "global",
@@ -2193,6 +2400,8 @@
       ],
       "difficulty": 2,
       "meta": 74,
+      "apiId": 32,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2219,6 +2428,7 @@
       "lanes": [
         "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "mobility",
         "immunity",
@@ -2227,6 +2437,8 @@
       ],
       "difficulty": 5,
       "meta": 82,
+      "apiId": 118,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2245,15 +2457,17 @@
       "name": "Julian",
       "aliases": [],
       "classes": [
-        "Fighter",
-        "Mage"
+        "Assassin",
+        "Fighter"
       ],
       "roles": [
-        "fighter",
-        "mage"
+        "assassin",
+        "fighter"
       ],
       "lanes": [
-        "jungle",
+        "jungle"
+      ],
+      "flexLanes": [
         "exp"
       ],
       "tags": [
@@ -2264,17 +2478,19 @@
       ],
       "difficulty": 4,
       "meta": 82,
+      "apiId": 116,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 71,
-        "late": 72,
-        "damage": 84,
-        "survivability": 72,
-        "cc": 62,
-        "push": 60,
-        "coordination": 59
+        "early": 74,
+        "late": 68,
+        "damage": 95,
+        "survivability": 56,
+        "cc": 51,
+        "push": 56,
+        "coordination": 52
       }
     },
     {
@@ -2282,14 +2498,17 @@
       "name": "Kadita",
       "aliases": [],
       "classes": [
-        "Mage"
+        "Mage",
+        "Assassin"
       ],
       "roles": [
-        "mage"
+        "mage",
+        "assassin"
       ],
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "burst",
         "immunity",
@@ -2298,17 +2517,19 @@
       ],
       "difficulty": 4,
       "meta": 74,
+      "apiId": 75,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 68,
-        "late": 74,
+        "early": 70,
+        "late": 72,
         "damage": 92,
         "survivability": 52,
-        "cc": 76,
-        "push": 58,
-        "coordination": 76
+        "cc": 70,
+        "push": 57,
+        "coordination": 73
       }
     },
     {
@@ -2324,6 +2545,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "burst",
         "mobility",
@@ -2332,6 +2554,8 @@
       ],
       "difficulty": 5,
       "meta": 82,
+      "apiId": 25,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2360,6 +2584,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "hard-cc",
         "single-target",
@@ -2368,6 +2593,8 @@
       ],
       "difficulty": 4,
       "meta": 76,
+      "apiId": 62,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2387,15 +2614,16 @@
       "aliases": [],
       "classes": [
         "Support",
-        "Tank"
+        "Fighter"
       ],
       "roles": [
         "support",
-        "tank"
+        "fighter"
       ],
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "hard-cc",
         "peel",
@@ -2404,17 +2632,19 @@
       ],
       "difficulty": 3,
       "meta": 76,
+      "apiId": 128,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 67,
-        "late": 65,
-        "damage": 32,
-        "survivability": 84,
-        "cc": 84,
-        "push": 33,
-        "coordination": 99
+        "early": 68,
+        "late": 66,
+        "damage": 42,
+        "survivability": 81,
+        "cc": 76,
+        "push": 39,
+        "coordination": 96
       }
     },
     {
@@ -2422,16 +2652,15 @@
       "name": "Karina",
       "aliases": [],
       "classes": [
-        "Assassin",
-        "Mage"
+        "Assassin"
       ],
       "roles": [
-        "assassin",
-        "mage"
+        "assassin"
       ],
       "lanes": [
         "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "true-damage",
         "burst",
@@ -2440,17 +2669,19 @@
       ],
       "difficulty": 4,
       "meta": 74,
+      "apiId": 8,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 72,
-        "late": 66,
+        "early": 74,
+        "late": 64,
         "damage": 99,
         "survivability": 48,
-        "cc": 44,
-        "push": 56,
-        "coordination": 49
+        "cc": 38,
+        "push": 55,
+        "coordination": 46
       }
     },
     {
@@ -2466,6 +2697,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "true-damage",
         "tank-shred",
@@ -2474,6 +2706,8 @@
       ],
       "difficulty": 4,
       "meta": 80,
+      "apiId": 40,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2498,8 +2732,10 @@
         "fighter"
       ],
       "lanes": [
-        "exp"
+        "exp",
+        "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "sustain",
         "mobility",
@@ -2507,6 +2743,8 @@
       ],
       "difficulty": 4,
       "meta": 70,
+      "apiId": 98,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2533,6 +2771,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "hard-cc",
         "engage",
@@ -2541,6 +2780,8 @@
       ],
       "difficulty": 4,
       "meta": 84,
+      "apiId": 78,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2570,6 +2811,7 @@
         "gold",
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "poke",
         "sustained-damage",
@@ -2577,6 +2819,8 @@
       ],
       "difficulty": 4,
       "meta": 70,
+      "apiId": 71,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2605,6 +2849,7 @@
       "lanes": [
         "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "mobility",
         "burst",
@@ -2613,6 +2858,8 @@
       ],
       "difficulty": 5,
       "meta": 82,
+      "apiId": 47,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2641,6 +2888,7 @@
       "lanes": [
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "aoe-cc",
         "burst",
@@ -2648,6 +2896,8 @@
       ],
       "difficulty": 4,
       "meta": 72,
+      "apiId": 37,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2674,6 +2924,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "poke",
         "scaling",
@@ -2681,6 +2932,8 @@
       ],
       "difficulty": 1,
       "meta": 58,
+      "apiId": 18,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2705,6 +2958,9 @@
         "fighter"
       ],
       "lanes": [
+        "jungle"
+      ],
+      "flexLanes": [
         "exp"
       ],
       "tags": [
@@ -2714,6 +2970,8 @@
       ],
       "difficulty": 4,
       "meta": 68,
+      "apiId": 67,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2742,6 +3000,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "poke",
         "burst",
@@ -2750,6 +3009,8 @@
       ],
       "difficulty": 3,
       "meta": 70,
+      "apiId": 53,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2776,6 +3037,7 @@
       "lanes": [
         "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "mobility",
         "burst",
@@ -2784,6 +3046,8 @@
       ],
       "difficulty": 5,
       "meta": 80,
+      "apiId": 84,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2802,16 +3066,17 @@
       "name": "Lolita",
       "aliases": [],
       "classes": [
-        "Tank",
-        "Support"
+        "Support",
+        "Tank"
       ],
       "roles": [
-        "tank",
-        "support"
+        "support",
+        "tank"
       ],
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "aoe-cc",
         "shield",
@@ -2820,16 +3085,18 @@
       ],
       "difficulty": 2,
       "meta": 72,
+      "apiId": 20,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 69,
-        "late": 63,
-        "damage": 30,
-        "survivability": 92,
-        "cc": 94,
-        "push": 34,
+        "early": 67,
+        "late": 65,
+        "damage": 32,
+        "survivability": 78,
+        "cc": 90,
+        "push": 33,
         "coordination": 99
       }
     },
@@ -2844,9 +3111,10 @@
         "fighter"
       ],
       "lanes": [
-        "jungle",
-        "exp"
+        "exp",
+        "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "sustain",
         "burst",
@@ -2854,6 +3122,8 @@
       ],
       "difficulty": 4,
       "meta": 72,
+      "apiId": 127,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2880,6 +3150,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "burst",
         "immunity",
@@ -2887,6 +3158,8 @@
       ],
       "difficulty": 4,
       "meta": 78,
+      "apiId": 68,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2915,6 +3188,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "aoe-cc",
         "global",
@@ -2923,6 +3197,8 @@
       ],
       "difficulty": 4,
       "meta": 74,
+      "apiId": 96,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2949,6 +3225,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "mobility",
         "zoning",
@@ -2957,6 +3234,8 @@
       ],
       "difficulty": 4,
       "meta": 72,
+      "apiId": 86,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -2975,34 +3254,36 @@
       "name": "Marcel",
       "aliases": [],
       "classes": [
-        "Mage",
         "Support"
       ],
       "roles": [
-        "mage",
         "support"
       ],
       "lanes": [
-        "mid"
+        "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "shield",
-        "true-damage",
-        "poke"
+        "peel",
+        "aoe-cc",
+        "vision"
       ],
       "difficulty": 4,
       "meta": 72,
+      "apiId": 132,
+      "provenance": "manual",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 74,
-        "late": 74,
-        "damage": 82,
-        "survivability": 54,
-        "cc": 63,
-        "push": 52,
-        "coordination": 72
+        "early": 66,
+        "late": 66,
+        "damage": 34,
+        "survivability": 72,
+        "cc": 84,
+        "push": 32,
+        "coordination": 99
       }
     },
     {
@@ -3016,7 +3297,9 @@
         "fighter"
       ],
       "lanes": [
-        "jungle",
+        "jungle"
+      ],
+      "flexLanes": [
         "exp"
       ],
       "tags": [
@@ -3027,6 +3310,8 @@
       ],
       "difficulty": 4,
       "meta": 72,
+      "apiId": 58,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3045,14 +3330,17 @@
       "name": "Masha",
       "aliases": [],
       "classes": [
-        "Fighter"
+        "Fighter",
+        "Tank"
       ],
       "roles": [
-        "fighter"
+        "fighter",
+        "tank"
       ],
       "lanes": [
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "split-push",
         "sustain",
@@ -3060,17 +3348,19 @@
       ],
       "difficulty": 2,
       "meta": 66,
+      "apiId": 88,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
         "early": 76,
-        "late": 68,
-        "damage": 66,
-        "survivability": 84,
-        "cc": 50,
-        "push": 82,
-        "coordination": 52
+        "late": 66,
+        "damage": 56,
+        "survivability": 88,
+        "cc": 58,
+        "push": 76,
+        "coordination": 59
       }
     },
     {
@@ -3090,6 +3380,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "mobility",
         "peel",
@@ -3098,6 +3389,8 @@
       ],
       "difficulty": 4,
       "meta": 82,
+      "apiId": 102,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3124,6 +3417,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "zoning",
         "disengage",
@@ -3132,6 +3426,8 @@
       ],
       "difficulty": 2,
       "meta": 78,
+      "apiId": 114,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3160,6 +3456,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "aoe-cc",
         "heal",
@@ -3167,6 +3464,8 @@
       ],
       "difficulty": 2,
       "meta": 70,
+      "apiId": 19,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3193,8 +3492,10 @@
         "fighter"
       ],
       "lanes": [
-        "exp"
+        "exp",
+        "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "hard-cc",
         "zoning",
@@ -3202,6 +3503,8 @@
       ],
       "difficulty": 3,
       "meta": 64,
+      "apiId": 74,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3228,6 +3531,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "scaling",
         "immunity",
@@ -3235,6 +3539,8 @@
       ],
       "difficulty": 1,
       "meta": 60,
+      "apiId": 1,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3261,6 +3567,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "poke",
         "hard-cc",
@@ -3269,6 +3576,8 @@
       ],
       "difficulty": 4,
       "meta": 72,
+      "apiId": 31,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3287,15 +3596,15 @@
       "name": "Nana",
       "aliases": [],
       "classes": [
-        "Mage",
-        "Support"
+        "Mage"
       ],
       "roles": [
-        "mage",
-        "support"
+        "mage"
       ],
       "lanes": [
-        "mid",
+        "mid"
+      ],
+      "flexLanes": [
         "roam"
       ],
       "tags": [
@@ -3305,17 +3614,19 @@
       ],
       "difficulty": 2,
       "meta": 70,
+      "apiId": 5,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
         "early": 74,
-        "late": 74,
-        "damage": 76,
-        "survivability": 54,
-        "cc": 73,
-        "push": 52,
-        "coordination": 74
+        "late": 76,
+        "damage": 88,
+        "survivability": 50,
+        "cc": 70,
+        "push": 58,
+        "coordination": 68
       }
     },
     {
@@ -3329,8 +3640,10 @@
         "assassin"
       ],
       "lanes": [
-        "jungle"
+        "jungle",
+        "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "invisible",
         "burst",
@@ -3338,6 +3651,8 @@
       ],
       "difficulty": 4,
       "meta": 66,
+      "apiId": 24,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3356,16 +3671,15 @@
       "name": "Natan",
       "aliases": [],
       "classes": [
-        "Marksman",
-        "Mage"
+        "Marksman"
       ],
       "roles": [
-        "marksman",
-        "mage"
+        "marksman"
       ],
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "scaling",
         "sustained-damage",
@@ -3373,17 +3687,19 @@
       ],
       "difficulty": 4,
       "meta": 74,
+      "apiId": 107,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 48,
+        "early": 44,
         "late": 99,
         "damage": 90,
-        "survivability": 40,
-        "cc": 38,
-        "push": 73,
-        "coordination": 57
+        "survivability": 38,
+        "cc": 30,
+        "push": 78,
+        "coordination": 55
       }
     },
     {
@@ -3399,6 +3715,7 @@
       "lanes": [
         "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "mobility",
         "burst",
@@ -3407,6 +3724,8 @@
       ],
       "difficulty": 4,
       "meta": 84,
+      "apiId": 122,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3435,6 +3754,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "poke",
         "vision",
@@ -3442,6 +3762,8 @@
       ],
       "difficulty": 4,
       "meta": 76,
+      "apiId": 119,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3460,35 +3782,36 @@
       "name": "Obsidia",
       "aliases": [],
       "classes": [
-        "Mage",
-        "Fighter"
+        "Marksman"
       ],
       "roles": [
-        "mage",
-        "fighter"
+        "marksman"
       ],
       "lanes": [
-        "exp",
-        "mid"
+        "gold"
       ],
+      "flexLanes": [],
       "tags": [
-        "zoning",
         "sustained-damage",
-        "sustain"
+        "scaling",
+        "mobility",
+        "single-target"
       ],
       "difficulty": 4,
       "meta": 72,
+      "apiId": 130,
+      "provenance": "manual",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 69,
-        "late": 78,
-        "damage": 86,
-        "survivability": 62,
-        "cc": 64,
-        "push": 58,
-        "coordination": 65
+        "early": 44,
+        "late": 99,
+        "damage": 92,
+        "survivability": 44,
+        "cc": 30,
+        "push": 78,
+        "coordination": 53
       }
     },
     {
@@ -3504,6 +3827,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "aoe-cc",
         "burst",
@@ -3511,6 +3835,8 @@
       ],
       "difficulty": 2,
       "meta": 64,
+      "apiId": 46,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3529,14 +3855,18 @@
       "name": "Paquito",
       "aliases": [],
       "classes": [
-        "Fighter"
+        "Fighter",
+        "Assassin"
       ],
       "roles": [
-        "fighter"
+        "fighter",
+        "assassin"
       ],
       "lanes": [
-        "jungle",
         "exp"
+      ],
+      "flexLanes": [
+        "jungle"
       ],
       "tags": [
         "burst",
@@ -3545,17 +3875,19 @@
       ],
       "difficulty": 4,
       "meta": 80,
+      "apiId": 103,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
         "early": 72,
         "late": 66,
-        "damage": 74,
-        "survivability": 80,
-        "cc": 60,
-        "push": 60,
-        "coordination": 58
+        "damage": 79,
+        "survivability": 72,
+        "cc": 57,
+        "push": 59,
+        "coordination": 56
       }
     },
     {
@@ -3571,6 +3903,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "poke",
         "burst",
@@ -3579,6 +3912,8 @@
       ],
       "difficulty": 3,
       "meta": 80,
+      "apiId": 52,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3607,6 +3942,7 @@
       "lanes": [
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "counter-initiate",
         "sustain",
@@ -3614,6 +3950,8 @@
       ],
       "difficulty": 2,
       "meta": 66,
+      "apiId": 106,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3642,8 +3980,10 @@
         "marksman"
       ],
       "lanes": [
+        "jungle",
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "hard-cc",
         "vision",
@@ -3651,6 +3991,8 @@
       ],
       "difficulty": 2,
       "meta": 66,
+      "apiId": 94,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3677,6 +4019,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "heal",
         "purify",
@@ -3684,6 +4027,8 @@
       ],
       "difficulty": 2,
       "meta": 66,
+      "apiId": 14,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3702,15 +4047,17 @@
       "name": "Roger",
       "aliases": [],
       "classes": [
-        "Marksman",
-        "Fighter"
+        "Fighter",
+        "Marksman"
       ],
       "roles": [
-        "marksman",
-        "fighter"
+        "fighter",
+        "marksman"
       ],
       "lanes": [
-        "jungle",
+        "jungle"
+      ],
+      "flexLanes": [
         "gold"
       ],
       "tags": [
@@ -3720,17 +4067,19 @@
       ],
       "difficulty": 3,
       "meta": 70,
+      "apiId": 39,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 67,
-        "late": 73,
-        "damage": 86,
-        "survivability": 53,
-        "cc": 35,
-        "push": 74,
-        "coordination": 56
+        "early": 77,
+        "late": 63,
+        "damage": 78,
+        "survivability": 71,
+        "cc": 45,
+        "push": 64,
+        "coordination": 57
       }
     },
     {
@@ -3738,15 +4087,15 @@
       "name": "Ruby",
       "aliases": [],
       "classes": [
-        "Fighter",
-        "Tank"
+        "Fighter"
       ],
       "roles": [
-        "fighter",
-        "tank"
+        "fighter"
       ],
       "lanes": [
-        "exp",
+        "exp"
+      ],
+      "flexLanes": [
         "roam"
       ],
       "tags": [
@@ -3757,17 +4106,19 @@
       ],
       "difficulty": 2,
       "meta": 76,
+      "apiId": 29,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
         "early": 72,
-        "late": 66,
-        "damage": 56,
-        "survivability": 96,
-        "cc": 74,
-        "push": 54,
-        "coordination": 79
+        "late": 68,
+        "damage": 66,
+        "survivability": 92,
+        "cc": 66,
+        "push": 60,
+        "coordination": 72
       }
     },
     {
@@ -3781,8 +4132,10 @@
         "assassin"
       ],
       "lanes": [
-        "jungle"
+        "jungle",
+        "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "single-target",
         "burst",
@@ -3790,6 +4143,8 @@
       ],
       "difficulty": 2,
       "meta": 64,
+      "apiId": 3,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3816,9 +4171,10 @@
         "mage"
       ],
       "lanes": [
-        "roam",
-        "mid"
+        "mid",
+        "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "hard-cc",
         "burst",
@@ -3827,6 +4183,8 @@
       ],
       "difficulty": 4,
       "meta": 84,
+      "apiId": 63,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3847,16 +4205,15 @@
         "silva"
       ],
       "classes": [
-        "Fighter",
-        "Mage"
+        "Fighter"
       ],
       "roles": [
-        "fighter",
-        "mage"
+        "fighter"
       ],
       "lanes": [
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "hard-cc",
         "single-target",
@@ -3864,17 +4221,19 @@
       ],
       "difficulty": 4,
       "meta": 72,
+      "apiId": 90,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 71,
-        "late": 70,
-        "damage": 80,
-        "survivability": 66,
-        "cc": 62,
+        "early": 72,
+        "late": 68,
+        "damage": 76,
+        "survivability": 74,
+        "cc": 60,
         "push": 60,
-        "coordination": 53
+        "coordination": 52
       }
     },
     {
@@ -3882,32 +4241,37 @@
       "name": "Sora",
       "aliases": [],
       "classes": [
-        "Mage"
+        "Fighter",
+        "Assassin"
       ],
       "roles": [
-        "mage"
+        "fighter",
+        "assassin"
       ],
       "lanes": [
-        "mid"
+        "exp"
       ],
+      "flexLanes": [],
       "tags": [
-        "zoning",
-        "poke",
-        "mobility"
+        "mobility",
+        "burst",
+        "sustain"
       ],
       "difficulty": 4,
       "meta": 70,
+      "apiId": 131,
+      "provenance": "manual",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 74,
-        "late": 76,
-        "damage": 88,
-        "survivability": 50,
-        "cc": 66,
-        "push": 58,
-        "coordination": 66
+        "early": 72,
+        "late": 66,
+        "damage": 79,
+        "survivability": 82,
+        "cc": 47,
+        "push": 59,
+        "coordination": 56
       }
     },
     {
@@ -3924,6 +4288,7 @@
         "exp",
         "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "split-push",
         "sustain",
@@ -3932,6 +4297,8 @@
       ],
       "difficulty": 2,
       "meta": 64,
+      "apiId": 27,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3960,6 +4327,7 @@
       "lanes": [
         "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "mobility",
         "burst",
@@ -3967,6 +4335,8 @@
       ],
       "difficulty": 4,
       "meta": 76,
+      "apiId": 126,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -3987,14 +4357,17 @@
         "teri"
       ],
       "classes": [
-        "Fighter"
+        "Fighter",
+        "Tank"
       ],
       "roles": [
-        "fighter"
+        "fighter",
+        "tank"
       ],
       "lanes": [
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "hard-cc",
         "sustain",
@@ -4003,17 +4376,19 @@
       ],
       "difficulty": 3,
       "meta": 74,
+      "apiId": 82,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
         "early": 72,
-        "late": 68,
-        "damage": 72,
-        "survivability": 92,
-        "cc": 60,
-        "push": 60,
-        "coordination": 58
+        "late": 66,
+        "damage": 62,
+        "survivability": 96,
+        "cc": 68,
+        "push": 54,
+        "coordination": 65
       }
     },
     {
@@ -4029,6 +4404,7 @@
       "lanes": [
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "sustain",
         "true-damage",
@@ -4036,6 +4412,8 @@
       ],
       "difficulty": 2,
       "meta": 72,
+      "apiId": 72,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4062,6 +4440,7 @@
       "lanes": [
         "roam"
       ],
+      "flexLanes": [],
       "tags": [
         "aoe-cc",
         "engage",
@@ -4070,6 +4449,8 @@
       ],
       "difficulty": 2,
       "meta": 82,
+      "apiId": 6,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4096,6 +4477,7 @@
       "lanes": [
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "sustain",
         "frontline",
@@ -4103,6 +4485,8 @@
       ],
       "difficulty": 2,
       "meta": 72,
+      "apiId": 59,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4129,6 +4513,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "aoe-cc",
         "burst",
@@ -4136,6 +4521,8 @@
       ],
       "difficulty": 4,
       "meta": 66,
+      "apiId": 66,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4164,6 +4551,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "burst",
         "mobility",
@@ -4172,6 +4560,8 @@
       ],
       "difficulty": 4,
       "meta": 84,
+      "apiId": 110,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4198,6 +4588,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "zoning",
         "aoe-cc",
@@ -4206,6 +4597,8 @@
       ],
       "difficulty": 2,
       "meta": 72,
+      "apiId": 57,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4232,6 +4625,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "aoe-cc",
         "burst",
@@ -4239,6 +4633,8 @@
       ],
       "difficulty": 2,
       "meta": 68,
+      "apiId": 38,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4267,6 +4663,7 @@
       "lanes": [
         "gold"
       ],
+      "flexLanes": [],
       "tags": [
         "scaling",
         "mobility",
@@ -4275,6 +4672,8 @@
       ],
       "difficulty": 4,
       "meta": 74,
+      "apiId": 89,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4304,6 +4703,7 @@
       "lanes": [
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "true-damage",
         "sustain",
@@ -4312,6 +4712,8 @@
       ],
       "difficulty": 4,
       "meta": 76,
+      "apiId": 83,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4338,6 +4740,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "poke",
         "scaling",
@@ -4346,6 +4749,8 @@
       ],
       "difficulty": 3,
       "meta": 78,
+      "apiId": 115,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4367,16 +4772,17 @@
         "yss"
       ],
       "classes": [
-        "Marksman",
-        "Assassin"
+        "Assassin",
+        "Marksman"
       ],
       "roles": [
-        "marksman",
-        "assassin"
+        "assassin",
+        "marksman"
       ],
       "lanes": [
         "jungle"
       ],
+      "flexLanes": [],
       "tags": [
         "global",
         "objective",
@@ -4385,17 +4791,19 @@
       ],
       "difficulty": 4,
       "meta": 74,
+      "apiId": 30,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 68,
-        "late": 82,
-        "damage": 87,
-        "survivability": 45,
-        "cc": 32,
-        "push": 86,
-        "coordination": 64
+        "early": 78,
+        "late": 72,
+        "damage": 89,
+        "survivability": 47,
+        "cc": 36,
+        "push": 75,
+        "coordination": 61
       }
     },
     {
@@ -4403,16 +4811,18 @@
       "name": "Yin",
       "aliases": [],
       "classes": [
-        "Assassin",
-        "Fighter"
+        "Fighter",
+        "Assassin"
       ],
       "roles": [
-        "assassin",
-        "fighter"
+        "fighter",
+        "assassin"
       ],
       "lanes": [
-        "jungle"
+        "jungle",
+        "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "single-target",
         "burst",
@@ -4420,17 +4830,19 @@
       ],
       "difficulty": 4,
       "meta": 76,
+      "apiId": 113,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
       "stats": {
-        "early": 74,
-        "late": 64,
-        "damage": 93,
-        "survivability": 56,
-        "cc": 41,
-        "push": 56,
-        "coordination": 50
+        "early": 72,
+        "late": 66,
+        "damage": 83,
+        "survivability": 72,
+        "cc": 47,
+        "push": 59,
+        "coordination": 54
       }
     },
     {
@@ -4449,6 +4861,7 @@
       "lanes": [
         "exp"
       ],
+      "flexLanes": [],
       "tags": [
         "sustain",
         "aoe-cc",
@@ -4457,6 +4870,8 @@
       ],
       "difficulty": 3,
       "meta": 82,
+      "apiId": 95,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4483,6 +4898,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "zoning",
         "aoe-cc",
@@ -4491,6 +4907,8 @@
       ],
       "difficulty": 3,
       "meta": 76,
+      "apiId": 101,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4517,6 +4935,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "zoning",
         "aoe-cc",
@@ -4524,6 +4943,8 @@
       ],
       "difficulty": 4,
       "meta": 74,
+      "apiId": 129,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4550,6 +4971,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "split-push",
         "poke",
@@ -4557,6 +4979,8 @@
       ],
       "difficulty": 2,
       "meta": 62,
+      "apiId": 50,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4583,6 +5007,7 @@
       "lanes": [
         "mid"
       ],
+      "flexLanes": [],
       "tags": [
         "zoning",
         "aoe-cc",
@@ -4590,6 +5015,8 @@
       ],
       "difficulty": 4,
       "meta": 86,
+      "apiId": 125,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
@@ -4616,8 +5043,10 @@
         "assassin"
       ],
       "lanes": [
-        "jungle",
         "exp"
+      ],
+      "flexLanes": [
+        "jungle"
       ],
       "tags": [
         "split-push",
@@ -4626,6 +5055,8 @@
       ],
       "difficulty": 2,
       "meta": 66,
+      "apiId": 16,
+      "provenance": "official-snapshot",
       "portrait": "",
       "status": "active",
       "releaseVersion": "",
