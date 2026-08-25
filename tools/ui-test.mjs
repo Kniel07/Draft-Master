@@ -910,6 +910,89 @@ ok('tournament ban slots are unaffected by rank',
 store.setMode('ranked');
 store.setRank('mythic');
 
+/* ==========================================================================
+   Phase B finding B4 — reasons are facts, rendered per perspective.
+
+   Both defects were representation defects, not data or logic defects, so both
+   are asserted against the representation rather than against a sentence.
+   ========================================================================== */
+
+section('B4b — the same fact reads correctly from both sides');
+// A fully indexed registry, which counterPoints needs and the raw JSON is not.
+const registryModule = await importFresh('src/data/registry.js');
+const registryRef = await registryModule.loadRegistry('data/');
+const reasonMod = await importFresh('src/engine/reason.js');
+const counterMod = await importFresh('src/engine/counter.js');
+const synergyMod = await importFresh('src/engine/synergy.js');
+const strategyMod = await importFresh('src/engine/strategy.js');
+
+const H = (name) => registryRef.heroes.find((h) => h.name === name);
+const baxiaFact = counterMod.counterPoints(registryRef, H('Baxia'), H('Angela')).reasons[0].fact;
+
+ok('a reason is a fact, not a sentence',
+  baxiaFact && baxiaFact.actor === 'baxia' && baxiaFact.target === 'angela' &&
+    baxiaFact.relationship === 'counter' && baxiaFact.effect === 'anti-heal' &&
+    typeof baxiaFact.weight === 'number',
+  JSON.stringify(baxiaFact));
+
+// The reported sentence said "the enemy support" when it meant *our* support.
+const asPick = reasonMod.renderReason(baxiaFact, { actorSide: reasonMod.OURS });
+const asThreat = reasonMod.renderReason(baxiaFact, { actorSide: reasonMod.THEIRS });
+ok('as a pick reason the target is theirs', /vs their Angela/.test(asPick), asPick);
+ok('as a threat note the target is ours', /vs your Angela/.test(asThreat), asThreat);
+ok('the mechanism itself claims no side',
+  !/\b(enemy|your|our|their)\b/i.test(baxiaFact.mechanism), baxiaFact.mechanism);
+const authoredMechanisms = (() => {
+  const c = JSON.parse(fs.readFileSync(path.join(root, 'data/counters.json'), 'utf8'));
+  const sy = JSON.parse(fs.readFileSync(path.join(root, 'data/synergies.json'), 'utf8'));
+  return [
+    ...c.tagCounters, ...c.classCounters, ...c.heroCounters,
+    ...sy.tagSynergies, ...sy.heroSynergies
+  ].map((r) => r.reason);
+})();
+const perspectiveBound = authoredMechanisms.filter((t) => /\b(enemy|enemy's)\b/i.test(t));
+ok(`none of the ${authoredMechanisms.length} authored mechanisms bakes in a perspective`,
+  perspectiveBound.length === 0, perspectiveBound.slice(0, 3).join(' | '));
+
+section('B4b — the brief renders threats from the right side');
+const ourFive = ['Chou', 'Yi Sun-shin', 'Angela', 'Harith', 'Edith'].map(H);
+const theirFive = ['Baxia', 'Fanny', 'Kagura', 'Beatrix', 'Yu Zhong'].map(H);
+const brief = strategyMod.buildStrategy(registryRef, ourFive, theirFive, {});
+
+ok('every threat note names whose hero is affected',
+  brief.threats.every((t) => /vs (your|their) /.test(t.note)),
+  brief.threats.map((t) => t.note).join(' | '));
+ok('a threat note never calls our own hero the enemy',
+  brief.threats.every((t) => !/enemy (support|carry|bruiser|frontline)/i.test(t.note)),
+  brief.threats.map((t) => t.note).join(' | '));
+ok('threats carry their underlying fact for a later layer',
+  brief.threats.every((t) => t.fact === null || (t.fact && t.fact.actor && t.fact.target)));
+
+section('B4a — a pair is explained by what it is, not one asserted cause');
+const pairs = synergyMod.synergyTotal(registryRef, ourFive).pairs;
+const top = pairs[0];
+ok('Angela + Edith is still the top pair',
+  [top.heroes[0].name, top.heroes[1].name].sort().join('+') === 'Angela+Edith',
+  `${top.heroes[0].name}+${top.heroes[1].name}`);
+ok('it wins on three linked effects, not one', top.summary.count === 3, String(top.summary.count));
+ok('the runner-up has fewer', pairs.find((p) =>
+  [p.heroes[0].name, p.heroes[1].name].sort().join('+') === 'Angela+Harith').summary.count === 2);
+
+const comboLine = brief.reminders.find((r) => /Combo to call/.test(r));
+ok('the combo line exists', Boolean(comboLine));
+ok('it reports how many effects link the pair', /\(3 linked effects\)/.test(comboLine), comboLine);
+ok('it names more than one mechanism', (comboLine.match(/;/g) || []).length >= 1, comboLine);
+ok('it no longer asserts a single reason as decisive',
+  !/^Combo to call: [^—]+— [^;]+\.$/.test(comboLine), comboLine);
+
+section('B4 — scoring is untouched by any of this');
+// The representation changed; the arithmetic must not have.
+ok('Angela + Edith still scores 22', top.weight === 22, String(top.weight));
+ok('Baxia into Angela still scores 10',
+  counterMod.counterPoints(registryRef, H('Baxia'), H('Angela')).total === 10);
+ok('a pick reason still carries its weight',
+  counterMod.counterPoints(registryRef, H('Baxia'), H('Angela')).reasons[0].weight === 10);
+
 section('Result');
 console.log(`${checks - failures}/${checks} checks passed`);
 if (failures) process.exit(1);

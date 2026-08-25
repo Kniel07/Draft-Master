@@ -490,11 +490,58 @@ Two network requests per session, both cached. Portraits are `loading="lazy"`.
 
 ---
 
+## 8a. Reasons are facts, rendered per perspective
+
+A reason used to be a finished English sentence, authored once and reused
+wherever it applied. That works until the same rule is read from two directions.
+
+A pick reason looks outward from our hero; a threat note looks inward from
+theirs. The rule text was written for the first — "enemy" meaning *the hero the
+rule acts on* — and reused for the second, where "enemy" already meant the
+opposing team. So the threat list said "healing reduction blunts the enemy
+support's core value" about *our* Angela.
+
+Editing that sentence would have hidden the defect rather than removed it. So a
+reason is now a fact:
+
+```
+{ actor, actorName, target, targetName,
+  relationship: 'counter' | 'synergy',
+  effect,                  // the trait, class or pair the rule keys on
+  source: 'named' | 'tag' | 'class' | 'measured',
+  weight,
+  mechanism }              // what the interaction does — no claim about sides
+```
+
+and the sentence is rendered at the point of use, where the perspective is
+known. The same fact yields:
+
+| Context | Rendering |
+| --- | --- |
+| Pick reason (Baxia ours) | Healing reduction blunts a support's core value **(vs their Angela)** |
+| Threat note (Baxia theirs) | Healing reduction blunts a support's core value **(vs your Angela)** |
+
+Twelve of the 160 authored strings carried a perspective word; those were
+normalised into mechanism clauses. The other 148 were already neutral and were
+not touched. A committed check sweeps all 160 on every run.
+
+**The mechanism stays authored.** Writing a rule and writing what it does is
+still the same act, which is what keeps explanations from drifting from the
+arithmetic. What moved out of the string is the part that was never the rule's
+to claim: whose hero is whose.
+
+**This is also the shape a tactical layer needs.** Handing a model "Baxia —
+healing reduction blunts the enemy support's core value" asks it to resolve a
+pronoun. Handing it `{ actor: baxia, target: angela, relationship: counter,
+effect: anti-heal, weight: 10 }` asks it nothing.
+
+---
+
 ## 9. Verification performed
 
 Committed and repeatable:
 
-- **`tools/ui-test.mjs` — 185 assertions**, the real UI under jsdom. Offline
+- **`tools/ui-test.mjs` — 203 assertions**, the real UI under jsdom. Offline
   boot; partial search ("yuz" → Yu Zhong); picking a hero the engine did not
   suggest; ignore removing one row and committing nothing; Why? opening the real
   components; the ban list; unavailable heroes still findable, struck through
@@ -599,11 +646,13 @@ guided step. Section 4b.
 rank-switch cleanup, out-of-order recording, Tournament regression) and manual
 (Epic/Legend/Mythic ban counts at all three widths).
 
-### B4 · Brief tactical grounding — **traced, not fixed**
+### B4 · Brief tactical grounding — traced, then fixed at the representation
 
-Two suspicious outputs. Both were traced to their deterministic source and
-**deliberately left in place**, because Phase B is measuring how much authored
-knowledge is unreliable and correcting the symptom would destroy the evidence.
+Two suspicious outputs. Both were traced first and left in place for one review
+cycle, because Phase B is measuring how much authored knowledge is unreliable
+and correcting a symptom would have destroyed the evidence. The trace showed
+neither was a data or logic error, so both were then fixed where they actually
+lived: in how a reason is represented.
 
 **B4a — "Combo to call: Angela into Edith — protection buys the scaling carry
 the time it needs"**, on a team with Harith as the more obvious scaling carry.
@@ -625,7 +674,15 @@ in that draft. `peel`, `shield` and `heal` are common tags and so is `scaling`,
 so this one rule dominates the combo line across many compositions.
 
 **Classification.** Template attribution, plus a tag-distribution observation.
-**Status.** Not fixed. Candidate for THINK review.
+**Fix.** A pair is described by what it is: how many effects link it and the
+strongest couple of them, never one asserted as decisive. `Angela + Edith
+(3 linked effects) — protection buys the scaling carry the time it needs;
+sustained healing multiplies frontline effective HP.`
+**Verification.** Automated, mutation-tested: restoring the single-reason
+template reproduces the reported sentence verbatim and fails three assertions.
+**Still open.** The tag-distribution observation. `peel + scaling` fires on four
+of five pairs in that draft, so one rule dominates the combo line across many
+compositions. That is a `tags` question and `tags` are frozen for Phase B.
 
 **B4b — "Baxia — healing reduction blunts the enemy support's core value"** in
 the enemy threat list, which read as a reversed relationship.
@@ -642,6 +699,9 @@ our hero's point of view, threat notes from the enemy hero's.
 
 **Classification.** Reason-string authoring convention — perspective-dependent
 text reused in both perspectives.
-**Status.** Not fixed. This one is systemic rather than a single bad sentence,
-and any fix touches the authored `reason` field on every rule.
+**Fix.** Reasons became facts. Section 8a.
+**Verification.** Automated, mutation-tested: putting the perspective back into
+one mechanism reproduces the reported sentence and fails two assertions,
+including a sweep asserting that none of the 160 authored mechanisms bakes in a
+perspective.
 

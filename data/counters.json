@@ -1,19 +1,19 @@
 {
   "schema": 2,
   "patch": "2.1.90",
-  "note": "Counter rules, all additive and all explained. tagCounters give complete coverage for every hero in the registry, classCounters add archetype pressure, and heroCounters are named overrides for matchups worth stating explicitly. Every row's `reason` is what the app shows the player — writing the rule and writing the explanation are the same act, so an explanation can never drift from the logic.",
+  "note": "Counter rules, all additive and all explained. tagCounters give complete coverage for every hero in the registry, classCounters add archetype pressure, and heroCounters are named overrides for matchups worth stating explicitly. Every row's `reason` is the *mechanism* — what the interaction does, with no claim about whose hero is whose. The side is supplied at render time by src/engine/reason.js, because the same rule is read from opposite perspectives (a pick reason looks outward from our hero, a threat note inward from theirs). Writing the rule and writing the mechanism is still the same act — writing the rule and writing the explanation are the same act, so an explanation can never drift from the logic.",
   "tagCounters": [
     {
       "counter": "anti-heal",
       "against": "sustain",
       "weight": 10,
-      "reason": "Anti-heal cuts the regeneration the enemy bruiser is built around"
+      "reason": "Anti-heal cuts the regeneration a bruiser is built around"
     },
     {
       "counter": "anti-heal",
       "against": "heal",
       "weight": 10,
-      "reason": "Healing reduction blunts the enemy support's core value"
+      "reason": "Healing reduction blunts a support's core value"
     },
     {
       "counter": "hard-cc",
@@ -37,13 +37,13 @@
       "counter": "counter-initiate",
       "against": "engage",
       "weight": 9,
-      "reason": "Punishes the enemy's committed engage"
+      "reason": "Punishes a committed engage"
     },
     {
       "counter": "disengage",
       "against": "engage",
       "weight": 8,
-      "reason": "Breaks up the enemy's grouped initiation"
+      "reason": "Breaks up a grouped initiation"
     },
     {
       "counter": "peel",
@@ -55,7 +55,7 @@
       "counter": "purify",
       "against": "hard-cc",
       "weight": 8,
-      "reason": "Cleanse removes the enemy's setup CC"
+      "reason": "Cleanse removes setup CC"
     },
     {
       "counter": "immunity",
@@ -85,7 +85,7 @@
       "counter": "tank-shred",
       "against": "frontline",
       "weight": 8,
-      "reason": "Percent damage melts the enemy frontline"
+      "reason": "Percent damage melts a frontline"
     },
     {
       "counter": "true-damage",
@@ -151,7 +151,7 @@
       "counter": "single-target",
       "against": "scaling",
       "weight": 6,
-      "reason": "Removes the one carry the enemy draft is built around"
+      "reason": "Removes the one carry a draft is built around"
     },
     {
       "counter": "single-target",
@@ -341,7 +341,7 @@
       "hero": "valentina",
       "against": "atlas",
       "weight": 20,
-      "reason": "Steals the enemy's best initiation ultimate"
+      "reason": "Steals the best initiation ultimate on the other side"
     },
     {
       "hero": "valentina",
@@ -353,7 +353,7 @@
       "hero": "valentina",
       "against": "khufra",
       "weight": 16,
-      "reason": "Copies the strongest lockdown in the enemy draft"
+      "reason": "Copies the strongest lockdown on the other side"
     },
     {
       "hero": "franco",
@@ -551,7 +551,7 @@
       "hero": "sun",
       "against": "masha",
       "weight": 8,
-      "reason": "Wins the side-lane trade the enemy split relies on"
+      "reason": "Wins the side-lane trade a split-push relies on"
     },
     {
       "hero": "phoveus",

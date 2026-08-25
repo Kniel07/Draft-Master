@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "patch": "2.1.90",
-  "note": "Synergy rules, all additive and all explained. tagSynergies cover every hero pair through their traits; heroSynergies are named combos. `reason` is the displayed text.",
+  "note": "Synergy rules, all additive and all explained. tagSynergies cover every hero pair through their traits; heroSynergies are named combos. `reason` is the displayed text. Reasons are mechanism clauses: they describe what the interaction does and never say whose hero is whose. Perspective is applied at render time by src/engine/reason.js.",
   "tagSynergies": [
     {
       "a": "setup",
@@ -131,7 +131,7 @@
         "zhuxin"
       ],
       "weight": 24,
-      "reason": "Layered crowd control — Atlas groups the enemy inside Zhuxin's zone"
+      "reason": "Layered crowd control — Atlas groups targets inside Zhuxin's zone"
     },
     {
       "pair": [
@@ -259,7 +259,7 @@
         "dyrroth"
       ],
       "weight": 16,
-      "reason": "Enables an aggressive all-in on the enemy backline"
+      "reason": "Enables an aggressive all-in on the opposing backline"
     },
     {
       "pair": [

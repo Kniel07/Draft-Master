@@ -9,7 +9,7 @@
 
 import { profile, highlights, assignLanes, describeUnorthodox } from './composition.js';
 import { counterPoints } from './counter.js';
-import { stripVs } from './counter.js';
+import { renderReason, stripQualifier, THEIRS } from './reason.js';
 
 function edge(us, them, id) {
   return (us.values[id] || 0) - (them.values[id] || 0);
@@ -84,11 +84,18 @@ function threats(registry, ourPicks, theirPicks, limit = 3) {
   // threat has already used.
   const used = new Set();
   return ranked.map((row) => {
-    const fresh = row.notes.find((n) => !used.has(stripVs(n.text)));
+    // The actor is *their* hero and the target is ours, so these render from
+    // the opposite side to a pick reason. Rendering the same fact with the
+    // default perspective is what produced "the enemy support's core value"
+    // when the support in question was ours.
+    const render = (entry) =>
+      entry ? renderReason(entry.fact, { actorSide: THEIRS }) : null;
+
+    const fresh = row.notes.find((n) => !used.has(stripQualifier(render(n) || '')));
     const chosen = fresh || row.notes[0];
-    const note = chosen ? stripVs(chosen.text) : 'Highest individual carry potential on their side';
-    used.add(note);
-    return { hero: row.hero, score: row.score, note };
+    const note = render(chosen) || 'Highest individual carry potential on their side';
+    used.add(stripQualifier(note));
+    return { hero: row.hero, score: row.score, note, fact: chosen ? chosen.fact : null };
   });
 }
 
@@ -157,9 +164,14 @@ function reminders(registry, us) {
 
   const topPair = us.synergy.pairs[0];
   if (topPair) {
-    out.push(
-      `Combo to call: ${topPair.heroes[0].name} into ${topPair.heroes[1].name} — ${topPair.reason.toLowerCase()}.`
-    );
+    // Describe the pair by what it actually is. Rendering its single
+    // highest-weighted reason asserted a cause the pair did not win on: it wins
+    // on the sum of its linked effects, and naming one of them as *the* reason
+    // is how "Angela into Edith" came to be justified with a claim about
+    // scaling carries.
+    const { count, text } = topPair.summary;
+    const linked = count > 1 ? ` (${count} linked effects)` : '';
+    out.push(`Combo to call: ${topPair.heroes[0].name} + ${topPair.heroes[1].name}${linked} — ${text}.`);
   }
   out.push('Call the retreat out loud after a spent initiation ultimate — that is the enemy window.');
   return out.slice(0, 5);

@@ -11,6 +11,8 @@
  * arithmetic that produced the ranking.
  */
 
+import { createFact, reasonText, renderReason, stripQualifier, THEIRS } from './reason.js';
+
 export function clamp(value, lo = 0, hi = 100) {
   return Math.max(lo, Math.min(hi, value));
 }
@@ -20,25 +22,39 @@ export function counterPoints(registry, hero, target) {
   let total = 0;
   const reasons = [];
 
+  // Each hit becomes a fact rather than a finished sentence. `text` is the
+  // default rendering for the common case (our hero acting on theirs); a caller
+  // reading from the other side re-renders from `fact` instead of reusing it.
+  const record = (row, source, effect) => {
+    const fact = createFact({
+      actor: hero,
+      target,
+      relationship: 'counter',
+      effect,
+      source,
+      weight: row.weight,
+      mechanism: row.reason
+    });
+    total += row.weight;
+    reasons.push({ weight: row.weight, text: reasonText(fact), vs: target.id, fact });
+  };
+
   (registry.heroCounterMap.get(hero.id) || []).forEach((row) => {
     if (row.against !== target.id) return;
-    total += row.weight;
-    reasons.push({ weight: row.weight, text: `${row.reason} (vs ${target.name})`, vs: target.id });
+    record(row, 'named', row.against);
   });
 
   (hero.tags || []).forEach((tag) => {
     (registry.tagCounterMap.get(tag) || []).forEach((row) => {
       if (!(target.tags || []).includes(row.against)) return;
-      total += row.weight;
-      reasons.push({ weight: row.weight, text: `${row.reason} (vs ${target.name})`, vs: target.id });
+      record(row, 'tag', tag);
     });
   });
 
   (hero.classes || []).forEach((cls) => {
     (registry.classCounterMap.get(cls) || []).forEach((row) => {
       if (!(target.classes || []).includes(row.against)) return;
-      total += row.weight;
-      reasons.push({ weight: row.weight, text: `${row.reason} (vs ${target.name})`, vs: target.id });
+      record(row, 'class', cls);
     });
   });
 
@@ -50,13 +66,17 @@ export function counterPoints(registry, hero, target) {
     const delta = measured.get(target.id);
     const points = clamp(delta * 100, -12, 12);
     if (Math.abs(points) >= 1) {
-      total += points;
-      reasons.push({
+      const fact = createFact({
+        actor: hero,
+        target,
+        relationship: 'counter',
+        effect: 'measured',
+        source: 'measured',
         weight: Math.abs(points),
-        text: `Measured win-rate edge against ${target.name} at this rank`,
-        vs: target.id,
-        measured: true
+        mechanism: 'A measured win-rate edge at this rank'
       });
+      total += points;
+      reasons.push({ weight: Math.abs(points), text: reasonText(fact), vs: target.id, measured: true, fact });
     }
   }
 
@@ -89,7 +109,12 @@ export function counterComponent(registry, hero, enemyPicks, scale) {
     riskReasons.push(
       ...back.reasons.map((r) => ({
         weight: r.weight,
-        text: `${enemy.name} answers this pick — ${stripVs(r.text).toLowerCase()}`
+        // The actor here is *their* hero acting on ours, so this renders from
+        // the opposite side to the credit reasons above.
+        text: `${enemy.name} answers this pick — ${stripQualifier(
+          renderReason(r.fact, { actorSide: THEIRS, qualifier: false })
+        ).toLowerCase()}`,
+        fact: r.fact
       }))
     );
   });
@@ -112,6 +137,7 @@ export function threatAgainst(registry, hero, ourPicks, scale) {
   return { score: ourPicks.length ? clamp(raw * scale) : 50, raw, reasons };
 }
 
+/** @deprecated kept for callers that still hold rendered strings. */
 export function stripVs(text) {
-  return String(text).replace(/\s*\((?:vs|with) [^)]+\)$/, '');
+  return stripQualifier(text);
 }

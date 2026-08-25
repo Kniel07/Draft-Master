@@ -6,18 +6,30 @@
  * collect the same "initiation lands into area control" credit three times.
  */
 
-import { clamp, stripVs } from './counter.js';
+import { clamp } from './counter.js';
+import { createFact, reasonText, summarisePair, stripQualifier } from './reason.js';
 
 export function synergyPoints(registry, hero, ally) {
   let total = 0;
   const reasons = [];
   if (hero.id === ally.id) return { total, reasons };
 
+  const record = (row, source, effect, mechanism) => {
+    const fact = createFact({
+      actor: hero,
+      target: ally,
+      relationship: 'synergy',
+      effect,
+      source,
+      weight: row.weight,
+      mechanism
+    });
+    total += row.weight;
+    reasons.push({ weight: row.weight, text: reasonText(fact), with: ally.id, fact });
+  };
+
   const named = registry.heroSynergyMap.get(registry.pairKey(hero.id, ally.id));
-  if (named) {
-    total += named.weight;
-    reasons.push({ weight: named.weight, text: `${named.reason} (with ${ally.name})`, with: ally.id });
-  }
+  if (named) record(named, 'named', ally.id, named.reason);
 
   const counted = new Set();
   (hero.tags || []).forEach((tag) => {
@@ -26,8 +38,7 @@ export function synergyPoints(registry, hero, ally) {
       const key = `${row.reason}|${ally.id}`;
       if (counted.has(key)) return;
       counted.add(key);
-      total += row.weight;
-      reasons.push({ weight: row.weight, text: `${row.reason} (with ${ally.name})`, with: ally.id });
+      record(row, 'tag', `${tag}+${row.other}`, row.reason);
     });
   });
 
@@ -35,13 +46,17 @@ export function synergyPoints(registry, hero, ally) {
   if (measured && measured.has(ally.id)) {
     const points = clamp(measured.get(ally.id) * 100, -10, 10);
     if (Math.abs(points) >= 1) {
-      total += points;
-      reasons.push({
+      const fact = createFact({
+        actor: hero,
+        target: ally,
+        relationship: 'synergy',
+        effect: 'measured',
+        source: 'measured',
         weight: Math.abs(points),
-        text: `Measured win-rate lift alongside ${ally.name} at this rank`,
-        with: ally.id,
-        measured: true
+        mechanism: 'A measured win-rate lift at this rank'
       });
+      total += points;
+      reasons.push({ weight: Math.abs(points), text: reasonText(fact), with: ally.id, measured: true, fact });
     }
   }
 
@@ -70,11 +85,18 @@ export function synergyTotal(registry, heroes) {
       const out = synergyPoints(registry, heroes[i], heroes[j]);
       if (out.total <= 0) continue;
       total += out.total;
-      const top = out.reasons.slice().sort((a, b) => b.weight - a.weight)[0];
+      const facts = out.reasons.map((r) => r.fact).filter(Boolean);
+      const summary = summarisePair(facts);
       pairs.push({
         heroes: [heroes[i], heroes[j]],
         weight: out.total,
-        reason: top ? stripVs(top.text) : 'Complementary kits'
+        facts,
+        summary,
+        // Retained for callers that want one clause; it is explicitly the
+        // strongest single mechanism, not "the reason the pair won".
+        reason: facts.length
+          ? stripQualifier(facts.slice().sort((a, b) => b.weight - a.weight)[0].mechanism)
+          : 'Complementary kits'
       });
     }
   }
@@ -88,7 +110,7 @@ export function bestPartners(registry, hero, available, limit = 3) {
     .map((candidate) => {
       const out = synergyPoints(registry, candidate, hero);
       const top = out.reasons.slice().sort((a, b) => b.weight - a.weight)[0];
-      return { hero: candidate, total: out.total, reason: top ? stripVs(top.text) : null };
+      return { hero: candidate, total: out.total, reason: top ? top.fact.mechanism : null, fact: top ? top.fact : null };
     })
     .filter((row) => row.total > 0)
     .sort((a, b) => b.total - a.total || a.hero.name.localeCompare(b.hero.name))

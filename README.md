@@ -214,7 +214,7 @@ node tools/validate-data.mjs   # data checks + engine smoke test
 node tools/audit-roles.mjs     # role/lane/id against the official snapshot
 python3 tools/generate-heroes.py
 
-npm i jsdom && node tools/ui-test.mjs   # 185 assertions against the real UI
+npm i jsdom && node tools/ui-test.mjs   # 203 assertions against the real UI
 ```
 
 `tools/ui-test.mjs` includes a nine-case API resilience matrix — unreachable,
