@@ -7,30 +7,61 @@
     "principle": "The app recommends. The player decides."
   },
   "lanes": [
-    { "id": "roam", "label": "Roam", "short": "ROAM", "apiLane": "roam" },
-    { "id": "jungle", "label": "Jungle", "short": "JUNG", "apiLane": "jungle" },
-    { "id": "mid", "label": "Mid Lane", "short": "MID", "apiLane": "mid" },
-    { "id": "gold", "label": "Gold Lane", "short": "GOLD", "apiLane": "gold" },
-    { "id": "exp", "label": "EXP Lane", "short": "EXP", "apiLane": "exp" }
+    {
+      "id": "roam",
+      "label": "Roam",
+      "short": "ROAM",
+      "apiLane": "roam"
+    },
+    {
+      "id": "jungle",
+      "label": "Jungle",
+      "short": "JUNG",
+      "apiLane": "jungle"
+    },
+    {
+      "id": "mid",
+      "label": "Mid Lane",
+      "short": "MID",
+      "apiLane": "mid"
+    },
+    {
+      "id": "gold",
+      "label": "Gold Lane",
+      "short": "GOLD",
+      "apiLane": "gold"
+    },
+    {
+      "id": "exp",
+      "label": "EXP Lane",
+      "short": "EXP",
+      "apiLane": "exp"
+    }
   ],
-  "classes": ["Tank", "Fighter", "Assassin", "Mage", "Marksman", "Support"],
-
+  "classes": [
+    "Tank",
+    "Fighter",
+    "Assassin",
+    "Mage",
+    "Marksman",
+    "Support"
+  ],
   "weights": {
     "note": "One place. Nothing in the UI or the engine hardcodes a weight. Values are relative — they are normalised by their own sum, so they do not have to add to 1.",
     "pick": {
-      "meta": 0.20,
+      "meta": 0.2,
       "counter": 0.25,
-      "synergy": 0.20,
+      "synergy": 0.2,
       "roleFit": 0.15,
-      "comfort": 0.10,
-      "flexibility": 0.10
+      "comfort": 0.1,
+      "flexibility": 0.1
     },
     "ban": {
-      "meta": 0.20,
+      "meta": 0.2,
       "enemyThreat": 0.25,
       "counterRisk": 0.23,
       "rankPopularity": 0.13,
-      "comfortRisk": 0.10,
+      "comfortRisk": 0.1,
       "flexibility": 0.09
     },
     "composition": {
@@ -38,15 +69,51 @@
       "need": 0.12
     }
   },
-
   "modes": {
     "ranked": {
       "id": "ranked",
       "label": "Ranked",
-      "description": "Epic through Mythical Immortal. You control the order — tell the app what has happened and it tells you what it means.",
+      "description": "Epic through Mythical Immortal. The app follows the real Ranked structure; you record the lobby as it happens.",
       "sequenced": false,
+      "guided": true,
       "teamSize": 5,
-      "banSlots": { "ally": 3, "enemy": 3 }
+      "note": "Ranked is guided, not sequenced. There is a real structure — rank decides the ban count, bans are blind and simultaneous, picks run a snake — so the app always knows what phase it is in and what comes next. But every slot stays directly addressable, because the app is not in the lobby: a ban can be revealed late, a pick can be missed, and the player must always be able to record what actually happened rather than what the sequence expected.",
+      "banStyle": "blind-simultaneous",
+      "banStyleNote": "In Ranked both teams ban at the same time without seeing each other's choices; the enemy's bans are revealed afterwards. So the app asks for your bans first — that is your decision window, and the only point where a ban recommendation can matter — and then for theirs once you can see them.",
+      "rulesets": {
+        "epic": {
+          "bansPerTeam": 3
+        },
+        "legend": {
+          "bansPerTeam": 4
+        },
+        "mythic": {
+          "bansPerTeam": 5
+        },
+        "honor": {
+          "bansPerTeam": 5
+        },
+        "glory": {
+          "bansPerTeam": 5
+        },
+        "immortal": {
+          "bansPerTeam": 5
+        }
+      },
+      "rulesetSource": "Draft Pick allows up to 10 bans (3/4/5 at Epic/Legend/Mythic per team); picks run Blue 1, Red 1-2, Blue 2-3, Red 3-4, Blue 4-5, Red 5. Verified against the MLBB Draft Pick wiki and LaroHub's ranked draft guide, 2026-08.",
+      "pickOrder": [
+        "ally",
+        "enemy",
+        "enemy",
+        "ally",
+        "ally",
+        "enemy",
+        "enemy",
+        "ally",
+        "ally",
+        "enemy"
+      ],
+      "pickOrderNote": "Written from the perspective of our team picking first. Mirrored when the enemy has first pick."
     },
     "tournament": {
       "id": "tournament",
@@ -57,56 +124,160 @@
       "format": "mpl-standard"
     }
   },
-
   "draftFormats": {
     "mpl-standard": {
       "id": "mpl-standard",
       "name": "MPL / M-Series standard",
       "description": "10 bans, 10 picks. Blue opens the first ban phase, Red opens the second.",
       "steps": [
-        { "team": "blue", "action": "ban", "phase": "Ban Phase 1" },
-        { "team": "red", "action": "ban", "phase": "Ban Phase 1" },
-        { "team": "blue", "action": "ban", "phase": "Ban Phase 1" },
-        { "team": "red", "action": "ban", "phase": "Ban Phase 1" },
-        { "team": "blue", "action": "ban", "phase": "Ban Phase 1" },
-        { "team": "red", "action": "ban", "phase": "Ban Phase 1" },
-        { "team": "blue", "action": "pick", "phase": "Pick Phase 1" },
-        { "team": "red", "action": "pick", "phase": "Pick Phase 1" },
-        { "team": "red", "action": "pick", "phase": "Pick Phase 1" },
-        { "team": "blue", "action": "pick", "phase": "Pick Phase 1" },
-        { "team": "blue", "action": "pick", "phase": "Pick Phase 1" },
-        { "team": "red", "action": "pick", "phase": "Pick Phase 1" },
-        { "team": "red", "action": "ban", "phase": "Ban Phase 2" },
-        { "team": "blue", "action": "ban", "phase": "Ban Phase 2" },
-        { "team": "red", "action": "ban", "phase": "Ban Phase 2" },
-        { "team": "blue", "action": "ban", "phase": "Ban Phase 2" },
-        { "team": "red", "action": "pick", "phase": "Pick Phase 2" },
-        { "team": "blue", "action": "pick", "phase": "Pick Phase 2" },
-        { "team": "blue", "action": "pick", "phase": "Pick Phase 2" },
-        { "team": "red", "action": "pick", "phase": "Pick Phase 2" }
+        {
+          "team": "blue",
+          "action": "ban",
+          "phase": "Ban Phase 1"
+        },
+        {
+          "team": "red",
+          "action": "ban",
+          "phase": "Ban Phase 1"
+        },
+        {
+          "team": "blue",
+          "action": "ban",
+          "phase": "Ban Phase 1"
+        },
+        {
+          "team": "red",
+          "action": "ban",
+          "phase": "Ban Phase 1"
+        },
+        {
+          "team": "blue",
+          "action": "ban",
+          "phase": "Ban Phase 1"
+        },
+        {
+          "team": "red",
+          "action": "ban",
+          "phase": "Ban Phase 1"
+        },
+        {
+          "team": "blue",
+          "action": "pick",
+          "phase": "Pick Phase 1"
+        },
+        {
+          "team": "red",
+          "action": "pick",
+          "phase": "Pick Phase 1"
+        },
+        {
+          "team": "red",
+          "action": "pick",
+          "phase": "Pick Phase 1"
+        },
+        {
+          "team": "blue",
+          "action": "pick",
+          "phase": "Pick Phase 1"
+        },
+        {
+          "team": "blue",
+          "action": "pick",
+          "phase": "Pick Phase 1"
+        },
+        {
+          "team": "red",
+          "action": "pick",
+          "phase": "Pick Phase 1"
+        },
+        {
+          "team": "red",
+          "action": "ban",
+          "phase": "Ban Phase 2"
+        },
+        {
+          "team": "blue",
+          "action": "ban",
+          "phase": "Ban Phase 2"
+        },
+        {
+          "team": "red",
+          "action": "ban",
+          "phase": "Ban Phase 2"
+        },
+        {
+          "team": "blue",
+          "action": "ban",
+          "phase": "Ban Phase 2"
+        },
+        {
+          "team": "red",
+          "action": "pick",
+          "phase": "Pick Phase 2"
+        },
+        {
+          "team": "blue",
+          "action": "pick",
+          "phase": "Pick Phase 2"
+        },
+        {
+          "team": "blue",
+          "action": "pick",
+          "phase": "Pick Phase 2"
+        },
+        {
+          "team": "red",
+          "action": "pick",
+          "phase": "Pick Phase 2"
+        }
       ]
     }
   },
-
   "strength": {
     "dimensions": [
-      { "id": "early", "label": "Early Game", "short": "Early" },
-      { "id": "late", "label": "Late Game", "short": "Late" },
-      { "id": "damage", "label": "Damage", "short": "Damage" },
-      { "id": "survivability", "label": "Survivability", "short": "Survive" },
-      { "id": "cc", "label": "Crowd Control", "short": "CC" },
-      { "id": "push", "label": "Push", "short": "Push" },
-      { "id": "coordination", "label": "Team Coordination", "short": "Synergy" }
+      {
+        "id": "early",
+        "label": "Early Game",
+        "short": "Early"
+      },
+      {
+        "id": "late",
+        "label": "Late Game",
+        "short": "Late"
+      },
+      {
+        "id": "damage",
+        "label": "Damage",
+        "short": "Damage"
+      },
+      {
+        "id": "survivability",
+        "label": "Survivability",
+        "short": "Survive"
+      },
+      {
+        "id": "cc",
+        "label": "Crowd Control",
+        "short": "CC"
+      },
+      {
+        "id": "push",
+        "label": "Push",
+        "short": "Push"
+      },
+      {
+        "id": "coordination",
+        "label": "Team Coordination",
+        "short": "Synergy"
+      }
     ]
   },
-
   "thresholds": {
     "strongDimension": 68,
     "weakDimension": 45,
     "highCounterRisk": 18,
     "matchupScale": 1.6
   },
-
   "api": {
     "enabled": true,
     "note": "Public, free, no key. Two hosts from the same project; the first that answers wins. Everything is cached, and every failure falls through to the bundled data files.",

@@ -89,6 +89,12 @@ function setView(next) {
  */
 function rankedTarget(snapshot) {
   if (snapshot.sequenced) return null;
+  // The guided step already knows what the draft is waiting for, including the
+  // blind-ban ordering. Falling back to "first empty slot of the current
+  // intent" is only for a board filled out of order.
+  if (snapshot.guidedStep) {
+    return { group: snapshot.guidedStep.group, index: snapshot.guidedStep.slot };
+  }
   const order =
     (snapshot.action || 'pick') === 'ban'
       ? [['enemyBans', snapshot.enemyBans], ['allyBans', snapshot.allyBans]]
@@ -148,6 +154,7 @@ const handlers = {
   onRole: (lane) => store.setRole(lane),
   onSide: (side) => store.setSide(side),
   onIntent: (intent) => store.setIntent(intent),
+  onFirstPick: (weFirst) => store.setFirstPick(weFirst),
   onToggleComfort: (heroId) => store.toggleComfort(heroId),
   onRateComfort: (heroId, rating) => store.setComfortRating(heroId, rating),
   onClearComfort: () => store.clearComfort(),
@@ -272,6 +279,7 @@ function signature(snapshot) {
     snapshot.side,
     snapshot.intent,
     snapshot.selectedRole,
+    snapshot.weFirst,
     snapshot.stepIndex,
     snapshot.allies.join(','),
     snapshot.enemies.join(','),
@@ -386,11 +394,17 @@ function renderActionBar(snapshot) {
     return;
   }
 
-  bar.appendChild(el('span', 'actionbar__label', target ? slotTitle(target) : action === 'ban' ? 'Your ban' : 'Your pick'));
+  const step = snapshot.guidedStep;
+  const label = step ? step.label : target ? slotTitle(target) : action === 'ban' ? 'Your ban' : 'Your pick';
+  bar.appendChild(el('span', 'actionbar__label', label));
   bar.appendChild(
     button(
       `btn btn--act btn--${action}`,
-      target && target.group.startsWith('enemy') ? `Log ${action === 'ban' ? 'a ban' : 'a pick'}` : 'Choose a hero',
+      target && target.group.startsWith('enemy')
+        ? `Record ${action === 'ban' ? 'their ban' : 'their pick'}`
+        : action === 'ban'
+          ? 'Choose a ban'
+          : 'Choose a hero',
       () => handlers.onBrowse()
     )
   );

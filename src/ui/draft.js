@@ -14,6 +14,7 @@
 
 import { el, clear, button, portrait, laneShort, scrollPanel } from './dom.js';
 import { timeline, turnLabel } from '../engine/tournament.js';
+import { describeStep, phaseProgress } from '../engine/ranked-rules.js';
 
 /* ------------------------------------------------------------ ranked board */
 
@@ -109,6 +110,13 @@ function rankedTeam(registry, snapshot, handlers, side) {
   host.appendChild(head);
 
   const bansIds = isAlly ? snapshot.allyBans : snapshot.enemyBans;
+  const banCount = snapshot.banProgress ? snapshot.banProgress[isAlly ? 'ally' : 'enemy'] : null;
+  if (banCount) {
+    const banHead = el('div', 'team__banhead');
+    banHead.appendChild(el('span', 'team__banlabel', 'Bans'));
+    banHead.appendChild(el('span', 'team__bancount', `${banCount.done} / ${banCount.total}`));
+    host.appendChild(banHead);
+  }
   host.appendChild(
     banStrip(registry, bansIds, bansIds.length, {
       label: `${isAlly ? 'Your' : 'Enemy'} bans`,
@@ -231,23 +239,63 @@ export function renderTurn(host, registry, snapshot, handlers) {
     return;
   }
 
-  // Ranked: the player says what they are about to do. Nothing else sets this.
-  host.className = `turn turn--${snapshot.intent}`;
-  host.appendChild(el('span', 'turn__phase', 'Your move'));
+  // Ranked. The old banner said "Your move" and offered a pick/ban toggle,
+  // which left the player to work out for themselves what the lobby was doing.
+  // Tournament mode was easier to follow purely because it answered four
+  // questions at a glance: what phase, whose turn, what action, what next. This
+  // answers the same four for a ruleset that genuinely differs.
+  const step = snapshot.guidedStep;
+  const ruleset = snapshot.ruleset;
+  const described = describeStep(step, ruleset);
 
-  const toggle = el('div', 'intent');
-  toggle.setAttribute('role', 'group');
-  toggle.setAttribute('aria-label', 'What are you doing now?');
-  [
-    { id: 'pick', label: "I'm picking" },
-    { id: 'ban', label: "I'm banning" }
-  ].forEach((option) => {
-    const active = snapshot.intent === option.id;
-    toggle.appendChild(
-      button(`intent__btn${active ? ' is-active' : ''}`, option.label, () => handlers.onIntent(option.id), {
-        pressed: active
-      })
+  host.className = `turn turn--${step ? (step.side === 'ally' ? 'ally' : 'enemy') : 'done'}${
+    described.recording ? ' turn--recording' : ''
+  }`;
+
+  const head = el('div', 'turn__head');
+  head.appendChild(el('span', 'turn__phase', described.phase));
+  if (step) {
+    const progress = phaseProgress(snapshot.sequence || [], snapshot, step.phase);
+    if (progress.total) {
+      head.appendChild(el('span', 'turn__count', `${progress.done} / ${progress.total}`));
+    }
+  }
+  host.appendChild(head);
+
+  host.appendChild(el('span', 'turn__call', described.call));
+
+  // Say plainly whether this is a decision the app can help with or an
+  // observation to write down. Those are different jobs and conflating them is
+  // what made the free-form board confusing.
+  host.appendChild(
+    el(
+      'span',
+      'turn__mode',
+      step
+        ? described.recording
+          ? 'Recording what they did'
+          : 'Your decision — suggestions below'
+        : 'The brief is ready'
+    )
+  );
+
+  if (described.detail) host.appendChild(el('span', 'turn__detail', described.detail));
+
+  if (step && handlers.onOpenSlot) {
+    host.appendChild(
+      button(
+        `btn btn--act btn--${step.phase}`,
+        described.recording
+          ? `Record ${step.phase === 'ban' ? 'their ban' : 'their pick'}`
+          : `Choose ${step.phase === 'ban' ? 'a ban' : 'a hero'}`,
+        () => handlers.onOpenSlot(step.group, step.slot)
+      )
     );
-  });
-  host.appendChild(toggle);
+  }
+
+  // The sequence is a guide, not a rail. Any slot on the board stays tappable,
+  // and this says so rather than leaving the player to discover it.
+  host.appendChild(
+    el('span', 'turn__hint', 'Out of order? Tap any slot on the board to record it directly.')
+  );
 }

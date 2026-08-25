@@ -64,6 +64,39 @@ function rankPicker(registry, snapshot, handlers, status) {
   return block;
 }
 
+function firstPickPicker(registry, snapshot, handlers) {
+  const ruleset = snapshot.ruleset;
+  const block = fieldset(
+    'Draft order',
+    ruleset ? `${ruleset.bansPerTeam} bans per team at ${ruleset.rankLabel}` : ''
+  );
+  const row = el('div', 'segment');
+  row.setAttribute('role', 'group');
+  row.setAttribute('aria-label', 'Who picks first');
+  [
+    { id: true, label: 'We pick first' },
+    { id: false, label: 'They pick first' }
+  ].forEach((option) => {
+    const active = snapshot.weFirst === option.id;
+    row.appendChild(
+      button(`segment__btn${active ? ' is-active' : ''}`, option.label, () => handlers.onFirstPick(option.id), {
+        pressed: active
+      })
+    );
+  });
+  block.appendChild(row);
+  block.appendChild(
+    el(
+      'p',
+      'setup__hint',
+      'Ranked bans are blind and simultaneous, so the app asks for yours first and theirs once the lobby ' +
+        'reveals them. Picks then run the usual snake. The app never assumes your lobby slot — only what ' +
+        'you tell it here.'
+    )
+  );
+  return block;
+}
+
 function rolePicker(registry, snapshot, handlers) {
   const block = fieldset('Your role', 'Optional. Set it and picks are ranked for that lane first');
   const row = el('div', 'chips chips--wide');
@@ -223,6 +256,7 @@ export function renderSetup(host, registry, snapshot, status, handlers) {
 
   if (snapshot.mode === 'ranked') {
     host.appendChild(rankPicker(registry, snapshot, handlers, status));
+    host.appendChild(firstPickPicker(registry, snapshot, handlers));
     host.appendChild(rolePicker(registry, snapshot, handlers));
     host.appendChild(comfortPool(registry, snapshot, handlers));
   } else {

@@ -37,13 +37,11 @@
 .team__count { font-family: var(--cond); font-size: 13px; color: var(--text-faint); letter-spacing: 0.06em; }
 
 .bans { display: flex; gap: 4px; margin-bottom: 8px; }
-.bans::before {
-  content: 'BANS';
-  align-self: center;
-  font-family: var(--cond); font-size: 9.5px; letter-spacing: 0.14em;
-  color: var(--text-faint);
-  margin-right: 2px;
-}
+/* The count lives in its own header now, because "2 / 5" is the thing the
+   player needs and a static BANS label was not it. */
+.team__banhead { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
+.team__banlabel { font-family: var(--cond); font-size: 9.5px; letter-spacing: 0.14em; color: var(--text-faint); text-transform: uppercase; }
+.team__bancount { font-family: var(--cond); font-size: 12px; letter-spacing: 0.06em; color: var(--text-dim); }
 .bans__cell { flex: 0 0 auto; }
 .bans__tap {
   width: 34px;
@@ -158,10 +156,20 @@
 .turn--pick { --turn: var(--blue); }
 .turn--ban { --turn: var(--red); }
 .turn--done { --turn: var(--good); }
+.turn { flex-direction: column; align-items: stretch; gap: 4px; }
+.turn__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .turn__phase {
   font-family: var(--cond); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--text-faint);
 }
+.turn__count { font-family: var(--cond); font-size: 12px; letter-spacing: 0.06em; color: var(--text-dim); }
+.turn__mode { font-size: 11.5px; color: var(--text-dim); }
+.turn__detail { font-size: 11.5px; color: var(--text-faint); line-height: 1.35; }
+.turn__hint { margin-top: 2px; font-size: 11px; color: var(--text-faint); }
+.turn .btn--act { margin-top: 6px; }
+.turn--ally { --turn: var(--blue); }
+.turn--enemy { --turn: var(--red); }
+.turn--recording { --turn: var(--warn); }
 .turn__call { font-family: var(--cond); font-size: 17px; font-weight: 600; letter-spacing: 0.04em; color: var(--gold); }
 
 .intent { display: flex; gap: 6px; margin-left: auto; }

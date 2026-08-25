@@ -234,6 +234,67 @@ team can put them.
 **Unusual is not invalid.** The app may say a pairing is unconventional. It may
 not overrule it, move the hero back, or treat the draft as broken.
 
+## 4b. Ranked is a ruleset, not a blank board
+
+Field testing found Ranked harder to follow than Tournament, and the reason was
+structural rather than cosmetic. Tournament answers four questions at a glance —
+what phase, whose turn, what action, what next. Ranked answered none of them. It
+offered ten slots, six bans regardless of rank, and a pick/ban toggle, and left
+the player to work out what the lobby was doing.
+
+The original reasoning — the player does not control the lobby order, so do not
+impose one — was half right. It was read as *there is no order*, which is a
+different claim and a false one. **Free-form does not mean structure-free.**
+
+### The actual rules
+
+Verified before implementing, rather than assumed from Tournament:
+
+| | |
+| --- | --- |
+| Bans per team | **3 at Epic, 4 at Legend, 5 at Mythic and above** |
+| Ban style | **Blind and simultaneous.** Both teams ban at once; the enemy's are revealed afterwards |
+| Pick order | Snake: first-pick side, then two, two, two, two, one |
+
+The blind-ban finding mattered most. Ranked bans are *not* an alternating
+sequence, so modelling them like Tournament's would have been wrong in a way
+that looked right. It also means there is exactly one window where a ban
+recommendation can influence anything — your own bans, before you can see
+theirs — so the sequence asks for those first and for the enemy's once the lobby
+reveals them.
+
+### Guided, not sequenced
+
+`config.json` marks Ranked `guided: true` and Tournament `sequenced: true`, and
+they stay separate rulesets. The guided step is **derived, not stored**: it is
+the first step in the sequence whose slot is still empty.
+
+That one decision is what lets structure and freedom coexist. Record something
+out of order and the pointer steps over it; clear a slot and the pointer comes
+back to it. There is no transition to get stuck in and no state to repair,
+because there is no stored position to disagree with the board.
+
+Rank selection now reshapes the board: changing rank resizes both ban strips and
+drops anything recorded in a slot that no longer exists, so the draft state
+cannot quietly disagree with the rules it claims to follow.
+
+### What it still refuses to know
+
+The app is not in the lobby. It does not model which player holds the current
+selection, S1–S5 slot ownership, or the ban-wave timing at Mythic (three
+revealed, then two). Who picks first is *observed*, so the player says so in
+Setup; nothing else is inferred.
+
+The banner distinguishes a decision from an observation — "Your decision —
+suggestions below" against "Recording what they did" — because those are
+different jobs and conflating them is what made the free-form board confusing.
+
+**Bans remain advisory.** Every suggestion keeps its own Ignore, browse-all
+stays under the list, and the disclaimer stays. Structure was added to the
+phase, not to the choice.
+
+---
+
 ## 5. Keeping the viewport still
 
 Four mechanisms, because removing the scroll calls only solves a third of it.
@@ -433,7 +494,7 @@ Two network requests per session, both cached. Portraits are `loading="lazy"`.
 
 Committed and repeatable:
 
-- **`tools/ui-test.mjs` — 145 assertions**, the real UI under jsdom. Offline
+- **`tools/ui-test.mjs` — 185 assertions**, the real UI under jsdom. Offline
   boot; partial search ("yuz" → Yu Zhong); picking a hero the engine did not
   suggest; ignore removing one row and committing nothing; Why? opening the real
   components; the ban list; unavailable heroes still findable, struck through
@@ -490,3 +551,97 @@ the next gate and no amount of further code changes it.
 | Live counter/compatibility data is fetched only on demand and capped | Low | Deliberate: the rule layer gives complete coverage and the rate limit is real |
 | Lane assignments are per-draft and not persisted | Low | They describe one game. Carrying them into the next draft would be a worse default than re-deriving them |
 | Trusting the tool over the player | Medium | The whole interaction design: every suggestion is one of several, every one is ignorable, and every one shows its working so it can be argued with |
+
+---
+
+## 11. Phase B field-test findings
+
+Four findings from real mobile drafts. Each records what was seen, what kind of
+problem it turned out to be, and — where it was not fixed — why not.
+
+### B1 · The hero sheet raised the keyboard
+
+**Observation.** Opening Pick/Ban focused the search field, so Android raised the
+keyboard over half the grid every time.
+**Classification.** Interaction.
+**Root cause.** `createSelector.open()` autofocused the input unconditionally.
+**Fix.** Focus goes to the sheet panel instead, keeping Escape and screen-reader
+announcement. A pointer-fine device has no keyboard to raise and its user is
+likely to type, so there the input still takes focus.
+**Verification.** Automated (committed suite asserts focus is not the search
+field) and manual (Chromium at all three widths: `sheet__panel` on open,
+`search` after an explicit tap).
+
+### B2 · Off-role picks reported as missing lanes
+
+**Observation.** Kaja on Roam and Belerick on EXP produced "EXP — not covered"
+and a role conflict for Kaja. Both assignments were deliberate.
+**Classification.** Draft model.
+**Root cause.** Lane coverage was inferred from hero role metadata alone. What a
+hero normally plays, what the team decided it is playing, and what the app would
+recommend were one concept instead of three.
+**Fix.** Explicit assignments are authoritative; the plan places every drafted
+hero somewhere; an unusual pairing is reported as unorthodox rather than
+invalid. Section 4a.
+**Verification.** Automated, including a mutation test that reproduces the
+original report verbatim.
+
+### B3 · Ranked draft structure
+
+**Observation.** Ranked was harder to follow than Tournament; ban count did not
+respond to rank.
+**Classification.** Draft rules — the rules themselves were modelled wrongly.
+**Root cause.** Ranked was implemented as a free-form board with a fixed six
+bans and no phase concept.
+**Fix.** Rank-dependent rulesets, blind-ban ordering, snake picks, and a derived
+guided step. Section 4b.
+**Verification.** Automated (rank→ban mapping for all six tiers, sequence shape,
+rank-switch cleanup, out-of-order recording, Tournament regression) and manual
+(Epic/Legend/Mythic ban counts at all three widths).
+
+### B4 · Brief tactical grounding — **traced, not fixed**
+
+Two suspicious outputs. Both were traced to their deterministic source and
+**deliberately left in place**, because Phase B is measuring how much authored
+knowledge is unreliable and correcting the symptom would destroy the evidence.
+
+**B4a — "Combo to call: Angela into Edith — protection buys the scaling carry
+the time it needs"**, on a team with Harith as the more obvious scaling carry.
+
+Not a data error. Both Edith and Harith legitimately carry the `scaling` tag.
+Angela+Edith scores 22 against Angela+Harith's 16 because *three* rules fire on
+the Edith pair (shield+engage 6, heal+frontline 7, peel+scaling 9) against two
+on the Harith pair. The engine is right that Angela+Edith is the strongest
+realised pairing.
+
+The defect is in attribution. `shotcallerNotes` renders the pair's single
+highest-weighted reason as the explanation, so the sentence asserts "the scaling
+carry" — a claim from the +9 rule — when what actually made this pair win was
+the +7 frontline-healing rule. The explanation names a reason the choice did not
+turn on.
+
+Worth recording alongside it: `peel + scaling` fires on four of the five pairs
+in that draft. `peel`, `shield` and `heal` are common tags and so is `scaling`,
+so this one rule dominates the combo line across many compositions.
+
+**Classification.** Template attribution, plus a tag-distribution observation.
+**Status.** Not fixed. Candidate for THINK review.
+
+**B4b — "Baxia — healing reduction blunts the enemy support's core value"** in
+the enemy threat list, which read as a reversed relationship.
+
+The direction is **correct**. Baxia carries `anti-heal`, our Angela carries
+`heal`, the rule fires, and the note describes what Baxia does to us.
+
+The defect is the pronoun. Reason strings are authored as standalone rule
+descriptions where "enemy" means *the target of the rule*. The threat list
+reuses them in a context where "enemy" has already been bound to the opposing
+team — so the sentence says "the enemy support" when it means *your* support.
+The same string is reused from two opposite perspectives: pick reasons read from
+our hero's point of view, threat notes from the enemy hero's.
+
+**Classification.** Reason-string authoring convention — perspective-dependent
+text reused in both perspectives.
+**Status.** Not fixed. This one is systemic rather than a single bad sentence,
+and any fix touches the authored `reason` field on every rule.
+

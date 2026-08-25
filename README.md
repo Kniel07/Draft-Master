@@ -11,7 +11,7 @@ Two modes share one engine:
 
 | Mode | For | Order |
 | --- | --- | --- |
-| **Ranked** | Epic → Mythical Immortal | Free-form. You are not in charge of the order in a real lobby, so the app does not pretend to be: log what happened, tell it what you are about to do, read the advice. |
+| **Ranked** | Epic → Mythical Immortal | Guided by the real Ranked ruleset — rank decides the ban count (3 / 4 / 5), bans are blind and simultaneous, picks run a snake — while every slot stays directly tappable, because the app is not in your lobby. |
 | **Tournament** | MPL / M-Series | The fixed 20-step sequence, with the broadcast timeline. |
 
 ---
@@ -214,7 +214,7 @@ node tools/validate-data.mjs   # data checks + engine smoke test
 node tools/audit-roles.mjs     # role/lane/id against the official snapshot
 python3 tools/generate-heroes.py
 
-npm i jsdom && node tools/ui-test.mjs   # 145 assertions against the real UI
+npm i jsdom && node tools/ui-test.mjs   # 185 assertions against the real UI
 ```
 
 `tools/ui-test.mjs` includes a nine-case API resilience matrix — unreachable,

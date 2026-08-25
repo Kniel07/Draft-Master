@@ -20,6 +20,7 @@
 
 import { readSetting, writeSetting } from '../api/cache.js';
 import { assignLanes } from '../engine/composition.js';
+import { rulesetFor, rankedSequence, currentStep as rankedCurrentStep, banProgress } from '../engine/ranked-rules.js';
 
 const SETTINGS_KEY = 'draft-settings';
 const listeners = new Set();
@@ -62,7 +63,10 @@ const state = {
    */
   laneAssignments: {},
 
-  /** Ranked intent: what the user is about to do. Never set by the engine. */
+  /** Ranked: does our team pick first? Observed in the lobby, so the player says. */
+  weFirst: true,
+
+  /** Ranked intent, when the player overrides the guided step by tapping a slot. */
   intent: 'pick',
   /** Which ranked slot the selector is filling: {group, index} or null. */
   target: null,
@@ -88,6 +92,7 @@ function persistable() {
     mode: state.mode,
     rank: state.rank,
     side: state.side,
+    weFirst: state.weFirst,
     selectedRole: state.selectedRole,
     comfortHeroes: state.comfortHeroes,
     comfortRating: state.comfortRating,
@@ -123,6 +128,7 @@ export function initState(loadedRegistry) {
     ? stored.scoutedHeroes.filter((id) => registry.byId.has(id))
     : [];
   state.side = stored.side === 'red' ? 'red' : 'blue';
+  state.weFirst = stored.weFirst !== false;
 
   state.comfortRating = {};
   state.comfortHeroes.forEach((id) => {
@@ -139,9 +145,53 @@ function teamSize() {
   return mode.teamSize || 5;
 }
 
+/** Ranked ban counts are rank-dependent: 3 at Epic, 4 at Legend, 5 at Mythic+. */
+export function rankedRuleset() {
+  return rulesetFor(registry, state.rank);
+}
+
 function banSlots() {
-  const mode = registry.config.modes[state.mode] || {};
-  return mode.banSlots || { ally: 3, enemy: 3 };
+  if (isSequenced()) {
+    return getSteps().reduce(
+      (acc, step) => {
+        if (step.action === 'ban') acc[step.team === 'blue' ? 'ally' : 'enemy'] += 1;
+        return acc;
+      },
+      { ally: 0, enemy: 0 }
+    );
+  }
+  const n = rankedRuleset().bansPerTeam;
+  return { ally: n, enemy: n };
+}
+
+/** Is this mode guided by a sequence the player may still step outside of? */
+export function isGuided() {
+  const mode = registry.config.modes[state.mode];
+  return Boolean(mode && mode.guided);
+}
+
+/** The board shape the ranked sequence reads. */
+function board() {
+  return {
+    allies: state.allies,
+    enemies: state.enemies,
+    allyBans: state.allyBans,
+    enemyBans: state.enemyBans
+  };
+}
+
+export function getRankedSequence() {
+  return rankedSequence(rankedRuleset(), state.weFirst);
+}
+
+/** The step the draft is on — derived, so recording out of order cannot trap it. */
+export function getGuidedStep() {
+  if (!isGuided()) return null;
+  return rankedCurrentStep(getRankedSequence(), board());
+}
+
+export function getBanProgress() {
+  return banProgress(board(), rankedRuleset());
 }
 
 function resetBoards() {
@@ -201,6 +251,8 @@ export function getCurrentStep() {
 
 export function isComplete() {
   if (isSequenced()) return state.stepIndex >= getSteps().length;
+  // Ranked is complete when both sides have five heroes. Unspent bans do not
+  // block it — a player may simply not have recorded them.
   return state.allies.every(Boolean) && state.enemies.every(Boolean);
 }
 
@@ -254,7 +306,11 @@ export function currentAction() {
     const step = getCurrentStep();
     return step ? step.action : null;
   }
-  return state.intent;
+  // A slot the player has tapped wins: they are telling us what they are
+  // recording. Otherwise follow the sequence.
+  if (state.target) return state.target.group.toLowerCase().includes('ban') ? 'ban' : 'pick';
+  const step = getGuidedStep();
+  return step ? step.phase : state.intent;
 }
 
 export function getSlotCounts(team) {
@@ -355,6 +411,11 @@ export function getSnapshot() {
     scoutedHeroes: state.scoutedHeroes.slice(),
     intent: state.intent,
     target: state.target ? { ...state.target } : null,
+    guided: isGuided(),
+    guidedStep: getGuidedStep(),
+    sequence: !isSequenced() ? getRankedSequence() : [],
+    ruleset: !isSequenced() ? rankedRuleset() : null,
+    banProgress: !isSequenced() ? getBanProgress() : null,
     ignored: state.ignored.slice(),
     laneAssignments: { ...state.laneAssignments },
     ui: { ...state.ui },
@@ -382,6 +443,34 @@ export function setMode(mode) {
 export function setRank(rank) {
   if (rank === state.rank) return;
   state.rank = rank;
+  // Rank decides the ban count, so changing it reshapes the board. Slots that
+  // no longer exist are dropped along with anything recorded in them —
+  // leaving a stale sixth ban lying around from a previous rank would make the
+  // draft state quietly disagree with the rules it claims to follow.
+  if (!isSequenced()) resizeBans();
+  save();
+  notify();
+}
+
+function resizeBans() {
+  const n = rankedRuleset().bansPerTeam;
+  ['allyBans', 'enemyBans'].forEach((group) => {
+    const current = state[group] || [];
+    const next = new Array(n).fill(null);
+    for (let i = 0; i < Math.min(n, current.length); i += 1) next[i] = current[i];
+    current.slice(n).forEach((heroId) => {
+      if (heroId) delete state.laneAssignments[heroId];
+    });
+    state[group] = next;
+  });
+  if (state.target && state.target.group.toLowerCase().includes('ban')) state.target = null;
+}
+
+/** Ranked: which side picks first. Observed in the lobby, never assumed. */
+export function setFirstPick(weFirst) {
+  const next = Boolean(weFirst);
+  if (next === state.weFirst) return;
+  state.weFirst = next;
   save();
   notify();
 }
@@ -530,8 +619,19 @@ export function commitHero(heroId, where) {
   return { ok: true, action: target.group.includes('Ban') ? 'ban' : 'pick', group: target.group, index };
 }
 
+/**
+ * Where a commit lands when the caller did not say — a recommendation card, for
+ * instance, which knows a hero but not a slot.
+ *
+ * The guided step is the answer whenever there is one: it already encodes that
+ * Ranked opens on our own blind bans, not the enemy's, and that picks follow the
+ * snake. Falling back to the raw intent flag put a ban into a pick slot,
+ * because the flag and the derived action could disagree.
+ */
 function defaultTarget() {
-  if (state.intent === 'ban') return { group: 'enemyBans', index: null };
+  const step = getGuidedStep();
+  if (step) return { group: step.group, index: step.slot };
+  if (currentAction() === 'ban') return { group: 'allyBans', index: null };
   return { group: 'allies', index: null };
 }
 

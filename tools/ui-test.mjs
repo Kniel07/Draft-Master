@@ -139,7 +139,15 @@ section('Hero registry');
 const snap0 = store.getSnapshot();
 ok('starts in ranked mode', snap0.mode === 'ranked', snap0.mode);
 ok('five ally slots', snap0.allies.length === 5);
-ok('three ban slots per side', snap0.allyBans.length === 3 && snap0.enemyBans.length === 3);
+// Ban count is rank-dependent now: 3 at Epic, 4 at Legend, 5 at Mythic and above.
+ok('ban slots follow the rank ruleset',
+  snap0.allyBans.length === snap0.ruleset.bansPerTeam &&
+    snap0.enemyBans.length === snap0.ruleset.bansPerTeam,
+  `${snap0.rank}: ${snap0.allyBans.length}/${snap0.enemyBans.length} vs ruleset ${snap0.ruleset.bansPerTeam}`);
+ok('the draft opens in the ban phase', snap0.guidedStep && snap0.guidedStep.phase === 'ban',
+  JSON.stringify(snap0.guidedStep));
+ok('and it opens on our own bans, because ranked bans are blind',
+  snap0.guidedStep.side === 'ally', snap0.guidedStep.side);
 
 section('No autoscroll on draft actions');
 const before = scrollCalls.length;
@@ -202,8 +210,10 @@ tap(byTextIn($$('#recommendations .rec')[0], 'Hide why'));
 ok('breakdown closes again', !$('#recommendations .rec__detail'));
 
 section('Ban flow');
-tap(byText('.intent__btn', "I'm banning"));
-ok('intent switched to ban', store.getSnapshot().intent === 'ban');
+// No intent toggle any more: Ranked opens in the ban phase because that is what
+// the ruleset says happens first.
+ok('the draft is already asking for a ban', store.getSnapshot().action === 'ban',
+  store.getSnapshot().action);
 const banRecs = $$('#recommendations .rec');
 ok('ban list offers several choices', banRecs.length === 3, String(banRecs.length));
 ok('ban buttons say Ban', Array.from(banRecs).every((r) => r.querySelector('.btn--ban')));
@@ -212,8 +222,9 @@ ok('ban list is titled as priority, not instruction',
   $('#recommendations .sect__title').textContent);
 const banName = banRecs[2].querySelector('.rec__name').textContent;
 tap(banRecs[2].querySelector('.btn--ban'));
-const bannedId = store.getSnapshot().enemyBans.filter(Boolean)[0];
-ok('banning the third suggestion works', store.getSnapshot().enemyBans.filter(Boolean).length === 1);
+const bannedId = store.getSnapshot().allyBans.filter(Boolean)[0];
+ok('banning the third suggestion works', store.getSnapshot().allyBans.filter(Boolean).length === 1,
+  JSON.stringify(store.getSnapshot().allyBans));
 ok('the banned hero is the one that was tapped, not the top row',
   Boolean(bannedId) && store.getUnavailable().has(bannedId), `${banName} -> ${bannedId}`);
 
@@ -770,6 +781,134 @@ ok('a flex-lane hero is still found by the lane filter', jungleNames.includes('a
   jungleNames.slice(0, 8).join(', '));
 ok('an off-lane hero is not', !jungleNames.includes('obsidia'));
 tap($('.sheet__close'));
+
+/* ==========================================================================
+   Phase B finding D — Ranked is a ruleset, not a blank board.
+
+   Ranked was modelled as five slots a side and three bans regardless of rank,
+   with no notion of phase. Rank actually decides the ban count, bans are blind
+   and simultaneous, and picks run a snake. "The player does not control the
+   lobby order" was read as "there is no order", which is a different claim.
+   ========================================================================== */
+
+section('Ranked ruleset — rank decides the ban count');
+store.resetDraft();
+store.setMode('ranked');
+
+const BANS_BY_RANK = { epic: 3, legend: 4, mythic: 5, honor: 5, glory: 5, immortal: 5 };
+Object.entries(BANS_BY_RANK).forEach(([rank, expected]) => {
+  store.setRank(rank);
+  const snap = store.getSnapshot();
+  ok(`${rank} → ${expected} bans per team`,
+    snap.ruleset.bansPerTeam === expected &&
+      snap.allyBans.length === expected &&
+      snap.enemyBans.length === expected,
+    `ruleset=${snap.ruleset.bansPerTeam} ally=${snap.allyBans.length} enemy=${snap.enemyBans.length}`);
+});
+
+section('Ranked ruleset — switching rank leaves no stale slots');
+store.setRank('mythic');
+store.commitHero('fanny', { group: 'allyBans', index: 4 });
+ok('a fifth ban is recordable at Mythic', store.getSnapshot().allyBans[4] === 'fanny');
+store.setRank('epic');
+const afterDrop = store.getSnapshot();
+ok('dropping to Epic shrinks the strip to 3', afterDrop.allyBans.length === 3, String(afterDrop.allyBans.length));
+ok('and the ban that no longer has a slot is gone',
+  !afterDrop.allyBans.includes('fanny') && !store.getUnavailable().has('fanny'),
+  JSON.stringify(afterDrop.allyBans));
+store.setRank('legend');
+ok('moving up to Legend gives 4 empty slots',
+  store.getSnapshot().allyBans.length === 4 && store.getSnapshot().allyBans.every((b) => b === null),
+  JSON.stringify(store.getSnapshot().allyBans));
+
+section('Ranked ruleset — the draft always knows where it is');
+store.setRank('epic');
+store.resetDraft();
+let snap = store.getSnapshot();
+ok('opens in the ban phase', snap.guidedStep.phase === 'ban');
+ok('on our own bans first, because ranked bans are blind',
+  snap.guidedStep.side === 'ally', snap.guidedStep.side);
+ok('and says so', snap.guidedStep.label === 'Your ban 1 of 3', snap.guidedStep.label);
+
+// Our three blind bans, then theirs once revealed.
+['fanny', 'ling', 'lancelot'].forEach((id) => store.commitHero(id));
+snap = store.getSnapshot();
+ok('after our three, it asks for theirs', snap.guidedStep.side === 'enemy' && snap.guidedStep.phase === 'ban',
+  JSON.stringify(snap.guidedStep));
+ok('labelled as a recording step', snap.guidedStep.label === 'Enemy ban 1 of 3', snap.guidedStep.label);
+
+['chou', 'kagura', 'atlas'].forEach((id) => store.commitHero(id));
+snap = store.getSnapshot();
+ok('bans done, picks begin', snap.guidedStep.phase === 'pick', JSON.stringify(snap.guidedStep));
+ok('we pick first by default', snap.guidedStep.side === 'ally', snap.guidedStep.side);
+
+section('Ranked ruleset — the pick snake');
+// Blue 1, Red 1-2, Blue 2-3, Red 3-4, Blue 4-5, Red 5.
+const pickSides = store.getSnapshot().sequence.filter((s) => s.phase === 'pick').map((s) => s.side);
+ok('our team first: A R R A A R R A A R',
+  pickSides.join(' ') === 'ally enemy enemy ally ally enemy enemy ally ally enemy',
+  pickSides.join(' '));
+store.setFirstPick(false);
+const mirrored = store.getSnapshot().sequence.filter((s) => s.phase === 'pick').map((s) => s.side);
+ok('their team first mirrors it',
+  mirrored.join(' ') === 'enemy ally ally enemy enemy ally ally enemy enemy ally',
+  mirrored.join(' '));
+ok('ten picks either way', mirrored.length === 10);
+store.setFirstPick(true);
+
+section('Ranked ruleset — structure guides, it does not trap');
+// The sequence is derived from which slots are empty, so recording out of order
+// steps over the gap rather than refusing.
+store.resetDraft();
+store.commitHero('miya', { group: 'enemies', index: 4 });
+ok('an out-of-order slot accepts a hero', store.getSnapshot().enemies[4] === 'miya');
+ok('the guided step is unmoved by it', store.getSnapshot().guidedStep.label === 'Your ban 1 of 3',
+  store.getSnapshot().guidedStep.label);
+store.clearSlot('enemies', 4);
+ok('and clearing it puts nothing out of step', store.getSnapshot().guidedStep.phase === 'ban');
+
+section('Ranked ruleset — the banner answers the four questions');
+goTo('draft');
+const turn = $('#turn');
+ok('phase is named', /ban phase/i.test(turn.textContent), turn.textContent.slice(0, 80));
+ok('rank is named', /epic/i.test(turn.textContent), turn.textContent.slice(0, 80));
+ok('the exact action is named', /your ban 1 of 3/i.test(turn.textContent), turn.textContent.slice(0, 120));
+ok('it says whose decision this is', /your decision/i.test(turn.textContent), turn.textContent.slice(0, 160));
+ok('progress is shown', /0 \/ 6/.test(turn.textContent), turn.textContent.slice(0, 160));
+ok('it offers the action directly', Boolean(turn.querySelector('.btn--act')));
+ok('and says the board stays tappable', /tap any slot/i.test(turn.textContent));
+
+ok('the ban strip counts per side',
+  Array.from($$('#board .team__bancount')).map((n) => n.textContent).join(' ') === '0 / 3 0 / 3',
+  Array.from($$('#board .team__bancount')).map((n) => n.textContent).join(' '));
+
+// Recording an enemy step must read as observation, not advice.
+['fanny', 'ling', 'lancelot'].forEach((id) => store.commitHero(id));
+goTo('draft');
+ok('an enemy step is labelled as recording', /recording what they did/i.test($('#turn').textContent),
+  $('#turn').textContent.slice(0, 200));
+
+section('Ranked ruleset — bans are still never compulsory');
+store.resetDraft();
+goTo('draft');
+ok('every ban suggestion still has its own Ignore',
+  $$('#recommendations .rec').every((r) =>
+    Array.from(r.querySelectorAll('button')).some((b) => b.textContent.trim() === 'Ignore')));
+ok('browse-all is still present in the ban phase', Boolean($('.recs__foot .btn--browse')));
+ok('the disclaimer still says suggestions only',
+  /suggestions only/i.test($('#recommendations').textContent));
+
+section('Tournament regression — unchanged by any of this');
+store.setMode('tournament');
+goTo('draft');
+ok('timeline still has 20 steps', $$('#timeline .tl__step').length === 20, String($$('#timeline .tl__step').length));
+const tourSides = store.getSnapshot().steps.map((s) => `${s.team[0]}${s.action[0]}`).join(' ');
+ok('the MPL order is untouched',
+  tourSides === 'bb rb bb rb bb rb bp rp rp bp bp rp rb bb rb bb rp bp bp rp', tourSides);
+ok('tournament ban slots are unaffected by rank',
+  (store.setRank('epic'), store.getSlotCounts('blue').bans === 5), String(store.getSlotCounts('blue').bans));
+store.setMode('ranked');
+store.setRank('mythic');
 
 section('Result');
 console.log(`${checks - failures}/${checks} checks passed`);
