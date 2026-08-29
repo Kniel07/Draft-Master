@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="styles/mobile.css">
 <link rel="stylesheet" href="styles/draft.css">
 <link rel="stylesheet" href="styles/tournament.css">
+<link rel="stylesheet" href="styles/library.css">
 </head>
 <body>
 
@@ -31,6 +32,8 @@
     <nav class="tabs" id="tabs" role="tablist" aria-label="Sections">
       <button class="tab is-active" type="button" role="tab" data-view="draft" aria-selected="true">Draft</button>
       <button class="tab" type="button" role="tab" data-view="brief" aria-selected="false">Brief</button>
+      <button class="tab" type="button" role="tab" data-view="heroes" aria-selected="false">Heroes</button>
+      <button class="tab" type="button" role="tab" data-view="items" aria-selected="false">Items</button>
       <button class="tab" type="button" role="tab" data-view="setup" aria-selected="false">Setup</button>
     </nav>
   </header>
@@ -52,6 +55,10 @@
     </section>
 
     <section class="view" id="view-brief" role="tabpanel" aria-label="Pre-game brief" hidden></section>
+
+    <section class="view" id="view-heroes" role="tabpanel" aria-label="Hero library" hidden></section>
+
+    <section class="view" id="view-items" role="tabpanel" aria-label="Item library" hidden></section>
 
     <section class="view setup" id="view-setup" role="tabpanel" aria-label="Setup" hidden></section>
 

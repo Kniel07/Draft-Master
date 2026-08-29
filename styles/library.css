@@ -1,0 +1,241 @@
+/* ==========================================================================
+   library.css — the two reference tabs: Heroes and Items.
+
+   Everything here is read-only browsing rather than drafting, so the rules are
+   slightly different from the board: artwork is allowed to be big, and the item
+   table is allowed to be wide. What does not change is the viewport guarantee —
+   the table scrolls inside its own wrapper, never the page.
+   ========================================================================== */
+
+.library { display: flex; flex-direction: column; gap: 10px; }
+.library__controls { display: flex; flex-direction: column; gap: 8px; }
+.library__count {
+  font-family: var(--cond);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* ------------------------------------------------------------ hero gallery */
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  align-items: start;
+}
+
+.hero-tile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 72px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--panel-2);
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.hero-tile.is-expanded { border-color: var(--gold); background: var(--raise); }
+.hero-tile__body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.hero-tile__name {
+  font-family: var(--cond); font-size: 16px; font-weight: 600; letter-spacing: 0.02em;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.hero-tile__role {
+  font-size: 11px; color: var(--text-dim);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.hero-tile__lanes {
+  font-family: var(--cond); font-size: 10.5px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-faint);
+}
+.hero-tile__flag {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  font-family: var(--cond); font-size: 10.5px; letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+.hero-tile__flag--new { color: var(--good); }
+
+/* The portrait is the reason this tab exists, so it gets a size of its own
+   rather than reusing the 44px slot crest. */
+.crest--lg { width: 60px; height: 60px; font-size: 18px; border-radius: var(--r-md); }
+
+/* The expanded panel takes the full row so the tiles around it never reflow
+   into a different column — a card that changed column under the thumb would
+   read as the page having moved. */
+.hero-detail {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--gold) 35%, var(--line));
+  border-radius: var(--r-md);
+  background: var(--panel);
+}
+.hero-detail__meta {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 12px;
+  font-size: 13px;
+}
+.hero-detail__meta dt {
+  font-family: var(--cond); font-size: 11.5px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-faint);
+}
+.hero-detail__meta dd { margin: 0; color: var(--text); }
+/* `.bars` from draft.css does the layout; this only sets the rhythm. */
+.hero-detail__bars { gap: 6px; }
+
+.taglist { display: flex; flex-wrap: wrap; gap: 4px; }
+.taglist__tag {
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* -------------------------------------------------------------- item table */
+
+/* Wide content scrolls inside its own container. The document never does. */
+.tablewrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--panel);
+}
+
+.itable { width: 100%; border-collapse: collapse; font-size: 13px; }
+.itable th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 8px 10px;
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-family: var(--cond);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+.itable td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.itable__row:last-child td { border-bottom: 0; }
+
+.itable__namewrap { display: flex; align-items: center; gap: 8px; }
+.itable__namebody { display: flex; flex-direction: column; min-width: 0; }
+.itable__title { font-family: var(--cond); font-size: 15px; font-weight: 600; white-space: nowrap; }
+.itable__tags {
+  font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-faint);
+}
+.itable__type {
+  font-family: var(--cond); letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-dim); white-space: nowrap;
+}
+.itable__price {
+  font-family: var(--cond); font-size: 15px; color: var(--gold);
+  text-align: right; white-space: nowrap;
+}
+.itable__attrs { min-width: 160px; }
+.itable__effect { min-width: 220px; }
+.itable__buy { min-width: 200px; color: var(--text-dim); }
+
+.attrlist { display: flex; flex-direction: column; gap: 2px; }
+.attrlist__row { white-space: nowrap; color: var(--text); }
+
+.effect__name {
+  display: block;
+  font-family: var(--cond); font-size: 11.5px; letter-spacing: 0.07em;
+  text-transform: uppercase; color: var(--gold);
+}
+.effect__text { display: block; margin-bottom: 6px; color: var(--text-dim); }
+.itable__effect .effect__text:last-child { margin-bottom: 0; }
+
+/* Items have no artwork in any public source, so the tile is generated from the
+   name and tinted by category — the same fallback logic as a hero crest. */
+.itemicon {
+  flex: 0 0 auto;
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
+  background: var(--raise);
+  font-family: var(--cond); font-size: 12px; font-weight: 700;
+  color: var(--text-dim);
+}
+.itemicon--attack { color: var(--red); border-color: color-mix(in srgb, var(--red) 45%, var(--line)); }
+.itemicon--magic { color: var(--blue); border-color: color-mix(in srgb, var(--blue) 45%, var(--line)); }
+.itemicon--defense { color: var(--good); border-color: color-mix(in srgb, var(--good) 45%, var(--line)); }
+.itemicon--movement { color: var(--gold); border-color: color-mix(in srgb, var(--gold) 45%, var(--line)); }
+
+/* A table is the right shape for comparing items — until the screen is narrower
+   than the comparison. Below 720px the same markup is re-laid as one card per
+   item, so a phone reads down instead of dragging sideways; the header row is
+   replaced by the per-cell labels the rows carry as data attributes. The table
+   itself is untouched, so the wide layout stays a real table. */
+@media (max-width: 719px) {
+  .tablewrap { border: 0; background: transparent; overflow-x: visible; }
+  .itable, .itable tbody, .itable__row, .itable td { display: block; width: 100%; }
+  .itable thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+  .itable__row {
+    margin-bottom: 8px;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--panel);
+  }
+  .itable__row:last-child { margin-bottom: 0; }
+  .itable td { padding: 0; border-bottom: 0; }
+  .itable td + td { margin-top: 8px; }
+
+  /* Everything except the name gets its column header back, inline. */
+  .itable td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    font-family: var(--cond);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  /* Type and price read as one line under the name rather than two blocks. */
+  /* Type and price read as one line under the name rather than two blocks. The
+     selectors carry the `td` so they outrank the generic label rule above. */
+  .itable td.itable__type, .itable td.itable__price { display: inline-block; width: auto; }
+  .itable td.itable__type::before, .itable td.itable__price::before {
+    display: inline;
+    margin: 0 6px 0 0;
+  }
+  .itable td.itable__price { margin-left: 16px; margin-top: 8px; text-align: left; }
+  .itable__attrs, .itable__effect, .itable__buy { min-width: 0; }
+  .attrlist__row { white-space: normal; }
+}
+
+/* ------------------------------------------------------------ breakpoints */
+
+/* Five tabs have to fit a 320px phone without wrapping the row. */
+@media (max-width: 400px) {
+  .tab { font-size: 12.5px; letter-spacing: 0.05em; }
+}
+
+@media (min-width: 640px) {
+  .gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .library__controls { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .library__controls .search { flex: 1 1 220px; }
+}
+
+@media (min-width: 1040px) {
+  .gallery { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}

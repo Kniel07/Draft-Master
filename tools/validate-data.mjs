@@ -81,6 +81,31 @@ const unreachable = registry.heroes.filter((h) => !reachable.has(h.id));
 if (unreachable.length) warn(`${unreachable.length} hero(es) participate in no counter rule: ${unreachable.map((h) => h.name).join(', ')}`);
 else console.log('  every hero is reachable by at least one counter rule');
 
+console.log('\nitems');
+const library = registry.items;
+if (!library.items.length) {
+  warn('no equipment loaded — the Items tab will be empty (the draft is unaffected)');
+} else {
+  const itemIds = new Set();
+  library.items.forEach((item) => {
+    if (itemIds.has(item.id)) fail(`duplicate item id: ${item.id}`);
+    itemIds.add(item.id);
+    if (!item.attributes.length) fail(`item "${item.name}" lists no attributes, so its row would be blank`);
+    if (item.price == null) warn(`item "${item.name}" has no price`);
+    if (!item.passive && !item.active && item.attributes.length < 2) {
+      warn(`item "${item.name}" has neither an effect nor a second attribute — check the row is complete`);
+    }
+    if (!item.buyWhen) warn(`item "${item.name}" has no "buy when" line, which is the only advice the table gives`);
+  });
+  const perCategory = library.categories
+    .map((category) => `${category.label} ${(library.byCategory.get(category.id) || []).length}`)
+    .join(', ');
+  console.log(`  ${library.items.length} items — ${perCategory}`);
+  if (library.provenance !== 'sourced') {
+    console.log('  provenance: authored — prices and stat values are not scraped and can drift a patch behind');
+  }
+}
+
 console.log('\nweights');
 const weights = resolveWeights(registry.config);
 Object.entries(weights).forEach(([group, set]) => {

@@ -37,6 +37,21 @@ assignment (a tank on EXP, a support in the jungle) is marked *unorthodox* and
 then left alone: the app flags it so you can see it, and does not overrule you.
 The same control is on each row of the brief's lane plan.
 
+**Heroes tab.** The whole roster as a gallery, largest artwork the app draws.
+Search by name, role, lane or trait, filter by lane, and sort A–Z, by meta score
+or by difficulty. Tap a hero to open its profile: role, common and flex lanes,
+difficulty, meta score, the seven strength dimensions as bars, its traits, and —
+when live data is reachable — its win, pick and ban rate for the selected rank.
+Portraits come from the live source; a hero with no artwork shows its generated
+crest and is never left out of the gallery.
+
+**Items tab.** A table of the shop equipment: price, attribute line, passive or
+active effect, and one line on when to buy it. Filter by type (attack, magic,
+defense, movement), search across names, stats and effect text — searching
+*healing* finds the anti-heal items — and sort by name, price or type. Below
+720px the table re-lays itself as one card per item so a phone reads down the
+list instead of dragging it sideways.
+
 **Brief tab.** Unlocks when both sides have five heroes: win condition,
 Turtle/Lord approach, the enemy heroes putting the most pressure on your draft,
 a lane plan, and shotcaller reminders. Written to be read in about 30 seconds.
@@ -84,10 +99,18 @@ data/
   synergies.json   tag and named synergy rules
   ranks.json       rank tiers, their API mapping, and the fallback rank curve
   config.json      lanes, modes, draft formats, weights, strength dimensions
+  items.json       shop equipment for the Items tab — reference only
 ```
 
 No hero, tag, lane or matchup is named anywhere in the JavaScript. A patch
 update is a JSON edit.
+
+`items.json` is the one file with a different standing. Hero role and lane come
+from a scraped official snapshot; equipment does not — those rows are authored,
+so the file says `"provenance": "authored"` and the tab says it on screen. The
+engine never reads it: it is reference material, and a missing or malformed
+`items.json` produces a warning in Setup → Data and an empty tab, never a boot
+failure.
 
 ### Live data
 
@@ -214,7 +237,7 @@ node tools/validate-data.mjs   # data checks + engine smoke test
 node tools/audit-roles.mjs     # role/lane/id against the official snapshot
 python3 tools/generate-heroes.py
 
-npm i jsdom && node tools/ui-test.mjs   # 145 assertions against the real UI
+npm i jsdom && node tools/ui-test.mjs   # 171 assertions against the real UI
 ```
 
 `tools/ui-test.mjs` includes a nine-case API resilience matrix — unreachable,

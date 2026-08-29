@@ -1,0 +1,959 @@
+{
+  "schema": 1,
+  "patch": "2.1.90",
+  "provenance": "authored",
+  "source": "authored from the in-game shop; not scraped",
+  "note": "Shop equipment reference. Unlike heroes.json, this file has no canonical machine-readable source behind it — the rows are authored, so exact prices and stat values can drift a patch behind the game and the effect text is deliberately descriptive rather than numeric. What it is for is the buy decision: which item answers which threat. Roam and jungle enchantments are not covered yet.",
+  "caption": "Authored reference, not scraped: the buy decision is the point, and exact prices and values can sit a patch behind the game.",
+  "categories": [
+    {
+      "id": "attack",
+      "label": "Attack",
+      "short": "ATK",
+      "blurb": "Physical damage, attack speed, crit and physical penetration."
+    },
+    {
+      "id": "magic",
+      "label": "Magic",
+      "short": "MAG",
+      "blurb": "Magic power, magic penetration, cooldown and spell vamp."
+    },
+    {
+      "id": "defense",
+      "label": "Defense",
+      "short": "DEF",
+      "blurb": "HP, physical and magic defence, and the passives that answer a specific threat."
+    },
+    {
+      "id": "movement",
+      "label": "Movement",
+      "short": "MOVE",
+      "blurb": "Boots. One slot, chosen for the matchup rather than the hero."
+    }
+  ],
+  "count": 49,
+  "items": [
+    {
+      "id": "blade-of-despair",
+      "name": "Blade of Despair",
+      "category": "attack",
+      "price": 3010,
+      "attributes": [
+        "+170 Physical ATK",
+        "+5% Movement Speed"
+      ],
+      "passive": {
+        "name": "Despair",
+        "text": "+25% Physical ATK against enemies below 50% HP."
+      },
+      "tags": [
+        "burst",
+        "late-game"
+      ],
+      "buyWhen": "The finisher slot on a carry that is already ahead."
+    },
+    {
+      "id": "berserkers-fury",
+      "name": "Berserker's Fury",
+      "category": "attack",
+      "price": 2570,
+      "attributes": [
+        "+65 Physical ATK",
+        "+25% Critical Chance"
+      ],
+      "passive": {
+        "name": "Doom",
+        "text": "Critical hits deal extra damage, and each critical hit briefly raises Physical ATK."
+      },
+      "tags": [
+        "crit"
+      ],
+      "buyWhen": "Every crit marksman; the first crit item in most gold-lane builds."
+    },
+    {
+      "id": "endless-battle",
+      "name": "Endless Battle",
+      "category": "attack",
+      "price": 2470,
+      "attributes": [
+        "+65 Physical ATK",
+        "+250 HP",
+        "+10% Cooldown Reduction",
+        "+5% Movement Speed",
+        "+8% Lifesteal",
+        "+10 Mana Regen"
+      ],
+      "passive": {
+        "name": "Divine Justice",
+        "text": "After using a skill, the next basic attack deals extra true damage and grants Movement Speed."
+      },
+      "tags": [
+        "true-damage",
+        "sustain",
+        "anti-tank"
+      ],
+      "buyWhen": "Fighters and junglers whose rotation is skill, then basic attack."
+    },
+    {
+      "id": "hunter-strike",
+      "name": "Hunter Strike",
+      "category": "attack",
+      "price": 2010,
+      "attributes": [
+        "+80 Physical ATK",
+        "+10% Cooldown Reduction",
+        "+15 Physical PEN"
+      ],
+      "passive": {
+        "name": "Retribution",
+        "text": "Hitting enemy heroes repeatedly grants a burst of Movement Speed."
+      },
+      "tags": [
+        "penetration",
+        "mobility"
+      ],
+      "buyWhen": "Assassins and junglers who need to close the gap and cut through armour."
+    },
+    {
+      "id": "malefic-roar",
+      "name": "Malefic Roar",
+      "category": "attack",
+      "price": 2060,
+      "attributes": [
+        "+60 Physical ATK"
+      ],
+      "passive": {
+        "name": "Armor Buster",
+        "text": "Ignores a large percentage of the target's Physical Defense."
+      },
+      "tags": [
+        "anti-tank",
+        "penetration"
+      ],
+      "buyWhen": "The enemy has two or more heroes stacking Physical Defense."
+    },
+    {
+      "id": "blade-of-the-heptaseas",
+      "name": "Blade of the Heptaseas",
+      "category": "attack",
+      "price": 2160,
+      "attributes": [
+        "+70 Physical ATK",
+        "+15 Physical PEN"
+      ],
+      "passive": {
+        "name": "Ambush",
+        "text": "After a few seconds out of combat, the next basic attack deals heavy bonus Physical damage."
+      },
+      "tags": [
+        "burst",
+        "assassin"
+      ],
+      "buyWhen": "Ambush assassins who open a fight from stealth or from the bush."
+    },
+    {
+      "id": "haas-claws",
+      "name": "Haas's Claws",
+      "category": "attack",
+      "price": 2020,
+      "attributes": [
+        "+70 Physical ATK",
+        "+20% Lifesteal"
+      ],
+      "passive": {
+        "name": "Insanity",
+        "text": "Lifesteal increases further while below 40% HP."
+      },
+      "tags": [
+        "sustain"
+      ],
+      "buyWhen": "Basic-attack fighters who have to win extended duels."
+    },
+    {
+      "id": "bloodlust-axe",
+      "name": "Bloodlust Axe",
+      "category": "attack",
+      "price": 2050,
+      "attributes": [
+        "+70 Physical ATK",
+        "+10% Cooldown Reduction",
+        "+20% Spell Vamp"
+      ],
+      "tags": [
+        "sustain",
+        "skill-damage"
+      ],
+      "buyWhen": "Physical heroes whose damage comes from skills rather than basic attacks."
+    },
+    {
+      "id": "demon-hunter-sword",
+      "name": "Demon Hunter Sword",
+      "category": "attack",
+      "price": 2360,
+      "attributes": [
+        "+35 Physical ATK",
+        "+25% Attack Speed"
+      ],
+      "passive": {
+        "name": "Devour",
+        "text": "Basic attacks deal bonus damage scaled off the target's current HP and heal the wielder."
+      },
+      "tags": [
+        "anti-tank",
+        "attack-speed"
+      ],
+      "buyWhen": "The enemy front line is too healthy to burst — shred it per hit instead."
+    },
+    {
+      "id": "golden-staff",
+      "name": "Golden Staff",
+      "category": "attack",
+      "price": 1900,
+      "attributes": [
+        "+65 Physical ATK",
+        "+25% Attack Speed"
+      ],
+      "passive": {
+        "name": "Rapid Strike",
+        "text": "Every third basic attack triggers extra hits; on-hit effects always apply."
+      },
+      "tags": [
+        "attack-speed",
+        "on-hit"
+      ],
+      "buyWhen": "Heroes with on-hit effects — the extra hits multiply them."
+    },
+    {
+      "id": "corrosion-scythe",
+      "name": "Corrosion Scythe",
+      "category": "attack",
+      "price": 2020,
+      "attributes": [
+        "+30 Physical ATK",
+        "+30% Attack Speed",
+        "+5% Movement Speed"
+      ],
+      "passive": {
+        "name": "Corrosion",
+        "text": "Basic attacks slow the target and stack Movement Speed on the wielder."
+      },
+      "tags": [
+        "attack-speed",
+        "slow"
+      ],
+      "buyWhen": "Chasing carries, and marksmen who need to kite rather than burst."
+    },
+    {
+      "id": "sea-halberd",
+      "name": "Sea Halberd",
+      "category": "attack",
+      "price": 2020,
+      "attributes": [
+        "+70 Physical ATK",
+        "+25% Attack Speed"
+      ],
+      "passive": {
+        "name": "Life Drain",
+        "text": "Damage dealt cuts the target's healing and HP regen roughly in half for a few seconds."
+      },
+      "tags": [
+        "anti-heal"
+      ],
+      "buyWhen": "Against Estes, Rafaela, Uranus, Esmeralda, Yu Zhong or any lifesteal carry."
+    },
+    {
+      "id": "windtalker",
+      "name": "Windtalker",
+      "category": "attack",
+      "price": 1990,
+      "attributes": [
+        "+30% Attack Speed",
+        "+10% Critical Chance",
+        "+5% Movement Speed"
+      ],
+      "passive": {
+        "name": "Typhoon",
+        "text": "Periodically, the next basic attack strikes several nearby enemies for Magic damage and can crit."
+      },
+      "tags": [
+        "wave-clear",
+        "early-game"
+      ],
+      "buyWhen": "An early tempo item for marksmen who need to clear waves and rotate."
+    },
+    {
+      "id": "wind-of-nature",
+      "name": "Wind of Nature",
+      "category": "attack",
+      "price": 1910,
+      "attributes": [
+        "+30 Physical ATK",
+        "+20% Attack Speed",
+        "+10% Lifesteal"
+      ],
+      "active": {
+        "name": "Wind Chant",
+        "text": "Become immune to Physical damage for a short time."
+      },
+      "tags": [
+        "survival",
+        "active"
+      ],
+      "buyWhen": "Against a physical assassin or marksman that deletes you first."
+    },
+    {
+      "id": "rose-gold-meteor",
+      "name": "Rose Gold Meteor",
+      "category": "attack",
+      "price": 2050,
+      "attributes": [
+        "+60 Physical ATK",
+        "+30 Magic DEF",
+        "+5% Lifesteal"
+      ],
+      "passive": {
+        "name": "Lifeline",
+        "text": "Dropping below 30% HP grants a shield."
+      },
+      "tags": [
+        "survival",
+        "magic-defense"
+      ],
+      "buyWhen": "A carry item that answers one magic burst threat without a full defence slot."
+    },
+    {
+      "id": "queens-wings",
+      "name": "Queen's Wings",
+      "category": "attack",
+      "price": 2150,
+      "attributes": [
+        "+25 Physical ATK",
+        "+1000 HP",
+        "+5% Cooldown Reduction"
+      ],
+      "passive": {
+        "name": "Demonize",
+        "text": "Below 40% HP, damage taken drops sharply and Spell Vamp rises."
+      },
+      "tags": [
+        "survival",
+        "sustain"
+      ],
+      "buyWhen": "Divers and offlaners who commit into the enemy team and have to come back out."
+    },
+    {
+      "id": "war-axe",
+      "name": "War Axe",
+      "category": "attack",
+      "price": 1950,
+      "attributes": [
+        "+35 Physical ATK",
+        "+550 HP",
+        "+10% Cooldown Reduction"
+      ],
+      "passive": {
+        "name": "Fighting Spirit",
+        "text": "Dealing damage builds stacks of bonus Physical ATK and Movement Speed."
+      },
+      "tags": [
+        "sustain",
+        "brawl"
+      ],
+      "buyWhen": "Fighters who stay in a fight long enough to build the stacks."
+    },
+    {
+      "id": "holy-crystal",
+      "name": "Holy Crystal",
+      "category": "magic",
+      "price": 2180,
+      "attributes": [
+        "+100 Magic Power"
+      ],
+      "passive": {
+        "name": "Mystery",
+        "text": "Increases total Magic Power by a further percentage."
+      },
+      "tags": [
+        "burst",
+        "late-game"
+      ],
+      "buyWhen": "The single biggest damage slot in almost every mage build."
+    },
+    {
+      "id": "lightning-truncheon",
+      "name": "Lightning Truncheon",
+      "category": "magic",
+      "price": 2250,
+      "attributes": [
+        "+90 Magic Power",
+        "+300 Mana",
+        "+10% Cooldown Reduction"
+      ],
+      "passive": {
+        "name": "Resonate",
+        "text": "Periodically, the next skill deals extra Magic damage to several targets."
+      },
+      "tags": [
+        "burst",
+        "wave-clear"
+      ],
+      "buyWhen": "Burst mages with a short combo — the proc lands on the opener."
+    },
+    {
+      "id": "genius-wand",
+      "name": "Genius Wand",
+      "category": "magic",
+      "price": 2000,
+      "attributes": [
+        "+75 Magic Power",
+        "+10 Magic PEN",
+        "+5% Movement Speed"
+      ],
+      "passive": {
+        "name": "Magic Bombard",
+        "text": "Magic damage strips Magic Defense from the target for a few seconds, stacking."
+      },
+      "tags": [
+        "penetration"
+      ],
+      "buyWhen": "Mages with repeated hits rather than one burst."
+    },
+    {
+      "id": "divine-glaive",
+      "name": "Divine Glaive",
+      "category": "magic",
+      "price": 2120,
+      "attributes": [
+        "+65 Magic Power"
+      ],
+      "passive": {
+        "name": "Spellbreaker",
+        "text": "Ignores a large percentage of the target's Magic Defense."
+      },
+      "tags": [
+        "anti-tank",
+        "penetration"
+      ],
+      "buyWhen": "The enemy has bought Magic Defense — this is the answer, not more Magic Power."
+    },
+    {
+      "id": "blood-wings",
+      "name": "Blood Wings",
+      "category": "magic",
+      "price": 2650,
+      "attributes": [
+        "+150 Magic Power",
+        "+150 HP"
+      ],
+      "passive": {
+        "name": "Nirvana",
+        "text": "Converts Magic Power into a large shield that rebuilds out of combat."
+      },
+      "tags": [
+        "survival",
+        "late-game"
+      ],
+      "buyWhen": "A last-item mage slot when the enemy assassin is hunting you."
+    },
+    {
+      "id": "concentrated-energy",
+      "name": "Concentrated Energy",
+      "category": "magic",
+      "price": 2050,
+      "attributes": [
+        "+70 Magic Power",
+        "+700 HP",
+        "+20% Spell Vamp"
+      ],
+      "passive": {
+        "name": "Recharge",
+        "text": "A kill or assist restores a share of max HP."
+      },
+      "tags": [
+        "sustain"
+      ],
+      "buyWhen": "Mages who fight in the middle of the scrap instead of behind it."
+    },
+    {
+      "id": "glowing-wand",
+      "name": "Glowing Wand",
+      "category": "magic",
+      "price": 2000,
+      "attributes": [
+        "+75 Magic Power",
+        "+5% Movement Speed"
+      ],
+      "passive": {
+        "name": "Scald",
+        "text": "Magic damage burns the target for a share of their max HP over a few seconds."
+      },
+      "tags": [
+        "anti-tank",
+        "damage-over-time"
+      ],
+      "buyWhen": "Against a high-HP front line that shrugs off flat burst."
+    },
+    {
+      "id": "necklace-of-durance",
+      "name": "Necklace of Durance",
+      "category": "magic",
+      "price": 2110,
+      "attributes": [
+        "+65 Magic Power",
+        "+5% Cooldown Reduction",
+        "+15% Spell Vamp"
+      ],
+      "passive": {
+        "name": "Life Drain",
+        "text": "Damage dealt cuts the target's healing and HP regen roughly in half for a few seconds."
+      },
+      "tags": [
+        "anti-heal"
+      ],
+      "buyWhen": "The mage's version of Sea Halberd — buy it against sustain, not after losing to it."
+    },
+    {
+      "id": "ice-queen-wand",
+      "name": "Ice Queen Wand",
+      "category": "magic",
+      "price": 2180,
+      "attributes": [
+        "+75 Magic Power",
+        "+10% Spell Vamp",
+        "+5% Movement Speed"
+      ],
+      "passive": {
+        "name": "Ice Bound",
+        "text": "Skill damage slows the target and speeds up the wielder."
+      },
+      "tags": [
+        "slow",
+        "chase"
+      ],
+      "buyWhen": "Mages who need to hold an enemy still for a follow-up."
+    },
+    {
+      "id": "feather-of-heaven",
+      "name": "Feather of Heaven",
+      "category": "magic",
+      "price": 2050,
+      "attributes": [
+        "+60 Magic Power",
+        "+25% Attack Speed"
+      ],
+      "passive": {
+        "name": "Flurry",
+        "text": "Basic attacks deal extra Magic damage."
+      },
+      "tags": [
+        "attack-speed",
+        "on-hit"
+      ],
+      "buyWhen": "Attack-speed magic hybrids such as Kagura's fans, Guinevere or Karrie-style builds."
+    },
+    {
+      "id": "fleeting-time",
+      "name": "Fleeting Time",
+      "category": "magic",
+      "price": 2050,
+      "attributes": [
+        "+70 Magic Power",
+        "+10% Cooldown Reduction"
+      ],
+      "passive": {
+        "name": "Timestream",
+        "text": "A kill or assist refunds a large share of the Ultimate's cooldown."
+      },
+      "tags": [
+        "cooldown"
+      ],
+      "buyWhen": "Mages whose ultimate is the whole kit — it chains kills together."
+    },
+    {
+      "id": "winter-truncheon",
+      "name": "Winter Truncheon",
+      "category": "magic",
+      "price": 2100,
+      "attributes": [
+        "+70 Magic Power",
+        "+50 Physical DEF"
+      ],
+      "active": {
+        "name": "Frozen",
+        "text": "Freeze yourself briefly: immune to all damage and control."
+      },
+      "tags": [
+        "survival",
+        "active"
+      ],
+      "buyWhen": "Against burst that kills you before your combo finishes."
+    },
+    {
+      "id": "enchanted-talisman",
+      "name": "Enchanted Talisman",
+      "category": "magic",
+      "price": 1850,
+      "attributes": [
+        "+50 Magic Power",
+        "+250 HP",
+        "+15% Cooldown Reduction"
+      ],
+      "passive": {
+        "name": "Mana Spring",
+        "text": "Periodically restores a share of max Mana."
+      },
+      "tags": [
+        "cooldown",
+        "mana"
+      ],
+      "buyWhen": "Early mage or support item when the mana bar is the real limit."
+    },
+    {
+      "id": "clock-of-destiny",
+      "name": "Clock of Destiny",
+      "category": "magic",
+      "price": 2150,
+      "attributes": [
+        "+60 Magic Power",
+        "+600 HP",
+        "+300 Mana"
+      ],
+      "passive": {
+        "name": "Time",
+        "text": "Stacks Magic Power and HP over time; at full stacks both are boosted again."
+      },
+      "tags": [
+        "scaling",
+        "early-game"
+      ],
+      "buyWhen": "Buy it early or not at all — the value is in the stacks."
+    },
+    {
+      "id": "immortality",
+      "name": "Immortality",
+      "category": "defense",
+      "price": 2120,
+      "attributes": [
+        "+800 HP",
+        "+40 Magic DEF"
+      ],
+      "passive": {
+        "name": "Immortal",
+        "text": "On death, revive after a short delay with some HP and a shield."
+      },
+      "tags": [
+        "survival",
+        "late-game"
+      ],
+      "buyWhen": "Anyone the enemy focuses first; the standard late-game insurance slot."
+    },
+    {
+      "id": "athenas-shield",
+      "name": "Athena's Shield",
+      "category": "defense",
+      "price": 2250,
+      "attributes": [
+        "+900 HP",
+        "+56 Magic DEF",
+        "+10 HP Regen"
+      ],
+      "passive": {
+        "name": "Shield",
+        "text": "Periodically grants a shield that absorbs Magic damage."
+      },
+      "tags": [
+        "magic-defense"
+      ],
+      "buyWhen": "Against a mage or magic assassin with one big burst rotation."
+    },
+    {
+      "id": "antique-cuirass",
+      "name": "Antique Cuirass",
+      "category": "defense",
+      "price": 2080,
+      "attributes": [
+        "+920 HP",
+        "+54 Physical DEF",
+        "+30 HP Regen"
+      ],
+      "passive": {
+        "name": "Deter",
+        "text": "Being hit by an enemy hero reduces their Physical ATK for a few seconds."
+      },
+      "tags": [
+        "physical-defense"
+      ],
+      "buyWhen": "Against a physical jungler or fighter that is snowballing."
+    },
+    {
+      "id": "blade-armor",
+      "name": "Blade Armor",
+      "category": "defense",
+      "price": 1850,
+      "attributes": [
+        "+90 Physical DEF"
+      ],
+      "passive": {
+        "name": "Bladed Armor",
+        "text": "Reflects a share of the Physical damage taken back at the attacker."
+      },
+      "tags": [
+        "physical-defense",
+        "anti-carry"
+      ],
+      "buyWhen": "Against a fed physical carry — best on a tank that is being attacked anyway."
+    },
+    {
+      "id": "dominance-ice",
+      "name": "Dominance Ice",
+      "category": "defense",
+      "price": 2010,
+      "attributes": [
+        "+500 Mana",
+        "+70 Physical DEF",
+        "+5% Cooldown Reduction"
+      ],
+      "passive": {
+        "name": "Arctic Cold",
+        "text": "Slows nearby enemies' Attack Speed and Movement Speed, and weakens enemy shields and regen."
+      },
+      "tags": [
+        "physical-defense",
+        "anti-heal",
+        "anti-shield"
+      ],
+      "buyWhen": "Against attack-speed carries, and against shield or regen stacking."
+    },
+    {
+      "id": "radiant-armor",
+      "name": "Radiant Armor",
+      "category": "defense",
+      "price": 1900,
+      "attributes": [
+        "+830 HP",
+        "+52 Magic DEF"
+      ],
+      "passive": {
+        "name": "Solidity",
+        "text": "Repeated Magic damage stacks further Magic damage reduction."
+      },
+      "tags": [
+        "magic-defense"
+      ],
+      "buyWhen": "Against sustained magic damage — a mage that keeps hitting you, not one that bursts once."
+    },
+    {
+      "id": "oracle",
+      "name": "Oracle",
+      "category": "defense",
+      "price": 2000,
+      "attributes": [
+        "+900 HP",
+        "+45 Magic DEF",
+        "+10% Cooldown Reduction",
+        "+15 HP Regen"
+      ],
+      "passive": {
+        "name": "Bless",
+        "text": "Boosts shields and HP regen received."
+      },
+      "tags": [
+        "magic-defense",
+        "sustain"
+      ],
+      "buyWhen": "On heroes with their own shields or heals — it multiplies what they already have."
+    },
+    {
+      "id": "cursed-helmet",
+      "name": "Cursed Helmet",
+      "category": "defense",
+      "price": 2050,
+      "attributes": [
+        "+1150 HP",
+        "+52 Magic DEF"
+      ],
+      "passive": {
+        "name": "Burning Soul",
+        "text": "Continuously deals Magic damage to nearby enemies, scaled off your own max HP."
+      },
+      "tags": [
+        "magic-defense",
+        "wave-clear"
+      ],
+      "buyWhen": "Tanks that split-push, and tanks that need to threaten a wave without items."
+    },
+    {
+      "id": "guardian-helmet",
+      "name": "Guardian Helmet",
+      "category": "defense",
+      "price": 2200,
+      "attributes": [
+        "+1550 HP",
+        "+20 HP Regen"
+      ],
+      "passive": {
+        "name": "Recovery",
+        "text": "Restores a share of max HP every second while out of combat."
+      },
+      "tags": [
+        "sustain",
+        "hp"
+      ],
+      "buyWhen": "Offlaners who have to hold a lane alone and cannot keep going back."
+    },
+    {
+      "id": "brute-force-breastplate",
+      "name": "Brute Force Breastplate",
+      "category": "defense",
+      "price": 2000,
+      "attributes": [
+        "+770 HP",
+        "+45 Physical DEF",
+        "+10% Cooldown Reduction"
+      ],
+      "passive": {
+        "name": "Brute Force",
+        "text": "Using skills stacks Movement Speed and both defences."
+      },
+      "tags": [
+        "physical-defense",
+        "mobility"
+      ],
+      "buyWhen": "Engage tanks who cast constantly and need to reach the back line."
+    },
+    {
+      "id": "thunder-belt",
+      "name": "Thunder Belt",
+      "category": "defense",
+      "price": 2020,
+      "attributes": [
+        "+800 HP",
+        "+30 Physical DEF",
+        "+10% Cooldown Reduction"
+      ],
+      "passive": {
+        "name": "Thunderbolt",
+        "text": "After a skill, the next basic attack deals damage scaled off the target's max HP and slows them."
+      },
+      "tags": [
+        "anti-tank",
+        "slow"
+      ],
+      "buyWhen": "Tanks and fighters that want threat as well as bulk."
+    },
+    {
+      "id": "magic-shoes",
+      "name": "Magic Shoes",
+      "category": "movement",
+      "price": 710,
+      "attributes": [
+        "+40 Movement Speed",
+        "+10% Cooldown Reduction"
+      ],
+      "tags": [
+        "cooldown"
+      ],
+      "buyWhen": "The default boot for anyone whose skills are the damage."
+    },
+    {
+      "id": "swift-boots",
+      "name": "Swift Boots",
+      "category": "movement",
+      "price": 710,
+      "attributes": [
+        "+40 Movement Speed",
+        "+15% Attack Speed"
+      ],
+      "tags": [
+        "attack-speed"
+      ],
+      "buyWhen": "Marksmen and basic-attack fighters."
+    },
+    {
+      "id": "warrior-boots",
+      "name": "Warrior Boots",
+      "category": "movement",
+      "price": 710,
+      "attributes": [
+        "+40 Movement Speed",
+        "+22 Physical DEF"
+      ],
+      "passive": {
+        "name": "Focusing Mark",
+        "text": "Taking basic-attack damage stacks extra Physical Defense."
+      },
+      "tags": [
+        "physical-defense"
+      ],
+      "buyWhen": "Against a physical lane opponent — most exp and gold lanes."
+    },
+    {
+      "id": "tough-boots",
+      "name": "Tough Boots",
+      "category": "movement",
+      "price": 710,
+      "attributes": [
+        "+40 Movement Speed",
+        "+22 Magic DEF"
+      ],
+      "passive": {
+        "name": "Tenacity",
+        "text": "Shortens the duration of crowd control."
+      },
+      "tags": [
+        "magic-defense",
+        "anti-cc"
+      ],
+      "buyWhen": "Against a heavy crowd-control line-up — the tenacity matters more than the defence."
+    },
+    {
+      "id": "arcane-boots",
+      "name": "Arcane Boots",
+      "category": "movement",
+      "price": 710,
+      "attributes": [
+        "+40 Movement Speed",
+        "+15 Magic PEN"
+      ],
+      "tags": [
+        "penetration"
+      ],
+      "buyWhen": "Mages, from the first back onward."
+    },
+    {
+      "id": "demon-shoes",
+      "name": "Demon Shoes",
+      "category": "movement",
+      "price": 710,
+      "attributes": [
+        "+40 Movement Speed",
+        "+15 Mana Regen"
+      ],
+      "passive": {
+        "name": "Mana Spring",
+        "text": "Restores Mana on kills and assists."
+      },
+      "tags": [
+        "mana"
+      ],
+      "buyWhen": "Mana-hungry heroes with no other regen in the build."
+    },
+    {
+      "id": "rapid-boots",
+      "name": "Rapid Boots",
+      "category": "movement",
+      "price": 750,
+      "attributes": [
+        "+40 Movement Speed"
+      ],
+      "passive": {
+        "name": "Wind Chant",
+        "text": "Grants further Movement Speed on top of the base bonus."
+      },
+      "tags": [
+        "mobility"
+      ],
+      "buyWhen": "Roamers and rotators — the map speed is worth more than the stat."
+    }
+  ]
+}

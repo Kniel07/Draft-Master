@@ -278,6 +278,88 @@ tap(byText('#controls .btn', 'Clear draft'));
 ok('clear empties the draft', store.getUnavailable().size === 0);
 ok('clear keeps rank and comfort', store.getSnapshot().rank === snap0.rank);
 
+section('Hero library tab');
+goTo('heroes');
+const galleryTiles = $$('#view-heroes .hero-tile');
+ok('the hero tab lists the whole roster in pages', galleryTiles.length > 0 && galleryTiles.length <= 48,
+  String(galleryTiles.length));
+ok('every tile carries a picture or its crest fallback',
+  galleryTiles.every((tile) => tile.querySelector('.crest')));
+ok('every tile names its hero', galleryTiles.every((tile) => tile.querySelector('.hero-tile__name').textContent.trim()));
+
+const heroesBeforeScroll = scrollCalls.length;
+tap(galleryTiles[0]);
+const openDetail = $('#view-heroes .hero-detail');
+ok('tapping a hero opens its detail panel', Boolean(openDetail));
+ok('the panel shows role, lane and difficulty', openDetail && openDetail.querySelectorAll('.hero-detail__meta dt').length >= 5);
+ok('the panel shows the stat bars', openDetail && openDetail.querySelectorAll('.bar').length >= 6);
+ok('expanding a hero does not move the page',
+  scrollCalls.slice(heroesBeforeScroll).every((c) => c.x === window.scrollX && c.y === window.scrollY));
+
+tap($$('#view-heroes .hero-tile')[0]);
+ok('tapping again closes the panel', !$('#view-heroes .hero-detail'));
+
+const heroSearch = $('#view-heroes .search');
+heroSearch.value = 'fanny';
+heroSearch.dispatchEvent(new window.Event('input', { bubbles: true }));
+await new Promise((r) => setTimeout(r, 220));
+const searched = $$('#view-heroes .hero-tile');
+ok('search narrows the gallery', searched.length >= 1 && searched.length < 48, String(searched.length));
+ok('search finds the hero it was given',
+  searched.some((tile) => tile.querySelector('.hero-tile__name').textContent === 'Fanny'));
+ok('the search field keeps its value across the redraw', $('#view-heroes .search').value === 'fanny');
+
+heroSearch.value = '';
+heroSearch.dispatchEvent(new window.Event('input', { bubbles: true }));
+await new Promise((r) => setTimeout(r, 220));
+const laneChip = $$('#view-heroes .chips .chip').find((c) => c.dataset.lane === 'jungle');
+tap(laneChip);
+const jungleTiles = $$('#view-heroes .hero-tile');
+ok('the lane filter narrows the gallery', jungleTiles.length > 0 && jungleTiles.length < 133, String(jungleTiles.length));
+ok('every hero shown plays that lane',
+  jungleTiles.every((tile) => tile.querySelector('.hero-tile__lanes').textContent.includes('JUNG')));
+tap($$('#view-heroes .chips .chip').find((c) => c.dataset.lane === 'all'));
+
+section('Item table tab');
+goTo('items');
+const itemRows = $$('#view-items .itable__row');
+const itemsFile = JSON.parse(fs.readFileSync(path.join(root, 'data/items.json'), 'utf8'));
+ok('the item tab renders one row per item', itemRows.length === itemsFile.items.length,
+  `${itemRows.length} of ${itemsFile.items.length}`);
+ok('the table has a header row', $$('#view-items .itable th').length === 6);
+ok('every row shows a price', itemRows.every((row) => row.querySelector('.itable__price').textContent.trim()));
+ok('every row shows at least one attribute', itemRows.every((row) => row.querySelectorAll('.attrlist__row').length >= 1));
+ok('the table declares that its numbers are authored',
+  $$('#view-items .setup__hint').some((n) => n.textContent.toLowerCase().includes('authored')));
+ok('a wide table scrolls inside its own wrapper', Boolean($('#view-items .tablewrap')));
+
+const defenseChip = $$('#view-items .chips .chip').find((c) => c.dataset.category === 'defense');
+tap(defenseChip);
+const defenseRows = $$('#view-items .itable__row');
+ok('the type filter narrows the table', defenseRows.length > 0 && defenseRows.length < itemsFile.items.length,
+  String(defenseRows.length));
+ok('every row shown is that type', defenseRows.every((row) => row.querySelector('.itable__type').textContent === 'Defense'));
+tap($$('#view-items .chips .chip').find((c) => c.dataset.category === 'all'));
+
+const itemSearch = $('#view-items .search');
+itemSearch.value = 'healing';
+itemSearch.dispatchEvent(new window.Event('input', { bubbles: true }));
+await new Promise((r) => setTimeout(r, 220));
+const antiHeal = $$('#view-items .itable__row').map((row) => row.querySelector('.itable__title').textContent);
+ok('search reaches the effect text, not just the name', antiHeal.includes('Sea Halberd'), antiHeal.join(', '));
+itemSearch.value = '';
+itemSearch.dispatchEvent(new window.Event('input', { bubbles: true }));
+await new Promise((r) => setTimeout(r, 220));
+
+const libraryScrollBefore = scrollCalls.length;
+goTo('draft');
+goTo('items');
+goTo('heroes');
+goTo('draft');
+ok('moving between the reference tabs never moves the page',
+  scrollCalls.slice(libraryScrollBefore).every((c) => c.x === window.scrollX && c.y === window.scrollY));
+ok('the draft board is still intact after browsing', $$('#board .slot').length > 0);
+
 /* ==========================================================================
    The API resilience matrix — the nine cases the source can put us in.
 
@@ -397,6 +479,25 @@ ok('live ban rate is bound to the right hero', cards.some((c) => c.id === 'fanny
 cards = await inspectHero('Lancelot');
 ok('a hero with only a win rate still shows it',
   cards.some((c) => c.id === 'lancelot' && /%W$/.test(c.flag || '')), JSON.stringify(cards.slice(0, 2)));
+
+// The hero tab is built once and refreshed in place, so this is also the check
+// that a live layer arriving later actually reaches a tab already on screen.
+goTo('heroes');
+const liveSearch = $('#view-heroes .search');
+liveSearch.value = 'fanny';
+liveSearch.dispatchEvent(new window.Event('input', { bubbles: true }));
+await new Promise((r) => setTimeout(r, 220));
+const fannyTile = $$('#view-heroes .hero-tile').find(
+  (tile) => tile.querySelector('.hero-tile__name').textContent === 'Fanny'
+);
+ok('the hero tab picks up the live portrait', Boolean(fannyTile && fannyTile.querySelector('.crest__img')));
+tap(fannyTile);
+ok('the hero panel reports the live rates',
+  /% win/.test($('#view-heroes .hero-detail').textContent), $('#view-heroes .hero-detail').textContent.slice(0, 120));
+tap(fannyTile);
+liveSearch.value = '';
+liveSearch.dispatchEvent(new window.Event('input', { bubbles: true }));
+await new Promise((r) => setTimeout(r, 220));
 
 section('API 2/9 — fewer heroes than we know about');
 ok('the shortfall is reported to the user', /had no live statistics/i.test(result.hints), result.hints.slice(0, 160));

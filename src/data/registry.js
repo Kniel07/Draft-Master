@@ -22,7 +22,8 @@ const FILES = {
   counters: 'counters.json',
   synergies: 'synergies.json',
   ranks: 'ranks.json',
-  config: 'config.json'
+  config: 'config.json',
+  items: 'items.json'
 };
 
 /** Stats every hero must have to be scoreable. Missing ones are filled, not fatal. */
@@ -187,6 +188,96 @@ function validate(heroes, config, counters, synergies) {
   };
 }
 
+/* ----------------------------------------------------------------- items */
+
+const ITEM_CATEGORY_FALLBACK = { id: 'other', label: 'Other', short: 'OTHER', blurb: '' };
+
+/**
+ * Equipment is reference material, not draft input. Nothing in the engine reads
+ * it, so a missing or malformed items.json is a warning and an empty library —
+ * never a boot failure. Same rule as a hero portrait: the decoration can fail,
+ * the draft cannot.
+ */
+function buildItemLibrary(file, warnings) {
+  if (!file || !Array.isArray(file.items)) {
+    warnings.push('items.json is missing or has no `items` array — the Items tab will be empty.');
+    return { items: [], byId: new Map(), categories: [], byCategory: new Map(), searchIndex: new Map(), patch: null, note: '', caption: '', provenance: 'missing' };
+  }
+
+  const categories = Array.isArray(file.categories) && file.categories.length
+    ? file.categories.slice()
+    : [ITEM_CATEGORY_FALLBACK];
+  const categoryIds = new Set(categories.map((c) => c.id));
+
+  const byId = new Map();
+  const items = [];
+
+  file.items.forEach((row, index) => {
+    const id = row.id || slug(row.name) || `item-${index}`;
+    if (!row.name) {
+      warnings.push(`Item "${id}" has no name — showing its id instead.`);
+    }
+    if (byId.has(id)) {
+      warnings.push(`Duplicate item id "${id}" — kept the first, dropped the second.`);
+      return;
+    }
+    let category = row.category;
+    if (!categoryIds.has(category)) {
+      warnings.push(`Item "${row.name || id}" has unknown category "${category}" — filed under Other.`);
+      category = ITEM_CATEGORY_FALLBACK.id;
+      if (!categoryIds.has(ITEM_CATEGORY_FALLBACK.id)) {
+        categories.push(ITEM_CATEGORY_FALLBACK);
+        categoryIds.add(ITEM_CATEGORY_FALLBACK.id);
+      }
+    }
+    const item = {
+      ...row,
+      id,
+      name: row.name || id,
+      category,
+      price: typeof row.price === 'number' ? row.price : null,
+      attributes: Array.isArray(row.attributes) ? row.attributes : [],
+      tags: Array.isArray(row.tags) ? row.tags : [],
+      buyWhen: row.buyWhen || ''
+    };
+    byId.set(id, item);
+    items.push(item);
+  });
+
+  const byCategory = new Map();
+  categories.forEach((category) => {
+    byCategory.set(category.id, items.filter((item) => item.category === category.id));
+  });
+
+  // Same trick as the hero index: one prebuilt haystack per item, so filtering
+  // the table on every keystroke is one indexOf per row.
+  const searchIndex = new Map();
+  items.forEach((item) => {
+    const parts = [item.name, item.id, item.category]
+      .concat(item.attributes)
+      .concat((item.tags || []).map((t) => t.replace(/-/g, ' ')))
+      .concat(item.passive ? [item.passive.name, item.passive.text] : [])
+      .concat(item.active ? [item.active.name, item.active.text] : [])
+      .concat(item.buyWhen ? [item.buyWhen] : []);
+    searchIndex.set(item.id, {
+      name: slug(item.name),
+      all: parts.map(slug).filter(Boolean).join(' ')
+    });
+  });
+
+  return {
+    items,
+    byId,
+    categories,
+    byCategory,
+    searchIndex,
+    patch: file.patch || null,
+    provenance: file.provenance || 'authored',
+    note: file.note || '',
+    caption: file.caption || ''
+  };
+}
+
 /* ----------------------------------------------------------------- indexes */
 
 function buildIndexes(heroes, counters, synergies, config) {
@@ -276,17 +367,32 @@ export async function loadRegistry(base = 'data/') {
     )
   );
 
+  // Loaded on its own, and outside the Promise.all above on purpose: equipment
+  // is reference material. If this file 404s or is malformed the app still
+  // drafts, so its failure is caught here and downgraded to a warning.
+  let itemsFile = null;
+  let itemsError = null;
+  try {
+    itemsFile = await loadJson(dataUrl(FILES.items, base));
+  } catch (cause) {
+    itemsError = cause.message;
+  }
+
   const heroes = (heroesFile.heroes || []).map((hero) => ({ ...hero, stats: { ...hero.stats } }));
   const report = validate(heroes, config, counters, synergies);
   if (report.fatal.length) {
     throw new Error(`Data problems found:\n• ${report.fatal.join('\n• ')}`);
   }
 
+  if (itemsError) report.warnings.push(`${itemsError} The Items tab will be empty.`);
+  const items = buildItemLibrary(itemsFile, report.warnings);
+
   const live = heroes.filter((h) => !h.duplicate).sort((a, b) => a.name.localeCompare(b.name));
 
   return {
     heroes: live,
     ...buildIndexes(live, counters, synergies, config),
+    items,
     config,
     ranks,
     meta,
@@ -297,7 +403,7 @@ export async function loadRegistry(base = 'data/') {
     pairKey,
     diagnostics: {
       warnings: report.warnings,
-      summary: report.summary,
+      summary: { ...report.summary, items: items.items.length },
       source: 'bundled',
       generatedAt: heroesFile.generated || null
     },

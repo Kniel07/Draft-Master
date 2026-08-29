@@ -65,8 +65,15 @@ src/
           strategy      the pre-game brief
   state/  draft-state   one store, both modes
   ui/     dom, hero-selector, draft, recommendations, strength-meter,
-          strategy, setup
+          strategy, setup, heroes, items
 ```
+
+The two reference tabs (`ui/heroes.js`, `ui/items.js`) sit slightly outside that
+flow on purpose. They read the registry and never the store, so they are built
+once and then only *refreshed* — rebuilding them on every render pass would
+throw away the search text and the open hero the moment anything else changed.
+`refresh()` re-reads the registry in place, which is how a live layer that
+arrives later reaches a tab already on screen.
 
 ---
 
@@ -433,12 +440,15 @@ Two network requests per session, both cached. Portraits are `loading="lazy"`.
 
 Committed and repeatable:
 
-- **`tools/ui-test.mjs` — 145 assertions**, the real UI under jsdom. Offline
+- **`tools/ui-test.mjs` — 171 assertions**, the real UI under jsdom. Offline
   boot; partial search ("yuz" → Yu Zhong); picking a hero the engine did not
   suggest; ignore removing one row and committing nothing; Why? opening the real
   components; the ban list; unavailable heroes still findable, struck through
   and disabled; a complete 20-step tournament draft through the real click
-  handlers; the brief; undo and clear; and the nine-case API resilience matrix
+  handlers; the brief; undo and clear; the hero gallery and the item table
+  (filter, sort, search reaching effect text, a profile opening without moving
+  the viewport, and a live portrait reaching a tab that is already built); and
+  the nine-case API resilience matrix
   above, plus both field-test findings: that the sheet does not raise the
   keyboard, and that the exact reported board (Kaja on Roam, Belerick on EXP)
   produces a full lane plan with one unorthodox flag and no missing-lane error.
@@ -446,8 +456,10 @@ Committed and repeatable:
   viewport never moves.
 - **`tools/validate-data.mjs`** — no duplicate ids, no unknown lanes, no matchup
   row naming a hero that does not exist, every hero reachable by at least one
-  counter rule, every tag used by at least one rule, weights resolving, and an
-  engine smoke test on an empty board.
+  counter rule, every tag used by at least one rule, weights resolving, an
+  engine smoke test on an empty board, and the item library: unique ids, no row
+  without attributes, and a warning on any item with no "buy when" line, which
+  is the only advice that table gives.
 - **`tools/generate-heroes.py`** — refuses to write `heroes.json` unless the
   hero table matches the canonical roster exactly, in both directions.
 - **`tools/audit-roles.mjs`** — every hero's role, lane and id against the
@@ -489,4 +501,6 @@ the next gate and no amount of further code changes it.
 | Lane assignment is greedy, so unusual flex drafts can mis-assign | Low | Surfaced in the lane plan rather than hidden |
 | Live counter/compatibility data is fetched only on demand and capped | Low | Deliberate: the rule layer gives complete coverage and the rate limit is real |
 | Lane assignments are per-draft and not persisted | Low | They describe one game. Carrying them into the next draft would be a worse default than re-deriving them |
+| Item prices and stat values are authored, not scraped, so they can sit a patch behind the game | Medium | The file declares `"provenance": "authored"` and the tab says so above the table; the rows are written so the *buy decision* survives a number changing. No engine reads them, so drift cannot affect a recommendation |
+| Equipment covers shop items only — roam and jungle enchantments are not in the file yet | Low | Stated in the file's note; the category filter shows exactly what is covered |
 | Trusting the tool over the player | Medium | The whole interaction design: every suggestion is one of several, every one is ignorable, and every one shows its working so it can be argued with |

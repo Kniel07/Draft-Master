@@ -26,6 +26,8 @@ import { renderRecommendations, renderSynergy } from './ui/recommendations.js';
 import { renderStrength } from './ui/strength-meter.js';
 import { renderStrategy } from './ui/strategy.js';
 import { renderSetup } from './ui/setup.js';
+import { createHeroesView } from './ui/heroes.js';
+import { createItemsView } from './ui/items.js';
 import {
   renderRankedBoard,
   renderTournamentBoard,
@@ -40,18 +42,20 @@ const dom = {};
 let registry = null;
 let selector = null;
 let lanePicker = null;
+let heroesView = null;
+let itemsView = null;
 let view = 'draft';
 let expandedWhy = null;
 let dataStatus = { source: 'bundled', label: 'Bundled dataset', live: false, detail: '' };
 let lastSignature = '';
 let wasComplete = false;
 
-const VIEWS = ['draft', 'brief', 'setup'];
+const VIEWS = ['draft', 'brief', 'heroes', 'items', 'setup'];
 
 function cacheDom() {
   [
     'app', 'boot', 'tabs', 'data-badge', 'storage-note',
-    'view-draft', 'view-brief', 'view-setup',
+    'view-draft', 'view-brief', 'view-heroes', 'view-items', 'view-setup',
     'timeline', 'board', 'turn', 'controls',
     'recommendations', 'synergy', 'strength', 'sheet-host', 'actionbar'
   ].forEach((id) => {
@@ -481,6 +485,31 @@ function renderBrief(snapshot) {
   });
 }
 
+/**
+ * The two reference tabs read the registry, not the draft, so they are built
+ * once and then only refreshed — rebuilding them on every pass would throw away
+ * the search text and the open hero the moment anything else on the app
+ * changed. `refresh` re-reads the registry in place, which is how live
+ * portraits and win rates reach a tab that is already on screen.
+ */
+function renderLibrary(which) {
+  if (which === 'heroes') {
+    if (!heroesView) {
+      heroesView = createHeroesView(registry);
+      dom['view-heroes'].appendChild(heroesView.root);
+      return;
+    }
+    heroesView.refresh();
+    return;
+  }
+  if (!itemsView) {
+    itemsView = createItemsView(registry);
+    dom['view-items'].appendChild(itemsView.root);
+    return;
+  }
+  itemsView.refresh();
+}
+
 function render(snapshot) {
   const next = signature(snapshot);
   if (next === lastSignature) return;
@@ -489,6 +518,8 @@ function render(snapshot) {
   keepScroll(() => {
     if (view === 'draft') renderDraft(snapshot);
     else if (view === 'brief') renderBrief(snapshot);
+    else if (view === 'heroes') renderLibrary('heroes');
+    else if (view === 'items') renderLibrary('items');
     else renderSetup(dom['view-setup'], registry, snapshot, dataStatus, handlers);
   });
 
